@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../CSS/Login.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="CENTER" prefHeight="400.0" prefWidth="300.0" styleClass="left-menu">
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Image/logo.png" />
+               </image>
+            </ImageView>
+         </children>
+      </VBox>
+      <Label layoutX="340.0" layoutY="76.0" prefHeight="59.0" prefWidth="227.0" text="CINEMA LOGIN">
+         <font>
+            <Font size="33.0" />
+         </font>
+      </Label>
+      <PasswordField fx:id="passWord" layoutX="329.0" layoutY="200.0" styleClass="field" />
+      <TextField fx:id="userName" layoutX="329.0" layoutY="155.0" styleClass="field" />
+      <Button fx:id="loginButton" layoutX="403.0" layoutY="263.0" mnemonicParsing="false" onAction="#onClickLoginButton" styleClass="login-button" text="Button" />
+      <Label fx:id="registerButton" layoutX="418.0" layoutY="315.0" onDragDetected="#onClickRegisterButton" styleClass="register-button" text="Register" />
+      <Label fx:id="messLogin" layoutX="334.0" layoutY="235.0" prefHeight="30.0" prefWidth="256.0" text="Vui lòng không để trống" textFill="RED">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>
