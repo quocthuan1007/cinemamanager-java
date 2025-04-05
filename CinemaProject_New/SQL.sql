@@ -1,28 +1,126 @@
-CREATE database cinema
+CREATE database cinema;
 
-use cinema
+use cinema;
 CREATE TABLE Role (
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    Name NVARCHAR(255)
+    Name NVARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Account (
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    Email NVARCHAR(255) NOT NULL,
+    Email NVARCHAR(255) NOT NULL UNIQUE,
     Password NVARCHAR(255) NOT NULL,
     AccountStatus NVARCHAR(50),
     RoleId INT,
-    FOREIGN KEY (RoleId) REFERENCES Role(Id)
+    FOREIGN KEY (RoleId) REFERENCES Role(Id) ON DELETE SET NULL
 );
 
 CREATE TABLE User (
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    Name NVARCHAR(255),
+    Name NVARCHAR(255) NOT NULL,
     Gender BIT,
     Birth DATE,
     Phone NVARCHAR(20),
     Address NVARCHAR(255),
-    AccountId INT,
-    FOREIGN KEY (AccountId) REFERENCES Account(Id)
+    AccountId INT UNIQUE,
+    FOREIGN KEY (AccountId) REFERENCES Account(Id) ON DELETE CASCADE
 );
 
+CREATE TABLE Genre (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Film (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(255) NOT NULL,
+    Country NVARCHAR(255),
+    Length INT,
+    Director NVARCHAR(255),
+    Actor NVARCHAR(255),
+    AgeLimit INT,
+    FilmStatus NVARCHAR(50),
+    Content TEXT,  -- Sửa từ NVARCHAR(MAX)
+    Trailer TEXT,  -- Sửa từ NVARCHAR(MAX)
+    AdPosterUrl TEXT, -- Sửa từ NVARCHAR(MAX)
+    PosterUrl TEXT, -- Sửa từ NVARCHAR(MAX)
+    ReleaseDate DATETIME(2)
+);
+
+CREATE TABLE Film_Genre (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    FilmId INT,
+    GenreId INT,
+    FOREIGN KEY (FilmId) REFERENCES Film(Id) ON DELETE CASCADE,
+    FOREIGN KEY (GenreId) REFERENCES Genre(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE Room (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    RowNumber INT,
+    ColNumber INT,
+    RoomStatus NVARCHAR(50),
+    Name NVARCHAR(255)
+);
+
+CREATE TABLE MovieShow  (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    StartTime DATETIME(2),
+    EndTime DATETIME(2),
+    FilmId INT,
+    RoomId INT,
+    IsDeleted BIT DEFAULT 0,
+    FOREIGN KEY (FilmId) REFERENCES Film(Id) ON DELETE CASCADE,
+    FOREIGN KEY (RoomId) REFERENCES Room(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE SeatType (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(255),
+    Cost INT
+);
+
+CREATE TABLE Seats (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Position NVARCHAR(255),
+    RoomId INT,
+    SeatTypeId INT,
+    FOREIGN KEY (RoomId) REFERENCES Room(Id) ON DELETE CASCADE,
+    FOREIGN KEY (SeatTypeId) REFERENCES SeatType(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE Bill (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    UserId INT,
+    DatePurchased DATETIME(2),
+    BillStatus NVARCHAR(50),
+    FOREIGN KEY (UserId) REFERENCES User(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE Reservation (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    BillId INT,
+    SeatId INT,
+    ShowId INT,
+    Cost INT,
+    SeatTypeName TEXT, -- Sửa từ NVARCHAR(longtext)
+    FOREIGN KEY (BillId) REFERENCES Bill(Id) ON DELETE CASCADE,
+    FOREIGN KEY (SeatId) REFERENCES Seats(Id) ON DELETE CASCADE,
+    FOREIGN KEY (ShowId) REFERENCES MovieShow (Id) ON DELETE CASCADE
+);
+
+CREATE TABLE Food (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(255) NOT NULL,
+    Description TEXT, -- Sửa từ NVARCHAR(MAX)
+    Cost INT
+);
+
+CREATE TABLE Food_Order (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    FoodId INT,
+    BillId INT,
+    Count INT,
+    FOREIGN KEY (FoodId) REFERENCES Food(Id) ON DELETE CASCADE,
+    FOREIGN KEY (BillId) REFERENCES Bill(Id) ON DELETE CASCADE
+);

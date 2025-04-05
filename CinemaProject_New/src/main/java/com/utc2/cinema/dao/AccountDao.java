@@ -1,7 +1,8 @@
 package com.utc2.cinema.dao;
 
 import com.utc2.cinema.config.Database;
-import com.utc2.cinema.entity.Account;
+import com.utc2.cinema.model.entity.Account;
+
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

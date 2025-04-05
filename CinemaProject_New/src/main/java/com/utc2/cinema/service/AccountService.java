@@ -1,7 +1,8 @@
 package com.utc2.cinema.service;
 
 import com.utc2.cinema.dao.AccountDao;
-import com.utc2.cinema.entity.Account;
+import com.utc2.cinema.model.entity.Account;
+
 
 public class AccountService
 {
