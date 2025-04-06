@@ -67,7 +67,7 @@ public class Main extends Application {
 
         int count = 0;
         for (Film film : films) {
-            if (count >= 3) break;
+            if (count >= 4) break;
 
             try {
                 String posterUrl = film.getPosterUrl();
@@ -176,6 +176,7 @@ public class Main extends Application {
         btn.setOnMouseExited(e -> btn.setStyle("-fx-background-color: #444; -fx-text-fill: white;"));
         return btn;
     }
+
 
     public static void main(String[] args) {
         launch(args);
