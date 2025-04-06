@@ -1,0 +1,43 @@
+.left-menu
+{
+    -fx-background-color: #AA0000;
+}
+.field
+{
+-   -fx-border-color: #DDDDDD;
+    -fx-border-radius: 0px;
+    -fx-background-radius: 0px;
+    -fx-pref-width: 250px;
+    -fx-pref-height: 35px;
+}
+.login-button
+{
+    -fx-background-color: #AA0000;
+    -fx-pref-width: 100px;
+    -fx-pref-height: 45px;
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+.register-button
+{
+    -fx-cursor: hand;
+    -fx-font-size: 20px;
+    -fx-text-fill: blue;
+}
+.combo-sex
+{
+    -fx-background-color:white;
+    -fx-border-color: #DDDDDD;
+    -fx-border-width: 2px;
+
+}
+.date-register
+{
+    -fx-text-fill:black;
+    -fx-pref-height: 35px;
+    -fx-border-color: #DDDDDD;
+}
+
+
+
