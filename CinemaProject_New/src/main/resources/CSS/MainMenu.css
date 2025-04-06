@@ -16,7 +16,7 @@
 
 .main-content
 {
-    -fx-background-color: #CC9933;
+    -fx-background-color: white;
 }
 .movie-content
 {
@@ -33,4 +33,15 @@
 .intro-content
 {
     -fx-background-color: #663300;
+}
+.user-bottom
+{
+    -fx-background-color: #AA0000;
+    -fx-background-radius:10px;
+    -fx-spacing:7px;
+}
+.user-text
+{
+    -fx-text-fill:white;
+    -fx-font-size:15px;
 }

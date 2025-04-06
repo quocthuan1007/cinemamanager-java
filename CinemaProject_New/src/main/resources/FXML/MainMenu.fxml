@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.MainController">
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@../CSS/MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.MainController">
    <children>
-      <BorderPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@../CSS/MainMenu.css">
-         <top>
-            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1000.0" styleClass="main-taskbar" BorderPane.alignment="CENTER">
+      <Pane>
+         <children>
+            <Pane prefHeight="700.0" prefWidth="1000.0">
+               <children>
+                  <Pane fx:id="mainMenuForm" prefHeight="700.0" prefWidth="1000.0">
+                     <styleClass>
+                        <String fx:value="main-taskbar" />
+                        <String fx:value="main-content" />
+                     </styleClass>
+                  </Pane>
+                  <Pane fx:id="movieForm" prefHeight="700.0" prefWidth="1000.0" styleClass="movie-content" visible="false" />
+                  <Pane fx:id="scheduleForm" prefHeight="700.0" prefWidth="1000.0" styleClass="schedule-content" visible="false" />
+                  <Pane fx:id="buyForm" prefHeight="700.0" prefWidth="1000.0" styleClass="buy-content" visible="false" />
+                  <Pane fx:id="introForm" prefHeight="700.0" prefWidth="1000.0" styleClass="intro-content" visible="false" />
+               </children>
+            </Pane>
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1000.0" styleClass="main-taskbar">
                <children>
                   <Label fx:id="mainMenuBtn" alignment="CENTER" onMouseClicked="#switchButton" prefHeight="32.0" prefWidth="102.0" styleClass="text-taskbar" text="Trang chủ" />
                   <Label fx:id="movieBtn" alignment="CENTER" onMouseClicked="#switchButton" prefHeight="32.0" prefWidth="102.0" styleClass="text-taskbar" text="Phim" />
@@ -19,18 +34,13 @@
                   <Label fx:id="introBtn" alignment="CENTER" onMouseClicked="#switchButton" prefHeight="32.0" prefWidth="102.0" styleClass="text-taskbar" text="Giới thiệu" />
                </children>
             </HBox>
-         </top>
-         <center>
-            <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <VBox alignment="CENTER" layoutX="14.0" layoutY="57.0" prefHeight="64.0" prefWidth="217.0" styleClass="user-bottom">
                <children>
-                  <Pane fx:id="mainMenuForm" prefHeight="650.0" prefWidth="1000.0" styleClass="main-taskbar" />
-                  <Pane fx:id="movieForm" prefHeight="650.0" prefWidth="1000.0" styleClass="movie-content" />
-                  <Pane fx:id="scheduleForm" prefHeight="650.0" prefWidth="1000.0" styleClass="schedule-content" />
-                  <Pane fx:id="buyForm" prefHeight="650.0" prefWidth="1000.0" styleClass="buy-content" />
-                  <Pane fx:id="introForm" prefHeight="650.0" prefWidth="1000.0" styleClass="intro-content" />
+                  <Label fx:id="userMain" styleClass="user-text" />
+                  <Label styleClass="user-text" text="0$" />
                </children>
-            </Pane>
-         </center>
-      </BorderPane>
+            </VBox>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

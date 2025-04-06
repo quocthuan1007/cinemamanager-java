@@ -12,7 +12,7 @@ public class MainTest extends Application {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainTest.class.getResource("/FXML/MainMenu.fxml"));
             Pane root = fxmlLoader.load();
-            Scene scene = new Scene(root, 1000, 650);
+            Scene scene = new Scene(root, 1000, 700);
             primaryStage.setTitle("Cinema Manager");
             primaryStage.setScene(scene);
             primaryStage.show();
