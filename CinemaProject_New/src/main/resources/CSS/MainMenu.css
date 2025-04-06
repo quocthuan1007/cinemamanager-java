@@ -1,0 +1,36 @@
+.main-taskbar
+{
+    -fx-spacing: 60px;
+    -fx-background-color:#AA0000;
+}
+.text-taskbar
+{
+    -fx-text-fill:white;
+    -fx-font-size:20px;
+}
+.text-taskbar:hover
+{
+    -fx-background-color: #CC9933;
+    -fx-background-radius:10px;
+}
+
+.main-content
+{
+    -fx-background-color: #CC9933;
+}
+.movie-content
+{
+    -fx-background-color: #FF3399;
+}
+.schedule-content
+{
+    -fx-background-color: #336666;
+}
+.buy-content
+{
+    -fx-background-color: #00AA00;
+}
+.intro-content
+{
+    -fx-background-color: #663300;
+}

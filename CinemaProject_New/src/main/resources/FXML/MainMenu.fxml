@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.MainController">
+   <children>
+      <BorderPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@../CSS/MainMenu.css">
+         <top>
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1000.0" styleClass="main-taskbar" BorderPane.alignment="CENTER">
+               <children>
+                  <Label fx:id="mainMenuBtn" alignment="CENTER" onMouseClicked="#switchButton" prefHeight="32.0" prefWidth="102.0" styleClass="text-taskbar" text="Trang chủ" />
+                  <Label fx:id="movieBtn" alignment="CENTER" onMouseClicked="#switchButton" prefHeight="32.0" prefWidth="102.0" styleClass="text-taskbar" text="Phim" />
+                  <Label fx:id="scheduleBtn" alignment="CENTER" onMouseClicked="#switchButton" prefHeight="32.0" prefWidth="102.0" styleClass="text-taskbar" text="Lịch chiếu" />
+                  <Label fx:id="buyBtn" alignment="CENTER" onMouseClicked="#switchButton" prefHeight="32.0" prefWidth="102.0" styleClass="text-taskbar" text="Mua vé" />
+                  <Label fx:id="introBtn" alignment="CENTER" onMouseClicked="#switchButton" prefHeight="32.0" prefWidth="102.0" styleClass="text-taskbar" text="Giới thiệu" />
+               </children>
+            </HBox>
+         </top>
+         <center>
+            <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Pane fx:id="mainMenuForm" prefHeight="650.0" prefWidth="1000.0" styleClass="main-taskbar" />
+                  <Pane fx:id="movieForm" prefHeight="650.0" prefWidth="1000.0" styleClass="movie-content" />
+                  <Pane fx:id="scheduleForm" prefHeight="650.0" prefWidth="1000.0" styleClass="schedule-content" />
+                  <Pane fx:id="buyForm" prefHeight="650.0" prefWidth="1000.0" styleClass="buy-content" />
+                  <Pane fx:id="introForm" prefHeight="650.0" prefWidth="1000.0" styleClass="intro-content" />
+               </children>
+            </Pane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>
