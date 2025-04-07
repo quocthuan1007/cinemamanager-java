@@ -80,6 +80,7 @@ public class RegisterController
                 Scene scene = new Scene(root, 600, 400);
                 stage.setTitle("Hello !");
                 stage.setScene(scene);
+                stage.setResizable(false);
                 stage.show();
             } catch (Exception e) {
                 e.printStackTrace();

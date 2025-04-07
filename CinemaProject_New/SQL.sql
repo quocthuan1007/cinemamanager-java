@@ -124,3 +124,46 @@ CREATE TABLE Food_Order (
     FOREIGN KEY (FoodId) REFERENCES Food(Id) ON DELETE CASCADE,
     FOREIGN KEY (BillId) REFERENCES Bill(Id) ON DELETE CASCADE
 );
+
+INSERT INTO Film (Name, Country, Length, Director, Actor, AgeLimit, FilmStatus, Content, Trailer, AdPosterUrl, PosterUrl, ReleaseDate)genre
+VALUES
+
+-- Phim 2
+('Mario Bros', 'Mỹ', 95, 'Aaron Horvath', 'Chris Pratt, Anya Taylor-Joy',
+ 6, 'Ngừng chiếu', 'Anh em Mario giải cứu Vương quốc Nấm khỏi Bowser.',
+ 'https://www.youtube.com/watch?v=TnGl01FkMMo', 'poster/marioAd.jpg', 'poster/mario', '2023-04-05'),
+
+-- Phim 3
+('Rocky', 'Mỹ', 120, 'John G. Avildsen', 'Sylvester Stallone',
+ 13, 'Ngừng chiếu', 'Hành trình của võ sĩ quyền anh Rocky Balboa.',
+ 'https://www.youtube.com/watch?v=3VUblDwa648', 'poster/rockyAd.jpg', 'poster/rocky', '1976-11-21'),
+
+-- Phim 4
+('Ròm', 'Việt Nam', 89, 'Trần Thanh Huy', 'Trần Anh Khoa',
+ 16, 'Ngừng chiếu', 'Câu chuyện về cậu bé sống ở Sài Gòn và kiếm tiền bằng cách chơi số đề.',
+ 'https://www.youtube.com/watch?v=8ReL8GJUXqY', 'poster/romAd.jpg', 'poster/rom', '2020-09-25'),
+
+-- Phim 5
+('The Lion King', 'Mỹ', 118, 'Jon Favreau', 'Donald Glover, Beyoncé',
+ 6, 'Ngừng chiếu', 'Hành trình trưởng thành của sư tử Simba.',
+ 'https://www.youtube.com/watch?v=7TavVZMewpY', 'poster/lionkingAd.jpg', 'poster/lionking', '2019-07-19'),
+
+-- Phim 6
+('Immaculatte', 'Ý', 90, 'Michele Soavi', 'Asia Argento',
+ 18, 'Đang chiếu', 'Một bộ phim kinh dị về sự thuần khiết và bóng tối nội tâm.',
+ 'https://www.youtube.com/watch?v=xyz123', 'poster/immaculatteAd.jpg', 'poster/immaculatte', '2023-10-13'),
+
+-- Phim 7
+('How to Train Your Dragon: The Hidden World', 'Mỹ', 104, 'Dean DeBlois', 'Jay Baruchel, America Ferrera',
+ 6, 'Ngừng chiếu', 'Hành trình cuối cùng giữa Hiccup và Rồng Răng Sún.',
+ 'https://www.youtube.com/watch?v=SkcucKDrbOI', 'poster/httydAd.jpg', 'poster/httyd', '2019-02-22'),
+
+-- Phim 8
+('Ant-Main', 'Mỹ', 120, 'Peyton Reed', 'Paul Rudd, Evangeline Lilly',
+ 13, 'Đang chiếu', 'Siêu anh hùng Ant-Man cùng với Wasp trong một nhiệm vụ mới.',
+ 'https://www.youtube.com/watch?v=ZlNFpri-Y40', 'poster/antmanAd.jpg', 'poster/antman', '2023-07-15'),
+
+-- Phim 9
+('Avengers: Infinity War', 'Mỹ', 149, 'Anthony and Joe Russo', 'Robert Downey Jr., Chris Evans',
+ 13, 'Ngừng chiếu', 'Biệt đội Avengers đối đầu với Thanos để cứu vũ trụ.',
+ 'https://www.youtube.com/watch?v=6ZfuNTqbHE8', 'poster/avengersAd.jpg', 'poster/avengers', '2018-04-27');

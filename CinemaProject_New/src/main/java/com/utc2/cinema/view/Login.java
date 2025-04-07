@@ -6,12 +6,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Login extends Application {
     @Override
     public void start(Stage stage) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Login.class.getResource("/FXML/Login.fxml"));
+            stage.setResizable(false);
             LoginController control = new LoginController();
             fxmlLoader.setController(control);
             Pane root = fxmlLoader.load();

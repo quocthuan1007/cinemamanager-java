@@ -1,5 +1,7 @@
 package com.utc2.cinema.controller;
 
+import com.utc2.cinema.model.entity.Account;
+import com.utc2.cinema.model.entity.UserSession;
 import com.utc2.cinema.service.AccountService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,15 +28,36 @@ public class LoginController {
     @FXML
     private TextField userName;
 
+    private void showMainMenu()
+    {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("/FXML/MainMenu.fxml"));
+            Pane root = fxmlLoader.load();
+            Scene scene = new Scene(root, 1000, 700);
+            Stage stage = new Stage();
+            stage.setTitle("Cinema Manager");
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     public void onClickLoginButton(ActionEvent event) {
         if(userName.getText() == "" || passWord.getText() == "")
             messLogin.setText("Vui lòng điền đầy đủ thông tin");
         else{
-            AccountService account = new AccountService();
-            if(account.findAccount(userName.getText(), passWord.getText()) != null)
+            Account findAccount = AccountService.findAccount(userName.getText(), passWord.getText());
+            if(findAccount != null)
             {
                 messLogin.setText("Đăng nhập thành công");
+                UserSession.createUserSession(findAccount.getId(),findAccount.getEmail(),findAccount.getPassword(),findAccount.getAccountStatus(),findAccount.getRoleId());
+                userName.setText("");
+                passWord.setText("");
+                Stage loginWin = (Stage) userName.getScene().getWindow();
+                loginWin.close();
+                showMainMenu();
             }
             else {
                 messLogin.setText("Không tìm thấy tài khoản!");
@@ -68,6 +91,7 @@ public class LoginController {
             Stage stage = new Stage();
             stage.setTitle("Register !");
             stage.setScene(scene);
+            stage.setResizable(false);
             stage.show();
         }
         catch (Exception e)

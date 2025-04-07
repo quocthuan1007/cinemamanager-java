@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.web.WebView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Button?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.utc2.cinema.controller.test"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <!-- Nút để kiểm tra sự kiện phát video -->
+    <Button layoutX="50.0" layoutY="50.0" text="Test Video" fx:id="testButton" onAction="#handleVideoButtonClick"/>
+
+    <!-- WebView để hiển thị video từ YouTube -->
+    <WebView fx:id="webView" layoutX="50.0" layoutY="100.0" prefWidth="500.0" prefHeight="300.0"/>
+</AnchorPane>

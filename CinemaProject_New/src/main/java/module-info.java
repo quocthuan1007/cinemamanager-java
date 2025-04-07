@@ -3,6 +3,7 @@ module CinemaProject {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.graphics;
+    requires javafx.web;
     requires java.desktop;
 
     opens com.utc2.cinema.view to javafx.fxml;

@@ -1,3 +1,31 @@
 .pane1{
     -fx-background-color:#444;
 }
+.button1 {
+    -fx-background-color: #444;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+}
+
+.button1:hover {
+    -fx-background-color: orange; /* Màu cam */
+    -fx-text-fill: white; /* Đảm bảo màu chữ vẫn là trắng */
+}
+.pane2{
+-fx-background-color: #1e1e1e; /* hoặc màu bạn đang dùng */
+    -fx-border-color: transparent transparent #cccccc transparent;
+    -fx-border-width: 0 0 2px 0;
+}
+.redButton {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.redButton:hover {
+    -fx-background-color: darkred;  /* Màu nền khi hover */
+    -fx-cursor: hand;               /* Đổi con trỏ khi hover */
+}
