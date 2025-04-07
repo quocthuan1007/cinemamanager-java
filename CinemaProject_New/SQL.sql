@@ -1,29 +1,44 @@
 CREATE database cinema;
 
 use cinema;
+CREATE database cinema
+
+use cinema
 CREATE TABLE Role (
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    Name NVARCHAR(255) NOT NULL
+    Name NVARCHAR(255)
 );
 
 CREATE TABLE Account (
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    Email NVARCHAR(255) NOT NULL UNIQUE,
+    Email NVARCHAR(255) NOT NULL,
     Password NVARCHAR(255) NOT NULL,
     AccountStatus NVARCHAR(50),
     RoleId INT,
-    FOREIGN KEY (RoleId) REFERENCES Role(Id) ON DELETE SET NULL
+    FOREIGN KEY (RoleId) REFERENCES Role(Id)
 );
+INSERT INTO Role (Name) VALUES
+('Admin'),
+('Staff'),
+('Customer');
+
+INSERT INTO Account (Email, Password, AccountStatus, RoleId)
+VALUES
+('quocthuan@gmail.com', '123123123', 'ONLINE', 1),
+('staff@gmail.com', 'staff123', 'ONLINE', 2),
+('customer@gmail.com', 'cust123', 'OFFLINE', 3);
+
+
 
 CREATE TABLE User (
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    Name NVARCHAR(255) NOT NULL,
+    Name NVARCHAR(255),
     Gender BIT,
     Birth DATE,
     Phone NVARCHAR(20),
     Address NVARCHAR(255),
-    AccountId INT UNIQUE,
-    FOREIGN KEY (AccountId) REFERENCES Account(Id) ON DELETE CASCADE
+    AccountId INT,
+    FOREIGN KEY (AccountId) REFERENCES Account(Id)
 );
 
 CREATE TABLE Genre (
@@ -125,7 +140,7 @@ CREATE TABLE Food_Order (
     FOREIGN KEY (BillId) REFERENCES Bill(Id) ON DELETE CASCADE
 );
 
-INSERT INTO Film (Name, Country, Length, Director, Actor, AgeLimit, FilmStatus, Content, Trailer, AdPosterUrl, PosterUrl, ReleaseDate)genre
+INSERT INTO Film (Name, Country, Length, Director, Actor, AgeLimit, FilmStatus, Content, Trailer, AdPosterUrl, PosterUrl, ReleaseDate)
 VALUES
 
 -- Phim 2

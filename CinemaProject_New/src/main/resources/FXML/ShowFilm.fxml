@@ -6,59 +6,62 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.layout.FlowPane?>
 
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.HBox?>
-<AnchorPane prefHeight="800.0" prefWidth="1160.0"
-            stylesheets="@../CSS/ShowFilm.css"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.utc2.cinema.controller.ShowFilmController">
+<AnchorPane prefHeight="800.0" prefWidth="1160.0" stylesheets="@../CSS/ShowFilm.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.ShowFilmController">
 
     <children>
-        <!-- Thanh menu -->
-        <Pane prefHeight="94.0" prefWidth="1160.0" styleClass="pane1">
-            <children>
-                <Button layoutX="127.0" layoutY="35.0" styleClass="button1" text="Trang Chủ" />
-                <Button layoutX="221.0" layoutY="35.0" styleClass="button1" text="Phim" />
-                <Button layoutX="278.0" layoutY="35.0" styleClass="button1" text="Lịch Chiếu" />
-                <Button layoutX="372.0" layoutY="35.0" styleClass="button1" text="Mua Vé" />
-                <Button layoutX="448.0" layoutY="35.0" styleClass="button1" text="Giới Thiệu" />
-                <TextField layoutX="601.0" layoutY="40.0" promptText="Nhập Tên Phim" />
-                <ImageView fx:id="posterImage" fitHeight="94.0" fitWidth="109.0" layoutX="805.0" layoutY="13.0" preserveRatio="true">
-                    <image>
-                        <Image url="@../Image/logo.png" />
-                    </image>
-                </ImageView>
-                <Label layoutX="914.0" layoutY="40.0" text="Xin Chào" textFill="WHITE">
-                    <font>
-                        <Font size="16.0" />
-                    </font>
-                </Label>
-            </children>
-        </Pane>
-        <Label layoutX="127.0" layoutY="120.0" text="Phim Đang Chiếu" textFill="ORANGE">
-            <font>
-                <Font size="16.0" />
-            </font>
-        </Label>
-        <Pane prefHeight="1.0" prefWidth="900.0" styleClass="pane2"
-              AnchorPane.leftAnchor="130.0" AnchorPane.rightAnchor="130.0" AnchorPane.topAnchor="150.0"/>
-
-
-        <!-- FlowPane hiển thị phim -->
-
-
-            <FlowPane fx:id="moviePosters"
-                      layoutX="80" layoutY="170"
-                      prefWidth="1000.0"
-                      hgap="30" vgap="30"
-                      alignment="CENTER"
-                      orientation="HORIZONTAL"
-                      prefWrapLength="1160.0" />
+      <Pane>
+         <children>
+              <!-- Thanh menu -->
+              <Pane prefHeight="94.0" prefWidth="1160.0" styleClass="pane1">
+                  <children>
+                      <Button fx:id="mainMenuBtn" layoutX="127.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Trang Chủ" />
+                      <Button fx:id="movieBtn" layoutX="221.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Phim" />
+                      <Button fx:id="scheduleBtn" layoutX="278.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Lịch Chiếu" />
+                      <Button fx:id="buyBtn" layoutX="372.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Mua Vé" />
+                      <Button fx:id="introBtn" layoutX="448.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Giới Thiệu" />
+                      <TextField layoutX="560.0" layoutY="40.0" prefHeight="25.0" prefWidth="240.0" promptText="Nhập Tên Phim" />
+                      <ImageView fx:id="posterImage" fitHeight="94.0" fitWidth="109.0" layoutX="805.0" layoutY="13.0" preserveRatio="true">
+                          <image>
+                              <Image url="@../Image/logo.png" />
+                          </image>
+                      </ImageView>
+                  <HBox alignment="CENTER" layoutX="914.0" layoutY="30.0" prefHeight="46.0" prefWidth="210.0">
+                     <children>
+                            <Label fx:id="userMain" text="quocthuan1133@gmail.com" textFill="WHITE">
+                                <font>
+                                    <Font size="16.0" />
+                                </font>
+                            </Label>
+                     </children>
+                  </HBox>
+                  </children>
+              </Pane>
+              <Pane layoutX="130.39999389648438" layoutY="150.39999389648438" prefHeight="1.0" prefWidth="900.0" styleClass="pane2" />
+         </children>
+      </Pane>
+      <Pane layoutY="153.0" prefHeight="650.0" prefWidth="1232.0">
+         <children>
+            <Pane fx:id="mainMenuForm" prefHeight="650.0" prefWidth="1232.0" styleClass="main-content">
+               <children>
+            
+            
+                    <!-- FlowPane hiển thị phim -->
+            
+            
+                        <FlowPane fx:id="moviePosters" alignment="CENTER" hgap="30" layoutX="134.0" orientation="HORIZONTAL" prefHeight="2.0" prefWidth="894.0" prefWrapLength="1160.0" vgap="30" />
+               </children>
+            </Pane>
+            <Pane fx:id="movieForm" prefHeight="650.0" prefWidth="1232.0" styleClass="movie-content" visible="false" />
+            <Pane fx:id="scheduleForm" prefHeight="650.0" prefWidth="1232.0" styleClass="schedule-content" visible="false" />
+            <Pane fx:id="buyForm" prefHeight="650.0" prefWidth="1232.0" styleClass="buy-content" visible="false" />
+            <Pane fx:id="introForm" prefHeight="650.0" prefWidth="1232.0" styleClass="intro-content" visible="false" />
+         </children>
+      </Pane>
 
 
 

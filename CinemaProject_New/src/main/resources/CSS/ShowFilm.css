@@ -29,3 +29,24 @@
     -fx-background-color: darkred;  /* Màu nền khi hover */
     -fx-cursor: hand;               /* Đổi con trỏ khi hover */
 }
+
+.main-content
+{
+    -fx-background-color: white;
+}
+.movie-content
+{
+    -fx-background-color: #FF3399;
+}
+.schedule-content
+{
+    -fx-background-color: #336666;
+}
+.buy-content
+{
+    -fx-background-color: #00AA00;
+}
+.intro-content
+{
+    -fx-background-color: #663300;
+}

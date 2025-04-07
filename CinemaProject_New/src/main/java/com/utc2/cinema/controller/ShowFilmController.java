@@ -1,9 +1,11 @@
 package com.utc2.cinema.controller;
 
 import com.utc2.cinema.model.entity.Film;
+import com.utc2.cinema.model.entity.UserSession;
 import com.utc2.cinema.service.FilmService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,7 +13,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
@@ -20,18 +24,107 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class ShowFilmController {
+public class ShowFilmController implements Initializable {
 
     @FXML
-    private FlowPane moviePosters; // FlowPane để chứa ảnh phim
-
-    private final FilmService filmService = new FilmService();
+    private Button buyBtn;
+    @FXML
+    private Label userMain;
 
     @FXML
-    public void initialize() {
+    private Pane buyForm;
+
+    @FXML
+    private Button introBtn;
+
+    @FXML
+    private Pane introForm;
+
+    @FXML
+    private Button mainMenuBtn;
+
+    @FXML
+    private Pane mainMenuForm;
+
+    @FXML
+    private Button movieBtn;
+
+    @FXML
+    private Pane movieForm;
+
+    @FXML
+    private FlowPane moviePosters;
+
+    @FXML
+    private ImageView posterImage;
+
+    @FXML
+    private Button scheduleBtn;
+
+    @FXML
+    private Pane scheduleForm;
+    @Override
+    public void initialize(java.net.URL location, java.util.ResourceBundle resources) {
+        mainMenuForm.setVisible(true);
+        introForm.setVisible(false);
+        movieForm.setVisible(false);
+        scheduleForm.setVisible(false);
+        buyForm.setVisible(false);
+
         List<Film> films = filmService.getAllFilms();
         showFilms(films);
+
+        if (UserSession.getInstance() != null) {
+            String email = UserSession.getInstance().getEmail();
+            userMain.setText(email);
+        } else {
+            userMain.setText("No user.");
+        }
     }
+    @FXML
+    void switchButton(MouseEvent event) {
+        if(event.getSource() == mainMenuBtn)
+        {
+            mainMenuForm.setVisible(true);
+            introForm.setVisible(false);
+            movieForm.setVisible(false);
+            scheduleForm.setVisible(false);
+            buyForm.setVisible(false);
+        }
+        else if(event.getSource() == movieBtn)
+        {
+            movieForm.setVisible(true);
+            mainMenuForm.setVisible(false);
+            introForm.setVisible(false);
+            scheduleForm.setVisible(false);
+            buyForm.setVisible(false);
+        }
+        else if(event.getSource() == scheduleBtn)
+        {
+            scheduleForm.setVisible(true);
+            movieForm.setVisible(false);
+            mainMenuForm.setVisible(false);
+            introForm.setVisible(false);
+            buyForm.setVisible(false);
+        }
+        else if(event.getSource() == buyBtn)
+        {
+            buyForm.setVisible(true);
+            movieForm.setVisible(false);
+            mainMenuForm.setVisible(false);
+            introForm.setVisible(false);
+            scheduleForm.setVisible(false);
+        }
+        else if(event.getSource() == introBtn)
+        {
+            introForm.setVisible(true);
+            movieForm.setVisible(false);
+            mainMenuForm.setVisible(false);
+            scheduleForm.setVisible(false);
+            buyForm.setVisible(false);
+        }
+    }
+    private final FilmService filmService = new FilmService();
 
     private void showFilms(List<Film> films) {
         int count = 0;
@@ -104,7 +197,5 @@ public class ShowFilmController {
             e.printStackTrace();
         }
     }
-
-
 
 }
