@@ -5,7 +5,7 @@ import java.util.List;
 public interface DaoInterface<T> {
 
     public int insertData(T target);
-    public int updateData(T target);
+    public int updateData(T target, int option);
     public int deleteData(T target);
     public T getData(String email, String password);
     public List<T> getAllData();

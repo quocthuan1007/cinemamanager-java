@@ -20,4 +20,8 @@ public class AccountService
     {
         return new AccountDao().insertData(account) > 0;
     }
+    public static boolean updateAccount(Account account, int option)
+    {
+        return new AccountDao().updateData(account, option) > 0;
+    }
 }

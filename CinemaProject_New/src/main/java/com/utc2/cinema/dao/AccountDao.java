@@ -33,9 +33,50 @@ public class AccountDao implements DaoInterface<Account>
 
     }
     @Override
-    public int updateData(Account target) {
-        return 0;
+    public int updateData(Account target, int option)
+    {
+        int rowsAffected = 0;
+        try {
+            Connection connect = Database.getConnection();
+            PreparedStatement st = null;
+
+            switch (option) {
+                case 1:
+                    st = connect.prepareStatement("UPDATE account SET email = ? WHERE id = ?");
+                    st.setString(1, target.getEmail());
+                    st.setInt(2, target.getId());
+                    break;
+                case 2:
+                    st = connect.prepareStatement("UPDATE account SET password = ? WHERE id = ?");
+                    st.setString(1, target.getPassword());
+                    st.setInt(2, target.getId());
+                    break;
+                case 3:
+                    st = connect.prepareStatement("UPDATE account SET accountStatus = ? WHERE id = ?");
+                    st.setString(1, target.getAccountStatus());
+                    st.setInt(2, target.getId());
+                    break;
+                case 4:
+                    st = connect.prepareStatement("UPDATE account SET roleId = ? WHERE id = ?");
+                    st.setInt(1, target.getRoleId());
+                    st.setInt(2, target.getId());
+                    break;
+                default:
+                    System.out.println("Tùy chọn không hợp lệ!");
+                    Database.closeConnection(connect);
+                    return 0;
+            }
+
+            rowsAffected = st.executeUpdate();
+            Database.closeConnection(connect);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return rowsAffected;
     }
+
     @Override
     public int deleteData(Account target) {
         return 0;
