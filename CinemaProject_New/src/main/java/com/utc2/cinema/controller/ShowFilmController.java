@@ -130,62 +130,61 @@ public class ShowFilmController implements Initializable {
     }
     private final FilmService filmService = new FilmService();
 
+    private VBox createFilmBox(Film film) {
+        String posterPath = "/Image/" + film.getPosterUrl() + ".png";
+        InputStream is = getClass().getResourceAsStream(posterPath);
+        if (is == null) {
+            System.out.println("Không tìm thấy ảnh: " + posterPath);
+            return null;
+        }
+
+        Image image = new Image(is);
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(160);
+        imageView.setFitHeight(190);
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+
+        Label nameLabel = new Label(film.getName());
+        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        Label directorLabel = new Label("Đạo diễn: " + film.getDirector());
+
+        Button bookButton = new Button("🎟️ Đặt vé");
+        bookButton.setStyle("-fx-background-color: #0078D7; -fx-text-fill: white;");
+        bookButton.setOnAction(event -> {
+            System.out.println("Hiển thị thông tin chi tiết cho phim: " + film.getName());
+            openFilmDetailWindow(film);
+        });
+
+        VBox filmBox = new VBox(8, imageView, nameLabel, directorLabel, bookButton);
+        filmBox.setAlignment(Pos.CENTER);
+        filmBox.setPadding(new Insets(10));
+        filmBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ccc; -fx-border-radius: 8; -fx-background-radius: 8;");
+        filmBox.setPrefWidth(180);
+
+        return filmBox;
+    }
+
     private void showFilms(List<Film> films) {
         int count = 0;
-        int countMoviePosters1 = 0;
         for (Film film : films) {
-            if (count >= 8) break; // Giới hạn số lượng phim hiển thị
+            if (count >= 8) break;
 
             try {
-                // Lấy đường dẫn ảnh từ cơ sở dữ liệu và tạo đối tượng Image
-                String posterPath = "/Image/" + film.getPosterUrl()+".png"; // Đảm bảo tên ảnh từ database không có phần mở rộng
+                VBox filmBox1 = createFilmBox(film);
+                VBox filmBox2 = createFilmBox(film); // mỗi nơi 1 box riêng
 
-                // Thêm dấu "/" phía trước để tạo đúng đường dẫn trong resources
-                InputStream is = getClass().getResourceAsStream(posterPath);
-                if (is == null) {
-                    System.out.println("Không tìm thấy ảnh: " + posterPath);
-                    continue;
-                }
+                if (filmBox1 != null) moviePosters.getChildren().add(filmBox1);
+                if (filmBox2 != null) moviePosters1.getChildren().add(filmBox2);
 
-                Image image = new Image(is);
-                ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(160);
-                imageView.setFitHeight(190);
-                imageView.setPreserveRatio(true);
-                imageView.setSmooth(true);
-
-                // Hiển thị tên phim và đạo diễn
-                Label nameLabel = new Label(film.getName());
-                nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-                Label directorLabel = new Label("Đạo diễn: " + film.getDirector());
-
-                // Nút đặt vé
-                Button bookButton = new Button("🎟️ Đặt vé");
-                bookButton.setStyle("-fx-background-color: #0078D7; -fx-text-fill: white;");
-                bookButton.setOnAction(event -> {
-                    System.out.println("Hiển thị thông tin chi tiết cho phim: " + film.getName());
-                    openFilmDetailWindow(film); // Mở cửa sổ chi tiết bộ phim
-                });
-
-                // Tạo VBox chứa ảnh và thông tin phim
-                VBox filmBox = new VBox(8, imageView, nameLabel, directorLabel, bookButton);
-                filmBox.setAlignment(Pos.CENTER);
-                filmBox.setPadding(new Insets(10));
-                filmBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ccc; -fx-border-radius: 8; -fx-background-radius: 8;");
-                filmBox.setPrefWidth(180);
-
-                moviePosters.getChildren().add(filmBox);
-                if (countMoviePosters1 < 4) {
-                    moviePosters1.getChildren().add(filmBox);
-                    countMoviePosters1++; // Tăng số lượng phim đã thêm vào moviePosters1
-                }
                 count++;
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
+
+
 
 
 

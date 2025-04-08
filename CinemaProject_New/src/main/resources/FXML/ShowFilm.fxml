@@ -56,20 +56,20 @@
                  </children>
                  <children>
                      <!-- FlowPane hiển thị phim chuyển qua đây -->
-                     <FlowPane fx:id="moviePosters1" alignment="CENTER" hgap="30" layoutX="134.0" layoutY="350.0" orientation="HORIZONTAL" prefHeight="2.0" prefWidth="894.0" prefWrapLength="1160.0" vgap="30" />
+                     <FlowPane fx:id="moviePosters" alignment="CENTER" hgap="30" layoutX="134.0" layoutY="350.0" orientation="HORIZONTAL" prefHeight="2.0" prefWidth="894.0" prefWrapLength="1160.0" vgap="30" />
                  </children>
              </Pane>
 
 
-             <Pane fx:id="movieForm" prefHeight="650.0" prefWidth="1232.0" styleClass="movie-content" visible="false">
+             <Pane fx:id="movieForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="movie-content" visible="false">
                  <children>
                      <!-- FlowPane hiển thị phim chuyển qua đây -->
-                     <FlowPane fx:id="moviePosters" alignment="CENTER" hgap="30" layoutX="134.0" orientation="HORIZONTAL" prefHeight="2.0" prefWidth="894.0" prefWrapLength="1160.0" vgap="30" />
+                     <FlowPane fx:id="moviePosters1" alignment="CENTER" hgap="30" layoutX="134.0" orientation="HORIZONTAL" prefHeight="2.0" prefWidth="894.0" prefWrapLength="1160.0" vgap="30" />
                  </children>
              </Pane>
-            <Pane fx:id="scheduleForm" prefHeight="650.0" prefWidth="1232.0" styleClass="schedule-content" visible="false" />
-            <Pane fx:id="buyForm" prefHeight="650.0" prefWidth="1232.0" styleClass="buy-content" visible="false" />
-            <Pane fx:id="introForm" prefHeight="650.0" prefWidth="1232.0" styleClass="intro-content" visible="false" />
+            <Pane fx:id="scheduleForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="schedule-content" visible="false" />
+            <Pane fx:id="buyForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="buy-content" visible="false" />
+            <Pane fx:id="introForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="intro-content" visible="false" />
          </children>
       </Pane>
 
