@@ -11,11 +11,6 @@
     -fx-background-color: orange; /* Màu cam */
     -fx-text-fill: white; /* Đảm bảo màu chữ vẫn là trắng */
 }
-.pane2{
--fx-background-color: #1e1e1e; /* hoặc màu bạn đang dùng */
-    -fx-border-color: transparent transparent #cccccc transparent;
-    -fx-border-width: 0 0 2px 0;
-}
 .redButton {
     -fx-background-color: red;
     -fx-text-fill: white;
@@ -36,7 +31,7 @@
 }
 .movie-content
 {
-    -fx-background-color: #FF3399;
+    -fx-background-color: white;
 }
 .schedule-content
 {

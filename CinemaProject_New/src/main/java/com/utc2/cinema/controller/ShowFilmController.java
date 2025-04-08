@@ -54,6 +54,8 @@ public class ShowFilmController implements Initializable {
 
     @FXML
     private FlowPane moviePosters;
+    @FXML
+    private FlowPane moviePosters1;
 
     @FXML
     private ImageView posterImage;
@@ -90,6 +92,7 @@ public class ShowFilmController implements Initializable {
             movieForm.setVisible(false);
             scheduleForm.setVisible(false);
             buyForm.setVisible(false);
+
         }
         else if(event.getSource() == movieBtn)
         {
@@ -98,6 +101,7 @@ public class ShowFilmController implements Initializable {
             introForm.setVisible(false);
             scheduleForm.setVisible(false);
             buyForm.setVisible(false);
+
         }
         else if(event.getSource() == scheduleBtn)
         {
@@ -128,6 +132,7 @@ public class ShowFilmController implements Initializable {
 
     private void showFilms(List<Film> films) {
         int count = 0;
+        int countMoviePosters1 = 0;
         for (Film film : films) {
             if (count >= 8) break; // Giới hạn số lượng phim hiển thị
 
@@ -170,6 +175,10 @@ public class ShowFilmController implements Initializable {
                 filmBox.setPrefWidth(180);
 
                 moviePosters.getChildren().add(filmBox);
+                if (countMoviePosters1 < 4) {
+                    moviePosters1.getChildren().add(filmBox);
+                    countMoviePosters1++; // Tăng số lượng phim đã thêm vào moviePosters1
+                }
                 count++;
 
             } catch (Exception e) {
@@ -177,6 +186,8 @@ public class ShowFilmController implements Initializable {
             }
         }
     }
+
+
 
     private void openFilmDetailWindow(Film film) {
         try {

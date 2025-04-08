@@ -31,7 +31,7 @@ public class LoginController {
     private void showMainMenu()
     {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("/FXML/ShowFilm.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("/FXML/MainMenu.fxml"));
             Pane root = fxmlLoader.load();
             Scene scene = new Scene(root, 1160, 800);
             Stage stage = new Stage();

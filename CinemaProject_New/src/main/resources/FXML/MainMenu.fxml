@@ -1,46 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@../CSS/MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.MainController">
+<AnchorPane prefHeight="800.0" prefWidth="1160.0" stylesheets="@../CSS/ShowFilm.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.ShowFilmController">
+
    <children>
       <Pane>
          <children>
-            <Pane prefHeight="700.0" prefWidth="1000.0">
+            <!-- Thanh menu -->
+            <Pane prefHeight="94.0" prefWidth="1160.0" styleClass="pane1">
                <children>
-                  <Pane fx:id="mainMenuForm" prefHeight="700.0" prefWidth="1000.0">
-                     <styleClass>
-                        <String fx:value="main-taskbar" />
-                        <String fx:value="main-content" />
-                     </styleClass>
-                  </Pane>
-                  <Pane fx:id="movieForm" prefHeight="700.0" prefWidth="1000.0" styleClass="movie-content" visible="false" />
-                  <Pane fx:id="scheduleForm" prefHeight="700.0" prefWidth="1000.0" styleClass="schedule-content" visible="false" />
-                  <Pane fx:id="buyForm" prefHeight="700.0" prefWidth="1000.0" styleClass="buy-content" visible="false" />
-                  <Pane fx:id="introForm" prefHeight="700.0" prefWidth="1000.0" styleClass="intro-content" visible="false" />
+                  <Button fx:id="mainMenuBtn" layoutX="127.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Trang Chủ" />
+                  <Button fx:id="movieBtn" layoutX="221.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Phim" />
+                  <Button fx:id="scheduleBtn" layoutX="278.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Lịch Chiếu" />
+                  <Button fx:id="buyBtn" layoutX="372.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Mua Vé" />
+                  <Button fx:id="introBtn" layoutX="448.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Giới Thiệu" />
+                  <TextField layoutX="560.0" layoutY="40.0" prefHeight="25.0" prefWidth="240.0" promptText="Nhập Tên Phim" />
+                  <ImageView fx:id="posterImage" fitHeight="94.0" fitWidth="109.0" layoutX="805.0" layoutY="13.0" preserveRatio="true">
+                     <image>
+                        <Image url="@../Image/logo.png" />
+                     </image>
+                  </ImageView>
+                  <HBox alignment="CENTER" layoutX="914.0" layoutY="30.0" prefHeight="46.0" prefWidth="210.0">
+                     <children>
+                        <Label fx:id="userMain" text="quocthuan1133@gmail.com" textFill="WHITE">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
                </children>
             </Pane>
-            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="1000.0" styleClass="main-taskbar">
-               <children>
-                  <Label fx:id="mainMenuBtn" alignment="CENTER" onMouseClicked="#switchButton" prefHeight="32.0" prefWidth="102.0" styleClass="text-taskbar" text="Trang chủ" />
-                  <Label fx:id="movieBtn" alignment="CENTER" onMouseClicked="#switchButton" prefHeight="32.0" prefWidth="102.0" styleClass="text-taskbar" text="Phim" />
-                  <Label fx:id="scheduleBtn" alignment="CENTER" onMouseClicked="#switchButton" prefHeight="32.0" prefWidth="102.0" styleClass="text-taskbar" text="Lịch chiếu" />
-                  <Label fx:id="buyBtn" alignment="CENTER" onMouseClicked="#switchButton" prefHeight="32.0" prefWidth="102.0" styleClass="text-taskbar" text="Mua vé" />
-                  <Label fx:id="introBtn" alignment="CENTER" onMouseClicked="#switchButton" prefHeight="32.0" prefWidth="102.0" styleClass="text-taskbar" text="Giới thiệu" />
-               </children>
-            </HBox>
-            <VBox alignment="CENTER" layoutX="14.0" layoutY="57.0" prefHeight="64.0" prefWidth="217.0" styleClass="user-bottom">
-               <children>
-                  <Label fx:id="userMain" styleClass="user-text" />
-                  <Label styleClass="user-text" text="0$" />
-               </children>
-            </VBox>
+
          </children>
       </Pane>
+      <Pane layoutY="153.0" prefHeight="650.0" prefWidth="1232.0">
+         <children>
+
+            <Pane fx:id="movieForm" prefHeight="650.0" prefWidth="1232.0" styleClass="movie-content" visible="false" />
+            <Pane fx:id="scheduleForm" prefHeight="650.0" prefWidth="1232.0" styleClass="schedule-content" visible="false" />
+            <Pane fx:id="buyForm" prefHeight="650.0" prefWidth="1232.0" styleClass="buy-content" visible="false" />
+            <Pane fx:id="introForm" prefHeight="650.0" prefWidth="1232.0" styleClass="intro-content" visible="false" />
+         </children>
+      </Pane>
+
+
+
+
+
    </children>
 </AnchorPane>
