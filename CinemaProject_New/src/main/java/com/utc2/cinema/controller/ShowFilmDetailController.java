@@ -1,11 +1,14 @@
 package com.utc2.cinema.controller;
 
 import com.utc2.cinema.model.entity.Film;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 public class ShowFilmDetailController {
 
@@ -18,6 +21,7 @@ public class ShowFilmDetailController {
     @FXML private Label filmAgeLimitLabel;
     @FXML private Label filmContentLabel;
     @FXML private ImageView filmPosterImageView;
+    @FXML private WebView webView; // WebView để hiển thị trailer
 
     public void setFilmDetails(Film film) {
         filmNameLabel.setText("Tên phim: " + film.getName());
@@ -34,5 +38,46 @@ public class ShowFilmDetailController {
         String posterPath = "/Image/" + film.getPosterUrl() + ".png"; // Ví dụ: "inception"
         Image image = new Image(getClass().getResourceAsStream(posterPath));
         filmPosterImageView.setImage(image);
+
+        // Hiển thị trailer
+        loadTrailer(film.getTrailer());
     }
+
+    private void loadTrailer(String youtubeUrl) {
+        if (youtubeUrl == null || youtubeUrl.isEmpty()) return;
+
+        // Chuyển từ dạng https://www.youtube.com/watch?v=xxx thành https://www.youtube.com/embed/xxx
+        String embedUrl = youtubeUrl.replace("watch?v=", "embed/");
+
+        String embedHTML = """
+            <html>
+                <body style='margin:0px;padding:0px;'>
+                    <iframe width='100%%' height='100%%' 
+                            src='%s?autoplay=1'
+                            frameborder='0' allow='autoplay; encrypted-media' allowfullscreen>
+                    </iframe>
+                </body>
+            </html>
+            """.formatted(embedUrl);
+
+        WebEngine webEngine = webView.getEngine();
+        webEngine.loadContent(embedHTML);
+    }
+}
+@FXML
+private void handleWatchTrailer(ActionEvent event) {
+    // Tạo Stage mới
+    Stage trailerStage = new Stage();
+    trailerStage.setTitle("Trailer");
+
+    // Tạo WebView
+    WebView webView = new WebView();
+    webView.setPrefSize(800, 450); // Tỷ lệ 16:9
+    webView.getEngine().load(trailerUrl); // Bạn sẽ gán biến trailerUrl từ dữ liệu phim
+
+    // Đưa WebView vào Scene
+    StackPane root = new StackPane(webView);
+    Scene scene = new Scene(root);
+    trailerStage.setScene(scene);
+    trailerStage.show();
 }

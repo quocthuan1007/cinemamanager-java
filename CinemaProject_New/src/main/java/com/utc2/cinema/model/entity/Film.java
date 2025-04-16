@@ -4,6 +4,7 @@
  */
 package com.utc2.cinema.model.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -24,6 +25,7 @@ public class Film {
     private String adPosterUrl;
     private String posterUrl;
     private Date releaseDate;
+    private LocalDate Date;
 
     public Film(int id, String name, String country, int length, String director, String actor, int ageLimit,
                 String filmStatus, String trailer, String content, String adPosterUrl, String posterUrl, Date releaseDate) {

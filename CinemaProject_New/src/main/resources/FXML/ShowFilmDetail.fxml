@@ -14,6 +14,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.web.WebView?>
 <AnchorPane prefHeight="800.0" prefWidth="1160.0"
             stylesheets="@../CSS/MainMenu.css"
             xmlns="http://javafx.com/javafx/23.0.1"
@@ -92,8 +94,11 @@
             </Label>
 
             <!-- Trailer phim bên dưới nội dung -->
+            <!-- Nút Xem Trailer thay cho WebView -->
             <Label text="Trailer:" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-<!--            <MediaView fx:id="filmTrailerMediaView" prefWidth="700.0" prefHeight="400.0" />-->
+            <Button text="Xem Trailer" onAction="#handleWatchTrailer" prefWidth="150.0" styleClass="redButton" />
+
+
         </VBox>
 
 
