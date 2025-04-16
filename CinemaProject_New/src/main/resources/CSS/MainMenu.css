@@ -1,17 +1,28 @@
-.main-taskbar
-{
-    -fx-spacing: 60px;
-    -fx-background-color:#AA0000;
+.pane1{
+    -fx-background-color:#444;
 }
-.text-taskbar
-{
-    -fx-text-fill:white;
-    -fx-font-size:20px;
+.button1 {
+    -fx-background-color: #444;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
 }
-.text-taskbar:hover
-{
-    -fx-background-color: #CC9933;
-    -fx-background-radius:10px;
+
+.button1:hover {
+    -fx-background-color: orange; /* Màu cam */
+    -fx-text-fill: white; /* Đảm bảo màu chữ vẫn là trắng */
+}
+.redButton {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.redButton:hover {
+    -fx-background-color: darkred;  /* Màu nền khi hover */
+    -fx-cursor: hand;               /* Đổi con trỏ khi hover */
 }
 
 .main-content
@@ -20,7 +31,7 @@
 }
 .movie-content
 {
-    -fx-background-color: #FF3399;
+    -fx-background-color: white;
 }
 .schedule-content
 {
@@ -34,14 +45,27 @@
 {
     -fx-background-color: #663300;
 }
-.user-bottom
+.confirm-info
 {
-    -fx-background-color: #AA0000;
-    -fx-background-radius:10px;
-    -fx-spacing:7px;
+    -fx-background-color: #FFCC33;
 }
-.user-text
+.text-field-info {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8;
+    -fx-border-color: #4A90E2;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-padding: 8;
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-text-fill: #333333;
+}
+
+.text-field-info:focused {
+    -fx-border-color: #2C6DD9;
+    -fx-effect: dropshadow(gaussian, #2C6DD9, 5, 0, 0, 0);
+}
+.userAccount
 {
-    -fx-text-fill:white;
-    -fx-font-size:15px;
+    -fx-cursor:hand;
 }

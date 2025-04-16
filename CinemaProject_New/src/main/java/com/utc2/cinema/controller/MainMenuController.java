@@ -1,16 +1,18 @@
 package com.utc2.cinema.controller;
 
 import com.utc2.cinema.model.entity.Film;
+import com.utc2.cinema.model.entity.User;
 import com.utc2.cinema.model.entity.UserSession;
 import com.utc2.cinema.service.FilmService;
+import com.utc2.cinema.service.UserService;
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -19,20 +21,32 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class ShowFilmController implements Initializable {
+public class MainMenuController implements Initializable {
+
+    @FXML
+    private TextField addressConfirm;
+
+    @FXML
+    private DatePicker birthConfirm;
 
     @FXML
     private Button buyBtn;
-    @FXML
-    private Label userMain;
 
     @FXML
     private Pane buyForm;
+
+    @FXML
+    private Button closeConfirm;
+
+    @FXML
+    private ChoiceBox<String> genderConfirm;
 
     @FXML
     private Button introBtn;
@@ -54,17 +68,31 @@ public class ShowFilmController implements Initializable {
 
     @FXML
     private FlowPane moviePosters;
+
     @FXML
     private FlowPane moviePosters1;
 
     @FXML
+    private TextField nameConfirm;
+
+    @FXML
+    private TextField numberConfirm;
+
+    @FXML
     private ImageView posterImage;
+
+    @FXML
+    private Button saveConfirm;
 
     @FXML
     private Button scheduleBtn;
 
     @FXML
     private Pane scheduleForm;
+    @FXML
+    private Pane infoForm;
+    @FXML
+    private Label userMain;
     @Override
     public void initialize(java.net.URL location, java.util.ResourceBundle resources) {
         mainMenuForm.setVisible(true);
@@ -81,6 +109,9 @@ public class ShowFilmController implements Initializable {
             userMain.setText(email);
         } else {
             userMain.setText("No user.");
+        }
+        if (genderConfirm.getItems().isEmpty()) {
+            genderConfirm.getItems().addAll("Nam", "Nữ");
         }
     }
     @FXML
@@ -183,11 +214,6 @@ public class ShowFilmController implements Initializable {
             }
         }
     }
-
-
-
-
-
     private void openFilmDetailWindow(Film film) {
         try {
             // Tải FXML của cửa sổ chi tiết phim
@@ -205,6 +231,101 @@ public class ShowFilmController implements Initializable {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    //Mở cap nhật thông tin
+    private void clearInfoInput()
+    {
+        nameConfirm.setText("");
+        birthConfirm.setValue(null);
+        genderConfirm.setValue(null);
+        addressConfirm.setText("");
+        numberConfirm.setText("");
+    }
+    private void loadUserInfo()
+    {
+        User Info = UserService.getUser(UserSession.getInstance().getUserId());
+        if(Info == null)
+        {
+            nameConfirm.setPromptText("Null");
+            birthConfirm.setPromptText("Null");
+            genderConfirm.setValue("Null");
+            addressConfirm.setPromptText("Null");
+            numberConfirm.setPromptText("Null");
+        }
+        else {
+            nameConfirm.setPromptText(Info.getName() != null ? Info.getName() : "Null");
+            birthConfirm.setPromptText(Info.getBirth() != null ? Info.getBirth().toString() : "Null");
+            addressConfirm.setPromptText(Info.getAddress() != null ? Info.getAddress() : "Null");
+            numberConfirm.setPromptText(Info.getPhone() != null ? Info.getPhone() : "Null");
+            genderConfirm.setValue(Info.isGender() ? "Nam" : "Nữ");
+        }
+    }
+    @FXML
+    void onPlayerClickInfoConfirm(MouseEvent event)
+    {
+        if(!infoForm.isVisible()) {
+            loadUserInfo();
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), infoForm);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
+            infoForm.setVisible(true);
+        }
+    }
+
+    @FXML
+    void onPlayerCloseInfoConfirm(ActionEvent event) {
+        if(infoForm.isVisible())
+            infoForm.setVisible(false);
+    }
+
+    @FXML
+    void onPlayerSaveInfoConfirm(ActionEvent event) {
+        try {
+            String name = nameConfirm.getText();
+            String genderText = genderConfirm.getValue();
+            java.time.LocalDate birthValue = birthConfirm.getValue(); // lấy trước
+            String address = addressConfirm.getText();
+            String phone = numberConfirm.getText();
+
+            if (name.isEmpty() || genderText == null || birthValue == null || address.isEmpty() || phone.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Thiếu thông tin");
+                alert.setHeaderText(null);
+                alert.setContentText("Vui lòng điền đầy đủ tất cả các thông tin trước khi lưu.");
+                alert.showAndWait();
+                return;
+            }
+
+            boolean gender = genderText.equals("Nam");
+            java.util.Date birth = java.sql.Date.valueOf(birthValue);
+
+            int accountId = UserSession.getInstance().getUserId();
+            User user = new User(0, name, gender, birth, phone, address, accountId);
+
+            if (UserService.getUser(accountId) != null) {
+                UserService.updateUser(user);
+            } else {
+                UserService.insertUser(user);
+            }
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Thông báo");
+            alert.setHeaderText(null);
+            alert.setContentText("Thông tin đã được lưu thành công!");
+            alert.showAndWait();
+
+            clearInfoInput();
+            loadUserInfo();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Lỗi");
+            alert.setHeaderText(null);
+            alert.setContentText("Lưu thông tin thất bại. Vui lòng kiểm tra lại dữ liệu.");
+            alert.showAndWait();
         }
     }
 

@@ -1,7 +1,5 @@
 package com.utc2.cinema.model.entity;
 
-import com.utc2.cinema.controller.MainController;
-
 public class UserSession
 {
     private static UserSession instance = null;
@@ -12,6 +10,14 @@ public class UserSession
     private int roleId;
     public int getRoleId() {
         return roleId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getAccountStatus() {
+        return accountStatus;
     }
 
     public static UserSession getInstance() {
