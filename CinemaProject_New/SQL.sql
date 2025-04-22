@@ -82,10 +82,11 @@ CREATE TABLE MovieShow  (
     EndTime DATETIME(2),
     FilmId INT,
     RoomId INT,
-    IsDeleted BIT DEFAULT 0,
+    IsDeleted BIT NOT NULL DEFAULT 0,
     FOREIGN KEY (FilmId) REFERENCES Film(Id) ON DELETE CASCADE,
     FOREIGN KEY (RoomId) REFERENCES Room(Id) ON DELETE CASCADE
 );
+
 
 CREATE TABLE SeatType (
     Id INT PRIMARY KEY AUTO_INCREMENT,
@@ -202,13 +203,12 @@ VALUES
 -- Phim 6: Immaculatte (Id = 6)
 INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
 VALUES
-('2025-04-10 14:00:00', '2025-04-10 15:30:00', 6, 1),
-('2025-04-11 18:00:00', '2025-04-11 19:30:00', 6, 2);
-
+('2025-04-23 14:00:00', '2025-04-23 15:30:00', 5, 1),
+('2025-04-23 18:00:00', '2025-04-23 19:30:00', 5, 2);
 -- Phim 8: Ant-Main (Id = 8)
 INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
 VALUES
-('2025-04-10 20:00:00', '2025-04-10 22:00:00', 8, 1);
+('2025-04-22 20:00:00', '2025-04-22 22:00:00', 8, 1);
 INSERT INTO Genre (Name)
 VALUES
 ('Hành động'),
@@ -218,7 +218,7 @@ VALUES
 ('Tâm lý');
 -- Immaculatte (FilmId = 6) là Kinh dị
 INSERT INTO Film_Genre (FilmId, GenreId)
-VALUES (6, 3);
+VALUES (5, 3);
 
 -- Ant-Main (FilmId = 8) là Hành động + Hài
 INSERT INTO Film_Genre (FilmId, GenreId)
@@ -226,4 +226,8 @@ VALUES
 (8, 1),
 (8, 4);
 
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
+VALUES
+('2025-04-23 14:00:00', '2025-04-23 15:30:00', 1, 1),
+('2025-04-23 18:00:00', '2025-04-23 19:30:00', 1, 2);
 
