@@ -3,27 +3,38 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.utc2.cinema.model.entity;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  *
  * @author ADMIN
  */
-public class Show {
+public class MovieShow {
     private int id;
-    private Date startTime;
-    private Date endTime;
+    private LocalDateTime  startTime;
+    private LocalDateTime endTime;
     private int filmId;
     private int roomId;
     private boolean isDeleted;
 
-    public Show(int id, Date startTime, Date endTime, int filmId, int roomId, boolean isDeleted) {
+
+
+    public MovieShow(int id, LocalDateTime startTime, LocalDateTime endTime, int filmId, int roomId, boolean isDeleted) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
         this.filmId = filmId;
         this.roomId = roomId;
         this.isDeleted = isDeleted;
+    }
+    public MovieShow() {
+        // Khởi tạo các giá trị mặc định cho các trường
+        this.id = 0; // Hoặc có thể là -1 nếu bạn muốn chỉ định chưa có ID
+        this.startTime = LocalDateTime.now(); // Mặc định là thời gian hiện tại
+        this.endTime = LocalDateTime.now();   // Mặc định là thời gian hiện tại
+        this.filmId = 0; // Giá trị mặc định cho filmId
+        this.roomId = 0; // Giá trị mặc định cho roomId
+        this.isDeleted = false; // Mặc định không bị xóa
     }
 
     public int getId() {
@@ -34,19 +45,19 @@ public class Show {
         this.id = id;
     }
 
-    public Date getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    public LocalDateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 

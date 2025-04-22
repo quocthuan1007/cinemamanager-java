@@ -43,7 +43,11 @@ public class Film {
         this.posterUrl = posterUrl;
         this.releaseDate = releaseDate;
     }
-
+    public Film(int id, String name, String posterUrl) {
+        this.id = id;
+        this.name = name;
+        this.posterUrl = posterUrl;
+    }
     public Film(String name, String posterUrl) {
         this.name=name;
         this.posterUrl=posterUrl;

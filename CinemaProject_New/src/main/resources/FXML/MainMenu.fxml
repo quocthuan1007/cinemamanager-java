@@ -15,6 +15,7 @@
 
 <?import javafx.scene.web.WebView?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ScrollPane?>
 <AnchorPane prefHeight="800.0" prefWidth="1160.0" stylesheets="@../CSS/MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.MainMenuController">
 
     <children>
@@ -121,8 +122,28 @@
                  </VBox>
 
              </Pane>
-            <Pane fx:id="scheduleForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="schedule-content" visible="false" />
-            <Pane fx:id="buyForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="buy-content" visible="false" />
+            <Pane fx:id="scheduleForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="schedule-content" visible="false" >
+                <children>
+                <FlowPane fx:id="dateFlowPane"
+                          layoutX="20.0" layoutY="100.0"
+                          hgap="10" vgap="5"
+                          prefWidth="1120.0" prefHeight="40.0"
+                          AnchorPane.leftAnchor="20.0"
+                          AnchorPane.rightAnchor="20.0">
+                    <!-- Các Button ngày sẽ được thêm từ controller -->
+                </FlowPane>
+                </children>
+                <!-- Bọc VBox lịch chiếu vào ScrollPane để có thanh cuộn -->
+                <ScrollPane layoutX="20.0" layoutY="100.0" prefWidth="1120.0" prefHeight="600.0" AnchorPane.bottomAnchor="0.0" fitToWidth="true">
+                    <content>
+                        <VBox fx:id="scheduleContainer"
+                              spacing="15" prefWidth="1120.0">
+                            <!-- JavaFX controller sẽ thêm lịch chiếu phim động ở đây -->
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </Pane>
+             <Pane fx:id="buyForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="buy-content" visible="false" />
             <Pane fx:id="introForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="intro-content" visible="false" />
          </children>
       </Pane>
