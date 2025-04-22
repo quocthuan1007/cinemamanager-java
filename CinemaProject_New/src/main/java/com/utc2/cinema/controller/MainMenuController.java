@@ -20,6 +20,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.util.Duration;
@@ -65,7 +67,10 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private Pane movieForm;
-
+    @FXML
+    private Pane showfilmdetail;
+    @FXML
+    private Button showfilmdetailBtn;
     @FXML
     private FlowPane moviePosters;
 
@@ -93,6 +98,16 @@ public class MainMenuController implements Initializable {
     private Pane infoForm;
     @FXML
     private Label userMain;
+    @FXML private Label filmNameLabel;
+    @FXML private Label filmDirectorLabel;
+    @FXML private Label filmActorLabel;
+    @FXML private Label filmTypeLabel;
+    @FXML private Label filmReleaseDateLabel;
+    @FXML private Label filmLengthLabel;
+    @FXML private Label filmAgeLimitLabel;
+    @FXML private Label filmContentLabel;
+    @FXML private ImageView filmPosterImageView;
+    @FXML private WebView webView; // WebView để hiển thị trailer
     @Override
     public void initialize(java.net.URL location, java.util.ResourceBundle resources) {
         mainMenuForm.setVisible(true);
@@ -114,49 +129,71 @@ public class MainMenuController implements Initializable {
             genderConfirm.getItems().addAll("Nam", "Nữ");
         }
     }
+
     @FXML
     void switchButton(MouseEvent event) {
-        if(event.getSource() == mainMenuBtn)
-        {
+//        if(event.getSource() == mainMenuBtn)
+//        {
+//            mainMenuForm.setVisible(true);
+//            introForm.setVisible(false);
+//            movieForm.setVisible(false);
+//            scheduleForm.setVisible(false);
+//            buyForm.setVisible(false);
+//
+//        }
+//        else if(event.getSource() == movieBtn)
+//        {
+//            movieForm.setVisible(true);
+//            mainMenuForm.setVisible(false);
+//            introForm.setVisible(false);
+//            scheduleForm.setVisible(false);
+//            buyForm.setVisible(false);
+//
+//        }
+//        else if(event.getSource() == scheduleBtn)
+//        {
+//            scheduleForm.setVisible(true);
+//            movieForm.setVisible(false);
+//            mainMenuForm.setVisible(false);
+//            introForm.setVisible(false);
+//            buyForm.setVisible(false);
+//        }
+//        else if(event.getSource() == buyBtn)
+//        {
+//            buyForm.setVisible(true);
+//            movieForm.setVisible(false);
+//            mainMenuForm.setVisible(false);
+//            introForm.setVisible(false);
+//            scheduleForm.setVisible(false);
+//        }
+//        else if(event.getSource() == introBtn)
+//        {
+//            introForm.setVisible(true);
+//            movieForm.setVisible(false);
+//            mainMenuForm.setVisible(false);
+//            scheduleForm.setVisible(false);
+//            buyForm.setVisible(false);
+//        }
+        // Ẩn tất cả trước
+        mainMenuForm.setVisible(false);
+        introForm.setVisible(false);
+        movieForm.setVisible(false);
+        scheduleForm.setVisible(false);
+        buyForm.setVisible(false);
+        showfilmdetail.setVisible(false);
+
+        if (event.getSource() == mainMenuBtn) {
             mainMenuForm.setVisible(true);
-            introForm.setVisible(false);
-            movieForm.setVisible(false);
-            scheduleForm.setVisible(false);
-            buyForm.setVisible(false);
-
-        }
-        else if(event.getSource() == movieBtn)
-        {
+        } else if (event.getSource() == movieBtn) {
             movieForm.setVisible(true);
-            mainMenuForm.setVisible(false);
-            introForm.setVisible(false);
-            scheduleForm.setVisible(false);
-            buyForm.setVisible(false);
-
-        }
-        else if(event.getSource() == scheduleBtn)
-        {
+        } else if (event.getSource() == scheduleBtn) {
             scheduleForm.setVisible(true);
-            movieForm.setVisible(false);
-            mainMenuForm.setVisible(false);
-            introForm.setVisible(false);
-            buyForm.setVisible(false);
-        }
-        else if(event.getSource() == buyBtn)
-        {
+        } else if (event.getSource() == buyBtn) {
             buyForm.setVisible(true);
-            movieForm.setVisible(false);
-            mainMenuForm.setVisible(false);
-            introForm.setVisible(false);
-            scheduleForm.setVisible(false);
-        }
-        else if(event.getSource() == introBtn)
-        {
+        } else if (event.getSource() == introBtn) {
             introForm.setVisible(true);
-            movieForm.setVisible(false);
-            mainMenuForm.setVisible(false);
-            scheduleForm.setVisible(false);
-            buyForm.setVisible(false);
+        } else if (event.getSource() == showfilmdetailBtn) {
+            showfilmdetail.setVisible(true);
         }
     }
     private final FilmService filmService = new FilmService();
@@ -184,7 +221,10 @@ public class MainMenuController implements Initializable {
         bookButton.setStyle("-fx-background-color: #0078D7; -fx-text-fill: white;");
         bookButton.setOnAction(event -> {
             System.out.println("Hiển thị thông tin chi tiết cho phim: " + film.getName());
-            openFilmDetailWindow(film);
+            setFilmDetails(film);
+
+            // Hiển thị form chi tiết phim (showFilmDetail)
+            showfilmdetail.setVisible(true); // Nếu nó là phần riêng biệt trong UI của bạn
         });
 
         VBox filmBox = new VBox(8, imageView, nameLabel, directorLabel, bookButton);
@@ -214,24 +254,47 @@ public class MainMenuController implements Initializable {
             }
         }
     }
-    private void openFilmDetailWindow(Film film) {
-        try {
-            // Tải FXML của cửa sổ chi tiết phim
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/ShowFilmDetail.fxml"));
-            AnchorPane filmDetailPane = loader.load();  // Chuyển sang AnchorPane nếu FXML sử dụng AnchorPane
 
-            // Lấy controller của giao diện chi tiết phim và truyền thông tin bộ phim
-            ShowFilmDetailController controller = loader.getController();
-            controller.setFilmDetails(film); // Truyền thông tin phim vào controller của giao diện chi tiết phim
+    public void setFilmDetails(Film film) {
+        filmNameLabel.setText("Tên phim: " + film.getName());
+        filmDirectorLabel.setText("Đạo diễn: " + film.getDirector());
+        filmActorLabel.setText("Diễn viên: " + film.getActor());
+        filmReleaseDateLabel.setText("Ngày phát hành: " + film.getReleaseDate());
+        filmLengthLabel.setText("Thời lượng: " + film.getLength() + " phút");
+        filmAgeLimitLabel.setText("Giới hạn tuổi: " + film.getAgeLimit() + "+");
 
-            // Tạo cửa sổ mới để hiển thị chi tiết bộ phim
-            Stage stage = new Stage();
-            stage.setTitle("Thông tin chi tiết phim: " + film.getName());
-            stage.setScene(new Scene(filmDetailPane));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Nội dung phim
+        filmContentLabel.setText(film.getContent());
+
+        // Cập nhật ảnh poster của phim
+        String posterPath = "/Image/" + film.getPosterUrl() + ".png"; // Ví dụ: "inception"
+        Image image = new Image(getClass().getResourceAsStream(posterPath));
+        filmPosterImageView.setImage(image);
+
+        // Hiển thị trailer
+        loadTrailer(film.getTrailer());
+    }
+
+    private void loadTrailer(String youtubeUrl) {
+        if (youtubeUrl == null || youtubeUrl.isEmpty()) return;
+
+        // Chuyển từ dạng https://www.youtube.com/watch?v=xxx thành https://www.youtube.com/embed/xxx
+        String embedUrl = youtubeUrl.replace("watch?v=", "embed/");
+
+        // Giảm kích thước và căn giữa iframe bên trong WebView
+        String embedHTML = """
+        <html>
+            <body style='margin:0px;padding:0px;display:flex;justify-content:center;align-items:center;height:100%%;'>
+                <iframe width='100%%' height='100%%' 
+                        src='%s?autoplay=1'
+                        frameborder='0' allow='autoplay; encrypted-media' allowfullscreen>
+                </iframe>
+            </body>
+        </html>
+        """.formatted(embedUrl);
+
+        WebEngine webEngine = webView.getEngine();
+        webEngine.loadContent(embedHTML);
     }
     //Mở cap nhật thông tin
     private void clearInfoInput()

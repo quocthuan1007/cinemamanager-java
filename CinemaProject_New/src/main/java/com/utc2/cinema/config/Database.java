@@ -12,13 +12,16 @@ public class Database {
         try {
             Properties properties = new Properties();
 
-            FileInputStream input = new FileInputStream("src\\main\\resources\\database.properties");
-            properties.load(input);
+//            FileInputStream input = new FileInputStream("src\\main\\resources\\database.properties");
+//            properties.load(input);
+//
+//            String url = properties.getProperty("db.url");
+//            String user = properties.getProperty("db.user");
+//            String password = properties.getProperty("db.password");
 
-            String url = properties.getProperty("db.url");
-            String user = properties.getProperty("db.user");
-            String password = properties.getProperty("db.password");
-
+            final String url = "jdbc:mysql://localhost:3306/cinema";
+            String user = "root";
+            final String password = "071205";
             System.out.println("URL: " + url);
             System.out.println("Username: " + user);
             System.out.println("Password: " + password);

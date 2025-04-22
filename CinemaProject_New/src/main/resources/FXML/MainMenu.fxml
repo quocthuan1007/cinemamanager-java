@@ -13,6 +13,8 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.web.WebView?>
+<?import javafx.scene.layout.VBox?>
 <AnchorPane prefHeight="800.0" prefWidth="1160.0" stylesheets="@../CSS/MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.MainMenuController">
 
     <children>
@@ -69,6 +71,56 @@
                      <FlowPane fx:id="moviePosters1" alignment="CENTER" hgap="30" layoutX="134.0" orientation="HORIZONTAL" prefHeight="2.0" prefWidth="894.0" prefWrapLength="1160.0" vgap="30" />
                  </children>
              </Pane>
+             <Pane fx:id="showfilmdetail" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="showfilm-content" visible="false">
+
+                 <VBox layoutX="100.0" layoutY="0" spacing="20">
+                     <!-- HBox chứa ảnh và thông tin -->
+                     <HBox spacing="20">
+                         <!-- Ảnh poster bên trái -->
+                         <ImageView fx:id="filmPosterImageView" fitHeight="300.0" fitWidth="200.0" preserveRatio="true" />
+
+                         <!-- Thông tin phim bên phải -->
+                         <VBox spacing="10" prefWidth="300.0">
+                             <Label fx:id="filmNameLabel">
+                                 <font><Font size="24.0" /></font>
+                             </Label>
+                             <Label fx:id="filmDirectorLabel">
+                                 <font><Font size="18.0" /></font>
+                             </Label>
+                             <Label fx:id="filmActorLabel">
+                                 <font><Font size="16.0" /></font>
+                             </Label>
+                             <Label fx:id="filmTypeLabel">
+                                 <font><Font size="16.0" /></font>
+                             </Label>
+                             <Label fx:id="filmReleaseDateLabel">
+                                 <font><Font size="16.0" /></font>
+                             </Label>
+                             <Label fx:id="filmLengthLabel">
+                                 <font><Font size="16.0" /></font>
+                             </Label>
+                             <Label fx:id="filmAgeLimitLabel">
+                                 <font><Font size="16.0" /></font>
+                             </Label>
+
+                             <!-- Nút Đặt Vé màu đỏ -->
+                             <Button text="Đặt Vé" styleClass="redButton" prefWidth="200.0" />
+                         </VBox>
+                         <!-- Nội dung phim (content) bên dưới sử dụng Label -->
+                         <Label text="Nội dung:" />
+                         <Label fx:id="filmContentLabel" wrapText="true"  layoutX="-400.0" prefWidth="300.0" style="-fx-font-size: 14px; -fx-font-family: 'Arial'; -fx-padding: 10px; -fx-background-color: #f0f0f0; -fx-border-radius: 5px; -fx-border-color: #ccc; -fx-border-width: 1px;">
+                             <font><Font size="14.0" /></font>
+                         </Label>
+                     </HBox>
+
+
+
+                     <!-- Trailer section -->
+                     <Label text="Trailer:" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+                     <WebView fx:id="webView" prefHeight="300.0" prefWidth="300.0" />
+                 </VBox>
+
+             </Pane>
             <Pane fx:id="scheduleForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="schedule-content" visible="false" />
             <Pane fx:id="buyForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="buy-content" visible="false" />
             <Pane fx:id="introForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="intro-content" visible="false" />
@@ -110,6 +162,7 @@
             <DatePicker fx:id="birthConfirm" layoutX="63.0" layoutY="235.0" styleClass="text-field-info" />
          </children>
       </Pane>
+
 
 
 

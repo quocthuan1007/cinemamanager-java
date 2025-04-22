@@ -10,6 +10,15 @@ public class test {
     private static final String PASSWORD = "071205";
 
     public static void main(String[] args) {
+        // Nạp driver MySQL (có thể không cần nếu sử dụng JDBC 4.0 trở đi)
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Không thể nạp driver MySQL!");
+            e.printStackTrace();
+            return;
+        }
+
         // Kiểm tra kết nối cơ sở dữ liệu
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
             if (conn != null) {
