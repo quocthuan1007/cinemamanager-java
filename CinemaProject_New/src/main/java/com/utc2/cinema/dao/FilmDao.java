@@ -13,7 +13,7 @@ import java.util.List;
 public class FilmDao {
 
     // Lấy tất cả phim từ cơ sở dữ liệu
-    public List<Film> getAllFilms() {
+    public static List<Film> getAllFilms() {
         List<Film> films = new ArrayList<>();
         String query = "SELECT Id, Name, Country, Length, Director, Actor, AgeLimit, FilmStatus, Content, Trailer, AdPosterUrl, PosterUrl, ReleaseDate FROM Film";
 

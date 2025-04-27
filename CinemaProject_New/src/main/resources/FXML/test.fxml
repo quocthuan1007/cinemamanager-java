@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.media.MediaView?>
-<?import javafx.scene.web.WebView?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1160.0"
-            stylesheets="@../CSS/MainMenu.css"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.utc2.cinema.controller.test">
+<AnchorPane prefHeight="800.0" prefWidth="1160.0" stylesheets="@../CSS/MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.test">
 
     <children>
         <!-- Thanh menu -->
@@ -44,26 +40,165 @@
                 </Label>
             </children>
         </Pane>
+        <AnchorPane prefHeight="706.0" prefWidth="1160.0">
+            <HBox alignment="CENTER" layoutX="0.0" layoutY="94.0" prefHeight="706.0" prefWidth="1160.0" spacing="60" style="-fx-padding: 20;">
 
-        <!-- Thanh chọn ngày -->
-        <FlowPane fx:id="dateFlowPane"
-                  layoutX="20.0" layoutY="100.0"
-                  hgap="10" vgap="5"
-                  prefWidth="1120.0" prefHeight="40.0"
-                  AnchorPane.leftAnchor="20.0"
-                  AnchorPane.rightAnchor="20.0">
-            <!-- Các Button ngày sẽ được thêm từ controller -->
-        </FlowPane>
-
-        <!-- Bọc VBox lịch chiếu vào ScrollPane để có thanh cuộn -->
-        <ScrollPane layoutX="20.0" layoutY="100.0" prefWidth="1120.0" prefHeight="600.0" AnchorPane.bottomAnchor="0.0" fitToWidth="true">
-            <content>
-                <VBox fx:id="scheduleContainer"
-                      spacing="15" prefWidth="1120.0">
-                    <!-- JavaFX controller sẽ thêm lịch chiếu phim động ở đây -->
+                <!-- Cột chọn phim -->
+                <VBox fx:id="filmListVBox" alignment="TOP_CENTER" prefWidth="500.0" spacing="20">
+                    <Label styleClass="titleLabel" text="CHỌN PHIM" />
+                    <ScrollPane fitToWidth="true" prefHeight="600.0" prefWidth="500.0">
+                        <content>
+                            <VBox fx:id="filmsContainer" alignment="TOP_CENTER" spacing="15" />
+                        </content>
+                    </ScrollPane>
                 </VBox>
-            </content>
-        </ScrollPane>
+
+                <!-- Cột chọn suất -->
+                <VBox fx:id="scheduleListVBox" alignment="TOP_CENTER" prefWidth="500.0" spacing="20">
+                    <Label styleClass="titleLabel" text="CHỌN SUẤT" />
+                    <ScrollPane fitToWidth="true" prefHeight="600.0" prefWidth="500.0">
+                        <content>
+                            <VBox fx:id="scheduleContainerOfFilm" alignment="TOP_CENTER" spacing="15" />
+                        </content>
+                    </ScrollPane>
+                </VBox>
+
+            </HBox>
+        </AnchorPane>
+        <!-- Phần chọn ghế (seat selection) -->
+        <AnchorPane fx:id="seatSelectionPane" layoutY="94.0" prefHeight="800.0" prefWidth="1160.0" visible="false">
+
+            <VBox alignment="TOP_CENTER" prefWidth="1160.0" spacing="20.0" style="-fx-padding: 20;">
+
+                <!-- Hàng chứa nút và màn hình -->
+                <HBox alignment="CENTER" layoutX="20.0" layoutY="20.0" spacing="350.0">
+                    <!-- Nút Quay lại ở góc trái -->
+                    <Button fx:id="backButton" styleClass="back-button" text="← Quay lại" />
+
+                    <!-- Tiêu đề ở giữa -->
+                    <Label styleClass="titleLabel" text="CHỌN GHẾ" />
+
+                    <!-- Nút Thanh toán ở góc phải -->
+                    <Button fx:id="payButton" styleClass="pay-button" text="Thanh toán →" />
+                </HBox>
+                <Label alignment="CENTER" maxWidth="928.0" style="-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px;" text="MÀN HÌNH" />
+
+
+                <!-- Scroll ghế -->
+                <ScrollPane fx:id="seatScrollPane" fitToWidth="true" layoutY="-40.0" prefHeight="300.0" style="-fx-background-color: transparent;">
+                    <VBox alignment="CENTER">
+                        <GridPane fx:id="seatGrid" alignment="CENTER" hgap="10" vgap="10" />
+                    </VBox>
+                </ScrollPane>
+
+                <!-- Ghi chú ghế -->
+                <HBox alignment="CENTER" layoutY="-20.0" spacing="40.0" style="-fx-padding: 10;">
+                    <!-- Ghế Thường -->
+                    <HBox alignment="CENTER" spacing="8.0">
+                        <!-- Ảnh ghế Thường -->
+                        <ImageView fitHeight="24" fitWidth="24">
+                            <image>
+                                <Image url="@../Image/ghe thuong.png" />
+                            </image>
+                        </ImageView>
+                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Ghế Thường: 70,000 VNĐ" />
+                    </HBox>
+
+                    <!-- Ghế VIP -->
+                    <HBox alignment="CENTER" spacing="8.0">
+                        <!-- Ảnh ghế VIP -->
+                        <ImageView fitHeight="24" fitWidth="24">
+                            <image>
+                                <Image url="@../Image/ghe vip.png" />
+                            </image>
+                        </ImageView>
+                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Ghế VIP: 100,000 VNĐ" />
+                    </HBox>
+                </HBox>
+
+
+
+
+
+
+                <Label prefHeight="40.0" prefWidth="206.0" text="CHỌN THỨC ĂN/ĐỒ UỐNG" textAlignment="CENTER">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Label>
+
+
+                    <TableView fx:id="foodDrinkTableView" prefHeight="200.0" prefWidth="600.0">
+                        <style>
+                            -fx-background-color: transparent; /* Nền bảng trong suốt */
+                            -fx-border-color: #003366; /* Viền bảng màu xanh đậm */
+                            -fx-border-width: 2px; /* Viền dày */
+                        </style>
+                        <columns>
+                            <!-- Cột Tên Món -->
+                            <TableColumn fx:id="nameColumn" prefWidth="200.0" text="Tên Món">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="food.name" />
+                                </cellValueFactory>
+                                <style>
+                                    -fx-text-fill: #003366; /* Màu chữ xanh đậm */
+                                </style>
+                            </TableColumn>
+
+                            <!-- Cột Mô Tả -->
+                            <TableColumn fx:id="descriptionColumn" prefWidth="272.66668701171875" text="Mô Tả">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="food.description" />
+                                </cellValueFactory>
+                                <style>
+                                    -fx-text-fill: #003366; /* Màu chữ xanh đậm */
+                                </style>
+                            </TableColumn>
+
+                            <!-- Cột Số Lượng -->
+                            <TableColumn fx:id="quantityColumn" prefWidth="195.33331298828125" text="Số Lượng">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="count" />
+                                </cellValueFactory>
+                                <style>
+                                    -fx-text-fill: #003366; /* Màu chữ xanh đậm */
+                                </style>
+                            </TableColumn>
+
+                            <!-- Cột Giá -->
+                            <TableColumn fx:id="priceColumn" prefWidth="221.99993896484375" text="Giá">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="food.cost" />
+                                </cellValueFactory>
+                                <style>
+                                    -fx-text-fill: #003366; /* Màu chữ xanh đậm */
+                                </style>
+                            </TableColumn>
+
+                            <!-- Cột Tổng Tiền -->
+                            <TableColumn fx:id="totalColumn" prefWidth="215.33319091796875" text="Tổng Tiền">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="totalPrice" />
+                                </cellValueFactory>
+                                <style>
+                                    -fx-text-fill: #003366; /* Màu chữ xanh đậm */
+                                </style>
+                            </TableColumn>
+                        </columns>
+                    </TableView>
+
+
+            </VBox>
+
+        </AnchorPane>
+
+
+
+
+
+
+
+
 
 
     </children>

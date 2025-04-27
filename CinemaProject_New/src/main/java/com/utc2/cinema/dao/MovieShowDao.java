@@ -116,4 +116,37 @@ public class MovieShowDao {
         }
         return movieShows;
     }
+    // Lấy danh sách các suất chiếu của phim từ ngày hôm nay trở đi
+    public List<MovieShow> getMovieShowsFromTodayOnward(int filmId) {
+        List<MovieShow> movieShows = new ArrayList<>();
+        LocalDate today = LocalDate.now(); // Lấy ngày hôm nay
+
+        String query = "SELECT * FROM MovieShow WHERE FilmId = ? AND DATE(StartTime) >= ? AND IsDeleted = 0"; // Điều kiện StartTime >= hôm nay
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, filmId);
+            pstmt.setDate(2, java.sql.Date.valueOf(today)); // Chuyển LocalDate sang java.sql.Date
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    MovieShow movieShow = new MovieShow();
+                    movieShow.setId(rs.getInt("Id"));
+                    movieShow.setFilmId(rs.getInt("FilmId"));
+                    movieShow.setStartTime(rs.getTimestamp("StartTime").toLocalDateTime());
+                    movieShow.setEndTime(rs.getTimestamp("EndTime").toLocalDateTime());
+                    movieShow.setRoomId(rs.getInt("RoomId"));
+                    movieShows.add(movieShow);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return movieShows;
+    }
+
+
+
 }

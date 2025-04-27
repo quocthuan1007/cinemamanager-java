@@ -31,10 +31,12 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class MainMenuController implements Initializable {
@@ -101,6 +103,7 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private Pane scheduleForm;
+
     @FXML
     private Pane infoForm;
     @FXML
@@ -115,32 +118,66 @@ public class MainMenuController implements Initializable {
     @FXML private Label filmContentLabel;
     @FXML private ImageView filmPosterImageView;
     @FXML private WebView webView; // WebView để hiển thị trailer
-    @FXML
-    private FlowPane dateFlowPane;
 
     @FXML
+    private FlowPane dateFlowPane;
+    @FXML
     private VBox scheduleContainer;
+
+
     @Override
-    public void initialize(java.net.URL location, java.util.ResourceBundle resources) {
+    public void initialize(URL location, ResourceBundle resources) {
+        setupMainForm();
+        setupFilms();
+        setupUser();
+        setupGenderComboBox();
+        setupSchedule();
+    }
+
+    private void setupMainForm() {
         mainMenuForm.setVisible(true);
         introForm.setVisible(false);
         movieForm.setVisible(false);
         scheduleForm.setVisible(false);
         buyForm.setVisible(false);
+    }
 
+    private void setupFilms() {
         List<Film> films = filmService.getAllFilms();
         showFilms(films);
+    }
 
+    private void setupUser() {
         if (UserSession.getInstance() != null) {
             String email = UserSession.getInstance().getEmail();
             userMain.setText(email);
         } else {
             userMain.setText("No user.");
         }
+    }
+
+    private void setupGenderComboBox() {
         if (genderConfirm.getItems().isEmpty()) {
             genderConfirm.getItems().addAll("Nam", "Nữ");
         }
     }
+
+    private void setupSchedule() {
+        LocalDate today = LocalDate.now();
+
+        // Hiển thị lịch hôm nay
+        showScheduleForDate(today);
+
+        // Tạo nút 7 ngày tới
+        for (int i = 0; i < 7; i++) {
+            LocalDate currentDate = today.plusDays(i);
+            Button dateButton = new Button(currentDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            dateButton.setOnAction(e -> handleDateButtonClick(currentDate));
+            styleButton(dateButton);
+            dateFlowPane.getChildren().add(dateButton);
+        }
+    }
+
 
     @FXML
     void switchButton(MouseEvent event) {
@@ -408,22 +445,7 @@ public class MainMenuController implements Initializable {
     private final MovieShowDao movieShowDao = new MovieShowDao();
     private final FilmDao filmDao = new FilmDao();
 
-    @FXML
-    public void initialize() {
-        LocalDate today = LocalDate.now();
 
-        // Hiển thị ngày hôm nay mặc định
-        showScheduleForDate(today);
-
-        // Thêm các nút ngày vào FlowPane
-        for (int i = 0; i < 7; i++) {
-            LocalDate currentDate = today.plusDays(i);
-            Button dateButton = new Button(currentDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-            dateButton.setOnAction(e -> handleDateButtonClick(currentDate));
-            styleButton(dateButton);
-            dateFlowPane.getChildren().add(dateButton);
-        }
-    }
 
     private void handleDateButtonClick(LocalDate date) {
         System.out.println("Ngày đã chọn: " + date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));

@@ -73,3 +73,48 @@
 {
     -fx-cursor:hand;
 }
+#scheduleForm {
+    display: block; /* Đảm bảo phần tử hiển thị */
+}
+#scheduleForm {
+    -fx-z-index: 10; /* Đảm bảo phần tử này hiển thị trên các phần tử khác */
+}
+.titleLabel {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #003366;
+}
+
+.back-button {
+    -fx-background-color: white;
+    -fx-text-fill: red;
+    -fx-font-size: 16px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+    -fx-effect: none;
+    -fx-cursor: hand;
+}
+.pay-button {
+    -fx-background-color: white;
+        -fx-text-fill: red;
+        -fx-font-size: 16px;
+        -fx-padding: 10px 20px;
+        -fx-background-radius: 8px;
+        -fx-border-radius: 8px;
+        -fx-border-color: red;
+        -fx-border-width: 2px;
+        -fx-effect: none;
+        -fx-cursor: hand;
+}
+
+.pay-button:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(255,0,0,0.5), 10, 0, 0, 0);
+}
+
+.back-button:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(255,0,0,0.5), 10, 0, 0, 0);
+}
+
