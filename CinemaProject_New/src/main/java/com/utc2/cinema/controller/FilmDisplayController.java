@@ -87,7 +87,7 @@ public class FilmDisplayController
         filmBox.setPadding(new Insets(10));
         filmBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ccc; -fx-border-radius: 8; -fx-background-radius: 8;");
         filmBox.setPrefWidth(180);
-        FlowPane.setMargin(filmBox, new Insets(10, 20, 10,0));
+        FlowPane.setMargin(filmBox, new Insets(10, 14, 10,14));
         return filmBox;
     }
 
@@ -99,7 +99,7 @@ public class FilmDisplayController
                 VBox filmBox2 = createFilmBox(film);
 
                 if (filmBox2 != null) moviePosters1.getChildren().add(filmBox2);
-                if (count <= 2)
+                if (count <= 3)
                 {
                     if (filmBox1 != null) moviePosters.getChildren().add(filmBox1);
                     count++;
