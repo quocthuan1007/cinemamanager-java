@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="FXML.MainManager"
+            prefHeight="600.0" prefWidth="900.0">
+
+    <!-- Thanh menu bên trái -->
+    <VBox fx:id="sidebar" spacing="15" prefWidth="220"
+          style="-fx-background-color: #2c3e50;"
+          AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+        <Label text="LHD Cinema" style="-fx-text-fill: white; -fx-font-size: 26px; -fx-font-weight: bold;" alignment="CENTER" />
+        <Button text="Thống kê" onAction="#handleThongKe"
+                maxWidth="180" style="-fx-background-color: transparent; -fx-text-fill: white;" />
+        <Button text="Quản lý nhân viên" onAction="#handleNhanVien"
+                maxWidth="180" style="-fx-background-color: transparent; -fx-text-fill: white;" />
+        <Button text="Quản lý phòng chiếu" onAction="#handlePhongChieu"
+                maxWidth="180" style="-fx-background-color: transparent; -fx-text-fill: white;" />
+        <Button text="Quản lý phim" onAction="#handleQuanLyPhim"
+                maxWidth="180" style="-fx-background-color: #34495e; -fx-text-fill: white;" />
+        <Button text="Quản lý lịch chiếu" onAction="#handleLichChieu"
+                maxWidth="180" style="-fx-background-color: transparent; -fx-text-fill: white;" />
+        <Button text="Đăng xuất" onAction="#handleDangXuat"
+                maxWidth="180" style="-fx-background-color: transparent; -fx-text-fill: white;" />
+        <Label text="Đăng nhập: Admin" style="-fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 20 0 0 0;" />
+    </VBox>
+
+    <!-- Phần nội dung thay đổi -->
+    <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;"
+               AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+               AnchorPane.rightAnchor="0.0" AnchorPane.leftAnchor="220.0" />
+</AnchorPane>
