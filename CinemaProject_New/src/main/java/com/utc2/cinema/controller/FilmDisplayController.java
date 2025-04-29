@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -38,9 +39,6 @@ public class FilmDisplayController
     private ImageView filmPosterImageView;
     private WebView webView;
     public FilmDisplayController(MainMenuController mainMenu) {
-        this.mainMenu = mainMenu;
-
-        // Khởi tạo các thành phần ngay khi có MainMenuController
         this.ShowFilmDetail = mainMenu.getShowfilmdetail();
         this.moviePosters = mainMenu.getMoviePosters();
         this.moviePosters1 = mainMenu.getMoviePosters1();
@@ -81,7 +79,7 @@ public class FilmDisplayController
             setFilmDetails(film);
 
             // Hiển thị form chi tiết phim (showFilmDetail)
-            ShowFilmDetail.setVisible(true); // Nếu nó là phần riêng biệt trong UI của bạn
+            ShowFilmDetail.setVisible(true);
         });
 
         VBox filmBox = new VBox(8, imageView, nameLabel, directorLabel, bookButton);
@@ -89,23 +87,23 @@ public class FilmDisplayController
         filmBox.setPadding(new Insets(10));
         filmBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ccc; -fx-border-radius: 8; -fx-background-radius: 8;");
         filmBox.setPrefWidth(180);
-
+        FlowPane.setMargin(filmBox, new Insets(10, 20, 10,0));
         return filmBox;
     }
 
     private void showFilms(List<Film> films) {
         int count = 0;
         for (Film film : films) {
-            if (count >= 8) break;
-
             try {
                 VBox filmBox1 = createFilmBox(film);
-                VBox filmBox2 = createFilmBox(film); // mỗi nơi 1 box riêng
+                VBox filmBox2 = createFilmBox(film);
 
-                if (filmBox1 != null) moviePosters.getChildren().add(filmBox1);
                 if (filmBox2 != null) moviePosters1.getChildren().add(filmBox2);
-
-                count++;
+                if (count <= 2)
+                {
+                    if (filmBox1 != null) moviePosters.getChildren().add(filmBox1);
+                    count++;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

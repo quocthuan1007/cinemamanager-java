@@ -51,7 +51,7 @@
       </Pane>
       <Pane layoutY="153.0" prefHeight="650.0" prefWidth="1232.0">
          <children>
-             <Pane fx:id="mainMenuForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="main-content">
+             <Pane fx:id="mainMenuForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="main-content" visible="false">
                  <children>
                      <ImageView fx:id="bannerImage" fitHeight="350.0" fitWidth="700.0" layoutX="230.0" preserveRatio="true">
                          <image>
@@ -67,60 +67,79 @@
 
 
              <Pane fx:id="movieForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="movie-content" visible="false">
-                 <children>
-                     <!-- FlowPane hiển thị phim chuyển qua đây -->
-                     <FlowPane fx:id="moviePosters1" alignment="CENTER" hgap="30" layoutX="134.0" orientation="HORIZONTAL" prefHeight="2.0" prefWidth="894.0" prefWrapLength="1160.0" vgap="30" />
-                 </children>
+               <children>
+                  <ScrollPane layoutX="226.0" prefHeight="646.0" prefWidth="840.0">
+                     <content>
+                        <FlowPane fx:id="moviePosters1" prefHeight="15.0" prefWidth="839.0" />
+                     </content>
+                  </ScrollPane>
+               </children>
              </Pane>
              <Pane fx:id="showfilmdetail" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="showfilm-content" visible="false">
-
+      
                  <VBox layoutX="100.0" layoutY="0" spacing="20">
                      <!-- HBox chứa ảnh và thông tin -->
                      <HBox spacing="20">
                          <!-- Ảnh poster bên trái -->
                          <ImageView fx:id="filmPosterImageView" fitHeight="300.0" fitWidth="200.0" preserveRatio="true" />
-
+      
                          <!-- Thông tin phim bên phải -->
                          <VBox prefWidth="300.0" spacing="10">
                              <Label fx:id="filmNameLabel">
-                                 <font><Font size="24.0" /></font>
+                                 <font>
+                              <Font size="24.0" />
+                           </font>
                              </Label>
                              <Label fx:id="filmDirectorLabel">
-                                 <font><Font size="18.0" /></font>
+                                 <font>
+                              <Font size="18.0" />
+                           </font>
                              </Label>
                              <Label fx:id="filmActorLabel">
-                                 <font><Font size="16.0" /></font>
+                                 <font>
+                              <Font size="16.0" />
+                           </font>
                              </Label>
                              <Label fx:id="filmTypeLabel">
-                                 <font><Font size="16.0" /></font>
+                                 <font>
+                              <Font size="16.0" />
+                           </font>
                              </Label>
                              <Label fx:id="filmReleaseDateLabel">
-                                 <font><Font size="16.0" /></font>
+                                 <font>
+                              <Font size="16.0" />
+                           </font>
                              </Label>
                              <Label fx:id="filmLengthLabel">
-                                 <font><Font size="16.0" /></font>
+                                 <font>
+                              <Font size="16.0" />
+                           </font>
                              </Label>
                              <Label fx:id="filmAgeLimitLabel">
-                                 <font><Font size="16.0" /></font>
+                                 <font>
+                              <Font size="16.0" />
+                           </font>
                              </Label>
-
+      
                              <!-- Nút Đặt Vé màu đỏ -->
                              <Button prefWidth="200.0" styleClass="redButton" text="Đặt Vé" />
                          </VBox>
                          <!-- Nội dung phim (content) bên dưới sử dụng Label -->
                          <Label text="Nội dung:" />
                          <Label fx:id="filmContentLabel" layoutX="-400.0" prefWidth="300.0" style="-fx-font-size: 14px; -fx-font-family: 'Arial'; -fx-padding: 10px; -fx-background-color: #f0f0f0; -fx-border-radius: 5px; -fx-border-color: #ccc; -fx-border-width: 1px;" wrapText="true">
-                             <font><Font size="14.0" /></font>
+                             <font>
+                           <Font size="14.0" />
+                        </font>
                          </Label>
                      </HBox>
-
-
-
+      
+      
+      
                      <!-- Trailer section -->
                      <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Trailer:" />
                      <WebView fx:id="webView" prefHeight="300.0" prefWidth="300.0" />
                  </VBox>
-
+      
              </Pane>
              <Pane fx:id="scheduleForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="schedule-content" visible="false">
                  <children>
@@ -137,7 +156,33 @@
                      </ScrollPane>
                  </children>
              </Pane>
-             <Pane fx:id="buyForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="buy-content" visible="false" />
+             <Pane fx:id="buyForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="buy-content" visible="false">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="706.0" prefWidth="1160.0" spacing="60" style="-fx-padding: 20;">
+                     <children>
+                        <VBox fx:id="filmListVBox" alignment="TOP_CENTER" prefWidth="500.0" spacing="20">
+                           <children>
+                              <Label styleClass="titleLabel" text="CHỌN PHIM" />
+                              <ScrollPane fitToWidth="true" prefHeight="600.0" prefWidth="500.0">
+                                 <content>
+                                    <VBox fx:id="filmsContainer" alignment="TOP_CENTER" spacing="15" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </VBox>
+                        <VBox fx:id="scheduleListVBox" alignment="TOP_CENTER" prefWidth="500.0" spacing="20">
+                           <children>
+                              <Label styleClass="titleLabel" text="CHỌN SUẤT" />
+                              <ScrollPane fitToWidth="true" prefHeight="600.0" prefWidth="500.0">
+                                 <content>
+                                    <VBox fx:id="scheduleContainerOfFilm" alignment="TOP_CENTER" spacing="15" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children></Pane>
             <Pane fx:id="introForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="intro-content" visible="false" />
          </children>
       </Pane>

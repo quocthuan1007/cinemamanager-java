@@ -285,6 +285,7 @@ public class MainMenuController implements Initializable {
         filmDisplayController = new FilmDisplayController(this);
         filmDisplayController.setupFilms();
     }
+    ///  confirm-info
     @FXML
     void onPlayerClickInfoConfirm(MouseEvent event){
         userConfirmController.onPlayerClickInfoConfirm(event);
@@ -304,7 +305,7 @@ public class MainMenuController implements Initializable {
         scheduleForm.setVisible(false);
         buyForm.setVisible(false);
     }
-
+    /// -- ///
     @FXML
     void switchButton(MouseEvent event) {
 
@@ -330,7 +331,4 @@ public class MainMenuController implements Initializable {
             showfilmdetail.setVisible(true);
         }
     }
-
-    //Mở cap nhật thông tin
-
 }

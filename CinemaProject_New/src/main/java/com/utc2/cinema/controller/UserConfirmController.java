@@ -5,11 +5,15 @@ import com.utc2.cinema.model.entity.UserSession;
 import com.utc2.cinema.service.UserService;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
+import java.time.LocalDate;
 
 public class UserConfirmController {
     private Label userMain;
@@ -56,17 +60,26 @@ public class UserConfirmController {
         User Info = UserService.getUser(UserSession.getInstance().getUserId());
         if(Info == null)
         {
-            nameConfirm.setPromptText("Null");
-            birthConfirm.setPromptText("Null");
-            genderConfirm.setValue("Null");
-            addressConfirm.setPromptText("Null");
-            numberConfirm.setPromptText("Null");
+            nameConfirm.setText("Null");
+            birthConfirm.setValue(null);
+            genderConfirm.setValue(null);
+            addressConfirm.setText("Null");
+            numberConfirm.setText("Null");
         }
         else {
-            nameConfirm.setPromptText(Info.getName() != null ? Info.getName() : "Null");
-            birthConfirm.setPromptText(Info.getBirth() != null ? Info.getBirth().toString() : "Null");
-            addressConfirm.setPromptText(Info.getAddress() != null ? Info.getAddress() : "Null");
-            numberConfirm.setPromptText(Info.getPhone() != null ? Info.getPhone() : "Null");
+            nameConfirm.setText(Info.getName() != null ? Info.getName() : "Null");
+            Date birthDate = Info.getBirth();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(birthDate);
+            LocalDate localDate = LocalDate.of(
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH) + 1,
+                    calendar.get(Calendar.DAY_OF_MONTH)
+            );
+
+            birthConfirm.setValue(localDate);
+            addressConfirm.setText(Info.getAddress() != null ? Info.getAddress() : "Null");
+            numberConfirm.setText(Info.getPhone() != null ? Info.getPhone() : "Null");
             genderConfirm.setValue(Info.isGender() ? "Nam" : "Nữ");
         }
     }
