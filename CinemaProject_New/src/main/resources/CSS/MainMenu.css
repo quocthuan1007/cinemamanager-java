@@ -27,19 +27,20 @@
 
 .main-content
 {
-    -fx-background-color: white;
+    -fx-background-color: #a01616;
+
 }
 .movie-content
 {
-    -fx-background-color: white;
+    -fx-background-color: #a01616;
 }
 .showfilm-content
 {
-    -fx-background-color: white;
+    -fx-background-color: #a01616;
 }
 .schedule-content
 {
-    -fx-background-color: white;
+    -fx-background-color: #a01616;
 }
 .buy-content
 {
