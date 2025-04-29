@@ -169,7 +169,7 @@
              <Pane fx:id="buyForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="buy-content" visible="false">
 
                  <!-- PHẦN CHỌN PHIM & SUẤT CHIẾU -->
-                 <HBox alignment="CENTER" layoutX="0.0" layoutY="94.0" prefHeight="706.0" prefWidth="1160.0" spacing="60" style="-fx-padding: 20;">
+                 <HBox alignment="CENTER" layoutX="0.0" layoutY="0.0" prefHeight="706.0" prefWidth="1160.0" spacing="60" style="-fx-padding: 20;">
                      <!-- Cột chọn phim -->
                      <VBox fx:id="filmListVBox" alignment="TOP_CENTER" prefWidth="500.0" spacing="20">
                          <Label styleClass="titleLabel" text="CHỌN PHIM" />
