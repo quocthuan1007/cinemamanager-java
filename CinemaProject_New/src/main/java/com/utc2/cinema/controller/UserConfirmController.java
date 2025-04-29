@@ -70,8 +70,7 @@ public class UserConfirmController {
             genderConfirm.setValue(Info.isGender() ? "Nam" : "Nữ");
         }
     }
-    @FXML
-    void onPlayerClickInfoConfirm(MouseEvent event)
+    public void onPlayerClickInfoConfirm(MouseEvent event)
     {
         if(!infoForm.isVisible()) {
             loadUserInfo();
@@ -83,14 +82,12 @@ public class UserConfirmController {
         }
     }
 
-    @FXML
-    void onPlayerCloseInfoConfirm(ActionEvent event) {
+    public void onPlayerCloseInfoConfirm(ActionEvent event) {
         if(infoForm.isVisible())
             infoForm.setVisible(false);
     }
 
-    @FXML
-    void onPlayerSaveInfoConfirm(ActionEvent event) {
+    public void onPlayerSaveInfoConfirm(ActionEvent event) {
         try {
             String name = nameConfirm.getText();
             String genderText = genderConfirm.getValue();

@@ -285,7 +285,18 @@ public class MainMenuController implements Initializable {
         filmDisplayController = new FilmDisplayController(this);
         filmDisplayController.setupFilms();
     }
-
+    @FXML
+    void onPlayerClickInfoConfirm(MouseEvent event){
+        userConfirmController.onPlayerClickInfoConfirm(event);
+    }
+    @FXML
+    void onPlayerSaveInfoConfirm(ActionEvent event) {
+        userConfirmController.onPlayerSaveInfoConfirm(event);
+    }
+    @FXML
+    void onPlayerCloseInfoConfirm(ActionEvent event) {
+        userConfirmController.onPlayerCloseInfoConfirm(event);
+    }
     private void setupMainForm() {
         mainMenuForm.setVisible(true);
         introForm.setVisible(false);
