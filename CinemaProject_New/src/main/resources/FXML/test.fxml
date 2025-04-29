@@ -16,6 +16,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.layout.StackPane?>
 <AnchorPane prefHeight="800.0" prefWidth="1160.0" stylesheets="@../CSS/MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.test">
 
     <children>
@@ -76,7 +78,7 @@
                     <Button fx:id="backButton" styleClass="back-button" text="← Quay lại" />
 
                     <!-- Tiêu đề ở giữa -->
-                    <Label styleClass="titleLabel" text="CHỌN GHẾ" />
+                    <Label styleClass="titleLabel" text="CHỌN GHẾ" layoutX="20.0" />
 
                     <!-- Nút Thanh toán ở góc phải -->
                     <Button fx:id="payButton" styleClass="pay-button" text="Thanh toán →" />
@@ -92,28 +94,59 @@
                 </ScrollPane>
 
                 <!-- Ghi chú ghế -->
-                <HBox alignment="CENTER" layoutY="-20.0" spacing="40.0" style="-fx-padding: 10;">
+                <HBox alignment="CENTER" layoutY="-100.0" spacing="30.0" style="-fx-padding: 10;">
+
                     <!-- Ghế Thường -->
                     <HBox alignment="CENTER" spacing="8.0">
-                        <!-- Ảnh ghế Thường -->
-                        <ImageView fitHeight="24" fitWidth="24">
-                            <image>
-                                <Image url="@../Image/ghe thuong.png" />
-                            </image>
-                        </ImageView>
+                        <StackPane>
+                            <ImageView fitHeight="24" fitWidth="24">
+                                <image>
+                                    <Image url="@../Image/ghe thuong.png" />
+                                </image>
+                            </ImageView>
+                        </StackPane>
                         <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Ghế Thường: 70,000 VNĐ" />
                     </HBox>
 
-                    <!-- Ghế VIP -->
+                    <!-- Ghế VIP (tô màu vàng) -->
                     <HBox alignment="CENTER" spacing="8.0">
-                        <!-- Ảnh ghế VIP -->
-                        <ImageView fitHeight="24" fitWidth="24">
-                            <image>
-                                <Image url="@../Image/ghe vip.png" />
-                            </image>
-                        </ImageView>
+                        <StackPane>
+                            <ImageView fitHeight="24" fitWidth="24">
+                                <image>
+                                    <Image url="@../Image/ghe vip.png" />
+                                </image>
+                            </ImageView>
+                            <Rectangle width="24" height="24" arcWidth="5" arcHeight="5" fill="yellow" opacity="0.3"/>
+                        </StackPane>
                         <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Ghế VIP: 100,000 VNĐ" />
                     </HBox>
+
+                    <!-- Ghế Đang Chọn (tô xanh lá) -->
+                    <HBox alignment="CENTER" spacing="8.0">
+                        <StackPane>
+                            <ImageView fitHeight="24" fitWidth="24">
+                                <image>
+                                    <Image url="@../Image/ghe thuong.png" />
+                                </image>
+                            </ImageView>
+                            <Rectangle width="24" height="24" arcWidth="5" arcHeight="5" fill="limegreen" opacity="0.3"/>
+                        </StackPane>
+                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Đang chọn" />
+                    </HBox>
+
+                    <!-- Ghế Đã Có Người Đặt (tô đỏ) -->
+                    <HBox alignment="CENTER" spacing="8.0">
+                        <StackPane>
+                            <ImageView fitHeight="24" fitWidth="24">
+                                <image>
+                                    <Image url="@../Image/ghe thuong.png" />
+                                </image>
+                            </ImageView>
+                            <Rectangle width="24" height="24" arcWidth="5" arcHeight="5" fill="red" opacity="0.3"/>
+                        </StackPane>
+                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Đã đặt" />
+                    </HBox>
+
                 </HBox>
 
 
@@ -121,14 +154,16 @@
 
 
 
-                <Label prefHeight="40.0" prefWidth="206.0" text="CHỌN THỨC ĂN/ĐỒ UỐNG" textAlignment="CENTER">
+
+
+                <Label prefHeight="40.0" prefWidth="206.0" layoutY="-50.0" text="CHỌN THỨC ĂN/ĐỒ UỐNG" textAlignment="CENTER">
                     <font>
                         <Font size="16.0" />
                     </font>
                 </Label>
 
 
-                    <TableView fx:id="foodDrinkTableView" prefHeight="200.0" prefWidth="600.0">
+                    <TableView fx:id="foodDrinkTableView" prefHeight="200.0" layoutY="-100.0" prefWidth="600.0">
                         <style>
                             -fx-background-color: transparent; /* Nền bảng trong suốt */
                             -fx-border-color: #003366; /* Viền bảng màu xanh đậm */

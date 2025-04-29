@@ -1,9 +1,6 @@
 package com.utc2.cinema.controller;
 
-import com.utc2.cinema.dao.FilmDao;
-import com.utc2.cinema.dao.FoodDao;
-import com.utc2.cinema.dao.MovieShowDao;
-import com.utc2.cinema.dao.RoomDao;
+import com.utc2.cinema.dao.*;
 import com.utc2.cinema.model.entity.*;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -25,10 +22,7 @@ import javafx.scene.text.Font;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class test {
 
@@ -177,6 +171,9 @@ public class test {
                 showLabel.setMaxHeight(100);
                 showLabel.setWrapText(true);
 
+                // Fetch reserved seats for the show
+                List<String> reservedSeats = ReservationDao.getReservedSeatsByShowId(show.getId());
+
                 showLabel.setOnMouseEntered(event -> {
                     showLabel.setStyle("-fx-background-color: lightgreen; -fx-padding: 10px; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-border-color: green; -fx-border-width: 2px;");
                 });
@@ -190,7 +187,7 @@ public class test {
                     filmListVBox.setVisible(false);
                     scheduleListVBox.setVisible(false);
                     seatSelectionPane.setVisible(true);
-                    openSeatSelection(show.getRoomId());
+                    openSeatSelection(show.getRoomId(), show.getId());
                 });
 
                 showtimesHBox.getChildren().add(showLabel);
@@ -208,6 +205,7 @@ public class test {
         }
     }
 
+
     private String getAgeLimitSymbol(int ageLimit) {
         switch (ageLimit) {
             case 6:
@@ -223,7 +221,8 @@ public class test {
         }
     }
 
-    private void openSeatSelection(int roomId) {
+
+    private void openSeatSelection(int roomId, int showId) {
         Room room = roomDao.getRoomById(roomId);
         int rows = room.getNumRows();
         int columns = room.getNumCols();
@@ -236,6 +235,9 @@ public class test {
 
         Image seatNormal = new Image(getClass().getResourceAsStream("/Image/ghe thuong.png"));
         Image seatVip = new Image(getClass().getResourceAsStream("/Image/ghe vip.png"));
+
+        // Lấy danh sách ghế đã đặt từ cơ sở dữ liệu
+        List<String> reservedSeats = new ReservationDao().getReservedSeatsByShowId(showId);
 
         int centerColumn = columns / 2;
 
@@ -291,15 +293,27 @@ public class test {
 
                 seatButton.setUserData(false); // ban đầu chưa chọn
 
+                // Kiểm tra ghế đã đặt hay chưa
+                if (reservedSeats.contains(seatLabel)) {
+                    // Tất cả ghế đã đặt sẽ có màu đỏ
+                    seatButton.setStyle(isVipSeat
+                            ? "-fx-background-color: darkred; -fx-border-color: black; -fx-border-radius: 5px;" // Ghế VIP đã đặt
+                            : "-fx-background-color: red; -fx-border-color: black; -fx-border-radius: 5px;"); // Ghế thường đã đặt
+                    seatButton.setDisable(true); // Vô hiệu hóa ghế đã đặt
+
+                    // Thêm thông tin "Đã đặt" vào Tooltip của ghế đã đặt
+                    tooltip.setText("Ghế " + seatLabel + " - Đã đặt");
+                }
+
                 seatButton.setOnAction(event -> {
                     boolean isSelected = (boolean) seatButton.getUserData();
 
-                    if (!isSelected) {
+                    if (!isSelected && !reservedSeats.contains(seatLabel)) {
                         seatButton.setStyle(isVipSeat
                                 ? "-fx-background-color: green; -fx-border-color: black; -fx-border-radius: 5px;"
                                 : "-fx-background-color: green; -fx-border-color: black; -fx-border-radius: 5px;");
                         System.out.println("Đã chọn ghế " + seatLabel);
-                    } else {
+                    } else if (!reservedSeats.contains(seatLabel)) {
                         seatButton.setStyle(isVipSeat
                                 ? "-fx-background-color: gold; -fx-border-color: black; -fx-border-radius: 5px;"
                                 : "-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 5px;");
@@ -309,14 +323,15 @@ public class test {
                     seatButton.setUserData(!isSelected); // cập nhật lại trạng thái
                 });
 
-
                 seatGrid.add(seatButton, j + 1, i + 1);
             }
         }
     }
 
 
-     // foodId -> count
+
+
+    // foodId -> count
 
 
 

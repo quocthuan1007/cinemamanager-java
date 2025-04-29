@@ -22,9 +22,11 @@ INSERT INTO Role (Name) VALUES
 
 INSERT INTO Account (Email, Password, AccountStatus, RoleId)
 VALUES
-('quocthuan@gmail.com', '123123123', 'ONLINE', 1),
-('staff@gmail.com', 'staff123', 'ONLINE', 2),
-('customer@gmail.com', 'cust123', 'OFFLINE', 3);
+('quocthuan@gmail.com', '123123123', 'ONLINE', 1),  -- Admin
+('staff@gmail.com', 'staff123', 'ONLINE', 2),        -- Nhân viên
+('customer@gmail.com', 'cust123', 'OFFLINE', 3),     -- Khách hàng
+('phamvand@gmail.com', 'd123456', 'ONLINE', 3);      -- Khách hàng (Phạm Văn D)
+
 
 
 
@@ -183,87 +185,6 @@ VALUES
  ('Avengers: Infinity War', 'Mỹ', 149, 'Anthony and Joe Russo', 'Robert Downey Jr., Chris Evans',
 13, 'Ngừng chiếu', 'Avengers: Infinity War là cuộc đối đầu đỉnh cao giữa biệt đội Avengers và Thanos – kẻ độc tài vũ trụ muốn xóa sổ một nửa sự sống bằng các Viên đá Vô cực. Các siêu anh hùng từ khắp nơi trong vũ trụ hợp sức để ngăn chặn âm mưu của hắn, nhưng cái giá phải trả vô cùng khốc liệt. Phim là bước ngoặt lớn của Vũ trụ điện ảnh Marvel với quy mô hoành tráng, cảm xúc mãnh liệt và những khoảnh khắc khiến khán giả nghẹt thở đến phút cuối.',
 'https://www.youtube.com/watch?v=6ZfuNTqbHE8', 'poster/avengersAd.jpg', 'poster/avengers', '2018-04-27');
- use cinema;
- INSERT INTO Room (RowNumber, ColNumber, RoomStatus, Name)
-VALUES
-(5, 5, 'Hoạt động', 'Phòng 1'),
-(8, 12, 'Hoạt động', 'Phòng 2'),
-(6 , 10, 'Bảo trì', 'Phòng 3');
-INSERT INTO SeatType (Name, Cost)
-VALUES
-('Thường', 70000),
-('VIP', 100000);
-INSERT INTO Seats (Position, RoomId, SeatTypeId)
-VALUES
-('A3', 1, 1), ('A4', 1, 1), ('A5', 1, 1),
-('B3', 1, 2), ('B4', 1, 2), ('B5', 1, 2),
-('A1', 2, 1), ('A2', 2, 1),
-('B1', 2, 2), ('B2', 2, 2);
--- Phim 6: Immaculatte (Id = 6)
--- Phim 1: Mario Bros (FilmId = 1)
--- Phim 1: Mario Bros (FilmId = 1)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-26 16:00:00', '2025-04-26 17:30:00', 1, 2),
-('2025-04-26 19:00:00', '2025-04-26 20:30:00', 1, 1),
-('2025-04-27 10:00:00', '2025-04-27 11:30:00', 1, 1),
-('2025-04-27 13:00:00', '2025-04-27 14:30:00', 1, 2);
-
--- Phim 2: Rocky (FilmId = 2)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-26 12:00:00', '2025-04-26 14:00:00', 2, 1),
-('2025-04-26 15:00:00', '2025-04-26 17:00:00', 2, 2),
-('2025-04-27 20:00:00', '2025-04-27 22:00:00', 2, 2),
-('2025-04-27 22:30:00', '2025-04-28 00:30:00', 2, 1),
-('2025-04-28 14:00:00', '2025-04-28 16:00:00', 2, 1);
-
--- Phim 3: Ròm (FilmId = 3)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-26 14:00:00', '2025-04-26 15:30:00', 3, 1),
-('2025-04-26 16:00:00', '2025-04-26 17:30:00', 3, 2),
-('2025-04-27 18:00:00', '2025-04-27 19:30:00', 3, 2),
-('2025-04-27 20:00:00', '2025-04-27 21:30:00', 3, 1),
-('2025-04-28 16:00:00', '2025-04-28 17:30:00', 3, 1);
-
--- Phim 4: The Lion King (FilmId = 4)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-26 18:00:00', '2025-04-26 20:00:00', 4, 1),
-('2025-04-26 20:30:00', '2025-04-26 22:30:00', 4, 2),
-('2025-04-27 12:00:00', '2025-04-27 14:00:00', 4, 2),
-('2025-04-27 16:00:00', '2025-04-27 18:00:00', 4, 1),
-('2025-04-28 20:00:00', '2025-04-28 22:00:00', 4, 1);
-
--- Phim 5: Immaculatte (FilmId = 5)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-26 14:00:00', '2025-04-26 15:30:00', 5, 1),
-('2025-04-26 16:00:00', '2025-04-26 17:30:00', 5, 2),
-('2025-04-27 18:00:00', '2025-04-27 19:30:00', 5, 2),
-('2025-04-27 20:00:00', '2025-04-27 21:30:00', 5, 1),
-('2025-04-28 16:00:00', '2025-04-28 17:30:00', 5, 1);
-
--- Phim 7: Ant-Man and the Wasp: Quantumania (FilmId = 7)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-26 20:00:00', '2025-04-26 22:00:00', 7, 1),
-('2025-04-26 22:30:00', '2025-04-27 00:30:00', 7, 2),
-('2025-04-27 14:00:00', '2025-04-27 16:00:00', 7, 2),
-('2025-04-27 16:30:00', '2025-04-27 18:30:00', 7, 1),
-('2025-04-28 18:00:00', '2025-04-28 20:00:00', 7, 1);
-
--- Phim 8: Avengers: Infinity War (FilmId = 8)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-26 12:00:00', '2025-04-26 14:00:00', 8, 1),
-('2025-04-26 14:30:00', '2025-04-26 16:30:00', 8, 2),
-('2025-04-27 20:00:00', '2025-04-27 22:00:00', 8, 2),
-('2025-04-27 22:30:00', '2025-04-28 00:30:00', 8, 1),
-('2025-04-28 14:00:00', '2025-04-28 16:00:00', 8, 1);
-
-
 INSERT INTO Genre (Name)
 VALUES
 ('Hành động'),
@@ -294,8 +215,97 @@ VALUES (2, 1), (2, 5);
 -- Avengers (FilmId = 9): Hành động
 INSERT INTO Film_Genre (FilmId, GenreId)
 VALUES (8, 1);
+ use cinema;
+ INSERT INTO Room (RowNumber, ColNumber, RoomStatus, Name)
+VALUES
+(5, 5, 'Hoạt động', 'Phòng 1'),
+(8, 12, 'Hoạt động', 'Phòng 2'),
+(6 , 10, 'Bảo trì', 'Phòng 3');
+
+-- Thêm ghế cho phòng 1
 
 
+-- Phim 6: Immaculatte (Id = 6)
+-- Phim 1: Mario Bros (FilmId = 1)
+-- Phim 1: Mario Bros (FilmId = 1)
+-- Phim 1: Fast and Furious (FilmId = 1)
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
+VALUES
+('2025-04-29 16:00:00', '2025-04-29 17:30:00', 1, 2),
+('2025-04-28 19:00:00', '2025-04-28 20:30:00', 1, 1),
+('2025-04-29 10:00:00', '2025-04-29 11:30:00', 1, 1),
+('2025-04-29 13:00:00', '2025-04-29 14:30:00', 1, 2);
+
+-- Phim 2: Rocky (FilmId = 2)
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
+VALUES
+('2025-04-28 12:00:00', '2025-04-28 14:00:00', 2, 1),
+('2025-04-28 15:00:00', '2025-04-28 17:00:00', 2, 2),
+('2025-04-29 20:00:00', '2025-04-29 22:00:00', 2, 2),
+('2025-04-29 22:30:00', '2025-04-30 00:30:00', 2, 1),
+('2025-04-30 14:00:00', '2025-04-30 16:00:00', 2, 1);
+
+-- Phim 3: Ròm (FilmId = 3)
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
+VALUES
+('2025-04-28 14:00:00', '2025-04-28 15:30:00', 3, 1),
+('2025-04-28 16:00:00', '2025-04-28 17:30:00', 3, 2),
+('2025-04-29 18:00:00', '2025-04-29 19:30:00', 3, 2),
+('2025-04-29 20:00:00', '2025-04-29 21:30:00', 3, 1),
+('2025-04-30 16:00:00', '2025-04-30 17:30:00', 3, 1);
+
+-- Phim 4: The Lion King (FilmId = 4)
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
+VALUES
+('2025-04-28 18:00:00', '2025-04-28 20:00:00', 4, 1),
+('2025-04-28 20:30:00', '2025-04-28 22:30:00', 4, 2),
+('2025-04-29 12:00:00', '2025-04-29 14:00:00', 4, 2),
+('2025-04-29 16:00:00', '2025-04-29 18:00:00', 4, 1),
+('2025-04-30 20:00:00', '2025-04-30 22:00:00', 4, 1);
+
+-- Phim 5: Immaculatte (FilmId = 5)
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
+VALUES
+('2025-04-28 14:00:00', '2025-04-28 15:30:00', 5, 1),
+('2025-04-28 16:00:00', '2025-04-28 17:30:00', 5, 2),
+('2025-04-29 18:00:00', '2025-04-29 19:30:00', 5, 2),
+('2025-04-29 20:00:00', '2025-04-29 21:30:00', 5, 1),
+('2025-04-30 16:00:00', '2025-04-30 17:30:00', 5, 1);
+
+-- Phim 7: Ant-Man and the Wasp: Quantumania (FilmId = 7)
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
+VALUES
+('2025-04-28 20:00:00', '2025-04-28 22:00:00', 7, 1),
+('2025-04-28 22:30:00', '2025-04-29 00:30:00', 7, 2),
+('2025-04-29 14:00:00', '2025-04-29 16:00:00', 7, 2),
+('2025-04-29 16:30:00', '2025-04-29 18:30:00', 7, 1),
+('2025-04-30 18:00:00', '2025-04-30 20:00:00', 7, 1);
+
+-- Phim 8: Avengers: Infinity War (FilmId = 8)
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
+VALUES
+('2025-04-28 12:00:00', '2025-04-28 14:00:00', 8, 1),
+('2025-04-28 14:30:00', '2025-04-28 16:30:00', 8, 2),
+('2025-04-29 20:00:00', '2025-04-29 22:00:00', 8, 2),
+('2025-04-29 22:30:00', '2025-04-30 00:30:00', 8, 1),
+('2025-04-30 14:00:00', '2025-04-30 16:00:00', 8, 1);
+
+
+INSERT INTO SeatType (Name, Cost)
+VALUES
+('Thường', 70000),
+('VIP', 100000);
+
+
+INSERT INTO Seats (Position, RoomId, SeatTypeId)
+VALUES
+('A1', 1, 1), ('A2', 1, 1), ('A3', 1, 1), ('A4', 1, 1), ('A5', 1, 1),
+('B1', 1, 1), ('B2', 1, 1), ('B3', 1, 1), ('B4', 1, 1), ('B5', 1, 1),
+('C1', 1, 1), ('C2', 1, 1), ('C3', 1, 1), ('C4', 1, 1), ('C5', 1, 1),
+('D1', 1, 1), ('D2', 1, 1), ('D3', 1, 1), ('D4', 1, 1), ('D5', 1, 1),
+('E1', 1, 1), ('E2', 1, 1), ('E3', 1, 1), ('E4', 1, 1), ('E5', 1, 1),
+('F1', 2, 1), ('F2', 2, 1), ('F3', 2, 1), ('F4', 2, 1), ('F5', 2, 1),
+('G1', 2, 1), ('G2', 2, 1), ('G3', 2, 1), ('G4', 2, 1), ('G5', 2, 1);
 
 INSERT INTO Food (Name, Description, Cost) VALUES
 ('Pizza', 'Pizza hải sản đặc biệt với phô mai ngon tuyệt.', 100000),
@@ -309,21 +319,47 @@ INSERT INTO Food (Name, Description, Cost) VALUES
 INSERT INTO User (Name, Gender, Birth, Phone, Address, AccountId) VALUES
 ('Quốc Thuận', 1, '1990-01-01', '0123456789', 'Hà Nội', 1),
 ('Nguyễn Văn A', 1, '1992-05-15', '0987654321', 'Hồ Chí Minh', 2),
-('Trần Thị B', 0, '1995-08-20', '0934567890', 'Đà Nẵng', 3);
+('Trần Thị B', 0, '1995-08-20', '0934567890', 'Đà Nẵng', 3),
+('Phạm Văn D', 1, '1993-11-11', '0912345678', 'Cần Thơ', 4);
 
-INSERT INTO Bill (UserId, DatePurchased, BillStatus) VALUES
-(1, '2025-04-27 10:18:19', 'Paid'),  -- Hóa đơn 1
-(2, '2025-04-27 10:20:10', 'Paid'),  -- Hóa đơn 2
-(3, '2025-04-27 10:22:00', 'Paid');  -- Hóa đơn 3
-INSERT INTO Food_Order (FoodId, BillId, Count) VALUES
-(1, 1, 2),  -- 2 cái Pizza trong hóa đơn 1
-(2, 1, 3),  -- 3 cái Burger trong hóa đơn 1
-(3, 1, 1),  -- 1 cái Hotdog trong hóa đơn 1
-(4, 2, 2),  -- 2 lon Coca Cola trong hóa đơn 2
-(5, 2, 3),  -- 3 lon Pepsi trong hóa đơn 2
-(6, 2, 1),  -- 1 lon Sprite trong hóa đơn 2
-(7, 3, 1),  -- 1 lon Fanta trong hóa đơn 3
-(8, 3, 2);  -- 2 lon 7Up trong hóa đơn 3
+
+INSERT INTO Bill (UserId, DatePurchased, BillStatus)
+VALUES
+(1, '2025-05-01 17:00:00', 'Đã thanh toán'),
+(2, '2025-05-01 18:00:00', 'Đã thanh toán'),
+(3, '2025-05-02 14:30:00', 'Đã thanh toán'),
+(4, '2025-05-02 15:00:00', 'Đã thanh toán');
+
+-- Giả sử BillId = 1 và ghế A1 (SeatId = 1) được đặt cho lịch chiếu MovieShowId = 1
+INSERT INTO Reservation (BillId, SeatId, ShowId, Cost, SeatTypeName)
+VALUES
+(1, 1, 1, 50000, 'Thường'),  -- A1 cho suất 1
+(1, 2, 1, 50000, 'Thường'),  -- A2 cho suất 1
+(2, 3, 2, 50000, 'Thường'),  -- A3 cho suất 2
+(2, 4, 2, 50000, 'Thường'),  -- A4 cho suất 2
+(3, 5, 3, 50000, 'Thường'),  -- A5 cho suất 3
+(3, 6, 3, 50000, 'Thường'),  -- B1 cho suất 3
+(4, 7, 4, 50000, 'Thường'),  -- B2 cho suất 4
+(4, 8, 4, 50000, 'Thường');  -- B3 cho suất 4
+
+
+-- lenh truy van ghe da duoc dat o film nao
+-- SELECT
+--     f.name AS film_name,
+--     ms.StartTime AS show_time,  -- Thay 'show_time' bằng 'StartTime'
+--     r.Name AS room_name,
+--     s.Position AS seat_label
+-- FROM
+--     Reservation res
+-- JOIN
+--     Seats s ON res.SeatId = s.Id
+-- JOIN
+--     MovieShow ms ON res.ShowId = ms.Id
+-- JOIN
+--     Room r ON ms.RoomId = r.Id
+-- JOIN
+--     Film f ON ms.FilmId = f.Id;
+
 
 
 
