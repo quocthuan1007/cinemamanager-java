@@ -32,8 +32,11 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -181,48 +184,6 @@ public class MainMenuController implements Initializable {
 
     @FXML
     void switchButton(MouseEvent event) {
-//        if(event.getSource() == mainMenuBtn)
-//        {
-//            mainMenuForm.setVisible(true);
-//            introForm.setVisible(false);
-//            movieForm.setVisible(false);
-//            scheduleForm.setVisible(false);
-//            buyForm.setVisible(false);
-//
-//        }
-//        else if(event.getSource() == movieBtn)
-//        {
-//            movieForm.setVisible(true);
-//            mainMenuForm.setVisible(false);
-//            introForm.setVisible(false);
-//            scheduleForm.setVisible(false);
-//            buyForm.setVisible(false);
-//
-//        }
-//        else if(event.getSource() == scheduleBtn)
-//        {
-//            scheduleForm.setVisible(true);
-//            movieForm.setVisible(false);
-//            mainMenuForm.setVisible(false);
-//            introForm.setVisible(false);
-//            buyForm.setVisible(false);
-//        }
-//        else if(event.getSource() == buyBtn)
-//        {
-//            buyForm.setVisible(true);
-//            movieForm.setVisible(false);
-//            mainMenuForm.setVisible(false);
-//            introForm.setVisible(false);
-//            scheduleForm.setVisible(false);
-//        }
-//        else if(event.getSource() == introBtn)
-//        {
-//            introForm.setVisible(true);
-//            movieForm.setVisible(false);
-//            mainMenuForm.setVisible(false);
-//            scheduleForm.setVisible(false);
-//            buyForm.setVisible(false);
-//        }
         // Ẩn tất cả trước
         mainMenuForm.setVisible(false);
         introForm.setVisible(false);
@@ -359,17 +320,22 @@ public class MainMenuController implements Initializable {
         User Info = UserService.getUser(UserSession.getInstance().getUserId());
         if(Info == null)
         {
-            nameConfirm.setPromptText("Null");
-            birthConfirm.setPromptText("Null");
-            genderConfirm.setValue("Null");
-            addressConfirm.setPromptText("Null");
-            numberConfirm.setPromptText("Null");
+            nameConfirm.setText("Null");
+            birthConfirm.setValue(null);
+            genderConfirm.setValue(null);
+            addressConfirm.setText("Null");
+            numberConfirm.setText("Null");
         }
         else {
-            nameConfirm.setPromptText(Info.getName() != null ? Info.getName() : "Null");
-            birthConfirm.setPromptText(Info.getBirth() != null ? Info.getBirth().toString() : "Null");
-            addressConfirm.setPromptText(Info.getAddress() != null ? Info.getAddress() : "Null");
-            numberConfirm.setPromptText(Info.getPhone() != null ? Info.getPhone() : "Null");
+            nameConfirm.setText(Info.getName() != null ? Info.getName() : "Null");
+            Date birth = Info.getBirth(); // java.util.Date
+            Instant instant = birth.toInstant();
+            LocalDate localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+            birthConfirm.setValue(localDate);
+
+
+            addressConfirm.setText(Info.getAddress() != null ? Info.getAddress() : "Null");
+            numberConfirm.setText(Info.getPhone() != null ? Info.getPhone() : "Null");
             genderConfirm.setValue(Info.isGender() ? "Nam" : "Nữ");
         }
     }

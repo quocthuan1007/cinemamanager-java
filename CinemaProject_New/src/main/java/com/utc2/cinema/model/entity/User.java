@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.utc2.cinema.model.entity;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**

@@ -12,19 +12,12 @@ public class Database {
         try {
             Properties properties = new Properties();
 
-//            FileInputStream input = new FileInputStream("src\\main\\resources\\database.properties");
-//            properties.load(input);
-//
-//            String url = properties.getProperty("db.url");
-//            String user = properties.getProperty("db.user");
-//            String password = properties.getProperty("db.password");
+            FileInputStream input = new FileInputStream("src\\main\\resources\\database.properties");
+            properties.load(input);
 
-            final String url = "jdbc:mysql://localhost:3306/cinema";
-            String user = "root";
-            final String password = "071205";
-            System.out.println("URL: " + url);
-            System.out.println("Username: " + user);
-            System.out.println("Password: " + password);
+            String url = properties.getProperty("db.url");
+            String user = properties.getProperty("db.user");
+            String password = properties.getProperty("db.password");
             Class.forName("com.mysql.cj.jdbc.Driver");
             c = DriverManager.getConnection(url, user, password);
             System.out.println("Kết nối thành công");
