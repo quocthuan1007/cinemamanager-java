@@ -124,14 +124,163 @@ public class MainMenuController implements Initializable {
     @FXML
     private VBox scheduleContainer;
 
+    public TextField getAddressConfirm() {
+        return addressConfirm;
+    }
 
+    public DatePicker getBirthConfirm() {
+        return birthConfirm;
+    }
+
+    public Button getBuyBtn() {
+        return buyBtn;
+    }
+
+    public Pane getBuyForm() {
+        return buyForm;
+    }
+
+    public Button getCloseConfirm() {
+        return closeConfirm;
+    }
+
+    public ChoiceBox<String> getGenderConfirm() {
+        return genderConfirm;
+    }
+
+    public Button getIntroBtn() {
+        return introBtn;
+    }
+
+    public Pane getIntroForm() {
+        return introForm;
+    }
+
+    public Button getMainMenuBtn() {
+        return mainMenuBtn;
+    }
+
+    public Pane getMainMenuForm() {
+        return mainMenuForm;
+    }
+
+    public Button getMovieBtn() {
+        return movieBtn;
+    }
+
+    public Pane getMovieForm() {
+        return movieForm;
+    }
+
+    public Pane getShowfilmdetail() {
+        return showfilmdetail;
+    }
+
+    public Button getShowfilmdetailBtn() {
+        return showfilmdetailBtn;
+    }
+
+    public FlowPane getMoviePosters() {
+        return moviePosters;
+    }
+
+    public FlowPane getMoviePosters1() {
+        return moviePosters1;
+    }
+
+    public TextField getNameConfirm() {
+        return nameConfirm;
+    }
+
+    public TextField getNumberConfirm() {
+        return numberConfirm;
+    }
+
+    public ImageView getPosterImage() {
+        return posterImage;
+    }
+
+    public Button getSaveConfirm() {
+        return saveConfirm;
+    }
+
+    public Button getScheduleBtn() {
+        return scheduleBtn;
+    }
+
+    public Pane getScheduleForm() {
+        return scheduleForm;
+    }
+
+    public Pane getInfoForm() {
+        return infoForm;
+    }
+
+    public Label getUserMain() {
+        return userMain;
+    }
+
+    public Label getFilmNameLabel() {
+        return filmNameLabel;
+    }
+
+    public Label getFilmDirectorLabel() {
+        return filmDirectorLabel;
+    }
+
+    public Label getFilmActorLabel() {
+        return filmActorLabel;
+    }
+
+    public Label getFilmTypeLabel() {
+        return filmTypeLabel;
+    }
+
+    public Label getFilmReleaseDateLabel() {
+        return filmReleaseDateLabel;
+    }
+
+    public Label getFilmLengthLabel() {
+        return filmLengthLabel;
+    }
+
+    public Label getFilmAgeLimitLabel() {
+        return filmAgeLimitLabel;
+    }
+
+    public Label getFilmContentLabel() {
+        return filmContentLabel;
+    }
+
+    public ImageView getFilmPosterImageView() {
+        return filmPosterImageView;
+    }
+
+    public WebView getWebView() {
+        return webView;
+    }
+
+    public FlowPane getDateFlowPane() {
+        return dateFlowPane;
+    }
+
+    public VBox getScheduleContainer() {
+        return scheduleContainer;
+    }
+    /// //////////////////////Main_code///////////////////////// ///
+    private FilmDisplayController filmDisplayController;
+    private ScheduleDisplayController scheduleDisplayController;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setupMainForm();
-        setupFilms();
         setupUser();
         setupGenderComboBox();
-        setupSchedule();
+
+        scheduleDisplayController = new ScheduleDisplayController(this);
+        scheduleDisplayController.setupSchedule();
+        
+        filmDisplayController = new FilmDisplayController(this);
+        filmDisplayController.setupFilms();
     }
 
     private void setupMainForm() {
@@ -142,10 +291,6 @@ public class MainMenuController implements Initializable {
         buyForm.setVisible(false);
     }
 
-    private void setupFilms() {
-        List<Film> films = filmService.getAllFilms();
-        showFilms(films);
-    }
 
     private void setupUser() {
         if (UserSession.getInstance() != null) {
@@ -161,24 +306,6 @@ public class MainMenuController implements Initializable {
             genderConfirm.getItems().addAll("Nam", "Nữ");
         }
     }
-
-    private void setupSchedule() {
-        LocalDate today = LocalDate.now();
-
-        // Hiển thị lịch hôm nay
-        showScheduleForDate(today);
-
-        // Tạo nút 7 ngày tới
-        for (int i = 0; i < 7; i++) {
-            LocalDate currentDate = today.plusDays(i);
-            Button dateButton = new Button(currentDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-            dateButton.setOnAction(e -> handleDateButtonClick(currentDate));
-            styleButton(dateButton);
-            dateFlowPane.getChildren().add(dateButton);
-        }
-    }
-
-
     @FXML
     void switchButton(MouseEvent event) {
 
@@ -204,106 +331,7 @@ public class MainMenuController implements Initializable {
             showfilmdetail.setVisible(true);
         }
     }
-    private final FilmService filmService = new FilmService();
 
-    private VBox createFilmBox(Film film) {
-        String posterPath = "/Image/" + film.getPosterUrl() + ".png";
-        InputStream is = getClass().getResourceAsStream(posterPath);
-        if (is == null) {
-            System.out.println("Không tìm thấy ảnh: " + posterPath);
-            return null;
-        }
-
-        Image image = new Image(is);
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(160);
-        imageView.setFitHeight(190);
-        imageView.setPreserveRatio(true);
-        imageView.setSmooth(true);
-
-        Label nameLabel = new Label(film.getName());
-        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        Label directorLabel = new Label("Đạo diễn: " + film.getDirector());
-
-        Button bookButton = new Button("🎟️ Đặt vé");
-        bookButton.setStyle("-fx-background-color: #0078D7; -fx-text-fill: white;");
-        bookButton.setOnAction(event -> {
-            System.out.println("Hiển thị thông tin chi tiết cho phim: " + film.getName());
-            setFilmDetails(film);
-
-            // Hiển thị form chi tiết phim (showFilmDetail)
-            showfilmdetail.setVisible(true); // Nếu nó là phần riêng biệt trong UI của bạn
-        });
-
-        VBox filmBox = new VBox(8, imageView, nameLabel, directorLabel, bookButton);
-        filmBox.setAlignment(Pos.CENTER);
-        filmBox.setPadding(new Insets(10));
-        filmBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ccc; -fx-border-radius: 8; -fx-background-radius: 8;");
-        filmBox.setPrefWidth(180);
-
-        return filmBox;
-    }
-
-    private void showFilms(List<Film> films) {
-        int count = 0;
-        for (Film film : films) {
-            if (count >= 8) break;
-
-            try {
-                VBox filmBox1 = createFilmBox(film);
-                VBox filmBox2 = createFilmBox(film); // mỗi nơi 1 box riêng
-
-                if (filmBox1 != null) moviePosters.getChildren().add(filmBox1);
-                if (filmBox2 != null) moviePosters1.getChildren().add(filmBox2);
-
-                count++;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void setFilmDetails(Film film) {
-        filmNameLabel.setText("Tên phim: " + film.getName());
-        filmDirectorLabel.setText("Đạo diễn: " + film.getDirector());
-        filmActorLabel.setText("Diễn viên: " + film.getActor());
-        filmReleaseDateLabel.setText("Ngày phát hành: " + film.getReleaseDate());
-        filmLengthLabel.setText("Thời lượng: " + film.getLength() + " phút");
-        filmAgeLimitLabel.setText("Giới hạn tuổi: " + film.getAgeLimit() + "+");
-
-        // Nội dung phim
-        filmContentLabel.setText(film.getContent());
-
-        // Cập nhật ảnh poster của phim
-        String posterPath = "/Image/" + film.getPosterUrl() + ".png"; // Ví dụ: "inception"
-        Image image = new Image(getClass().getResourceAsStream(posterPath));
-        filmPosterImageView.setImage(image);
-
-        // Hiển thị trailer
-        loadTrailer(film.getTrailer());
-    }
-
-    private void loadTrailer(String youtubeUrl) {
-        if (youtubeUrl == null || youtubeUrl.isEmpty()) return;
-
-        // Chuyển từ dạng https://www.youtube.com/watch?v=xxx thành https://www.youtube.com/embed/xxx
-        String embedUrl = youtubeUrl.replace("watch?v=", "embed/");
-
-        // Giảm kích thước và căn giữa iframe bên trong WebView
-        String embedHTML = """
-        <html>
-            <body style='margin:0px;padding:0px;display:flex;justify-content:center;align-items:center;height:100%%;'>
-                <iframe width='100%%' height='100%%' 
-                        src='%s?autoplay=1'
-                        frameborder='0' allow='autoplay; encrypted-media' allowfullscreen>
-                </iframe>
-            </body>
-        </html>
-        """.formatted(embedUrl);
-
-        WebEngine webEngine = webView.getEngine();
-        webEngine.loadContent(embedHTML);
-    }
     //Mở cap nhật thông tin
     private void clearInfoInput()
     {
@@ -398,122 +426,5 @@ public class MainMenuController implements Initializable {
             alert.setContentText("Lưu thông tin thất bại. Vui lòng kiểm tra lại dữ liệu.");
             alert.showAndWait();
         }
-    }
-
-
-    private final MovieShowDao movieShowDao = new MovieShowDao();
-    private final FilmDao filmDao = new FilmDao();
-
-
-
-    private void handleDateButtonClick(LocalDate date) {
-        System.out.println("Ngày đã chọn: " + date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-
-        // Hiển thị lịch chiếu cho ngày đã chọn
-        showScheduleForDate(date);
-    }
-
-    private void showScheduleForDate(LocalDate date) {
-        // Xóa lịch chiếu cũ
-        scheduleContainer.getChildren().clear();
-
-        // Lấy các lịch chiếu cho ngày đã chọn
-        List<MovieShow> movieShows = movieShowDao.getShowsByDate(date);
-        if (movieShows.isEmpty()) {
-            Label noShowsLabel = new Label("Không có lịch chiếu cho ngày này.");
-            noShowsLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #777;");
-            scheduleContainer.getChildren().add(noShowsLabel);
-        } else {
-            // Hiển thị lịch chiếu
-            displaySchedule(movieShows);
-        }
-    }
-
-    private void displaySchedule(List<MovieShow> movieShows) {
-        // Xóa lịch chiếu cũ
-        scheduleContainer.getChildren().clear();
-
-        // Dùng một Map để nhóm các lịch chiếu theo filmId
-        Map<Integer, List<MovieShow>> movieShowMap = movieShows.stream()
-                .collect(Collectors.groupingBy(MovieShow::getFilmId));
-
-        // Lặp qua các bộ phim (filmId)
-        for (Map.Entry<Integer, List<MovieShow>> entry : movieShowMap.entrySet()) {
-            Integer filmId = entry.getKey();
-            List<MovieShow> showsForFilm = entry.getValue();
-
-            // Lấy thông tin phim từ filmId
-            Film film = filmDao.getFilmById(filmId);
-            String posterPath = "/Image/" + film.getPosterUrl() + ".png"; // Kiểm tra đúng đường dẫn ảnh
-            InputStream is = getClass().getResourceAsStream(posterPath);
-
-            if (is == null) {
-                System.out.println("Không tìm thấy ảnh: " + posterPath);
-                continue; // Tiếp tục với phim khác nếu không tìm thấy ảnh
-            }
-
-            Image image = new Image(is);
-            ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(160);
-            imageView.setFitHeight(190);
-            imageView.setPreserveRatio(true);
-            imageView.setSmooth(true);
-
-            // Tạo VBox chứa tên phim trên poster
-            VBox filmNameBox = new VBox(5);
-            Label filmNameLabel = new Label(film.getName());
-            filmNameLabel.setFont(new Font("Arial", 18));
-            filmNameLabel.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
-            filmNameBox.getChildren().add(filmNameLabel);
-
-            // Tạo HBox chứa poster và tên phim (tên phim trên cùng, poster dưới)
-            VBox posterBox = new VBox(10);
-            posterBox.setStyle("-fx-alignment: center; -fx-padding: 10px;");
-            posterBox.getChildren().addAll(filmNameBox, imageView); // Poster dưới tên phim
-
-            // Tạo VBox để chứa lịch chiếu của bộ phim
-            VBox scheduleBox = new VBox(10);
-            scheduleBox.setStyle("-fx-alignment: top-left; -fx-padding: 10px;");
-
-            // Thêm lịch chiếu vào VBox
-            for (MovieShow movieShowDetails : showsForFilm) {
-                String showStart = movieShowDetails.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm"));
-                String showEnd = movieShowDetails.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"));
-
-                String showDetails = "Bắt đầu: " + showStart + " | Kết thúc: " + showEnd;
-                Label showLabel = new Label(showDetails);
-                showLabel.setStyle("-fx-font-size: 14px; -fx-padding: 10px; " +
-                        "-fx-background-color: transparent; -fx-border-color: #32CD32; " +
-                        "-fx-border-radius: 8px; -fx-border-width: 2; " +
-                        "-fx-text-fill: black;");
-
-                scheduleBox.getChildren().add(showLabel);
-            }
-
-            // Tạo HBox để chứa cả poster và lịch chiếu
-            HBox movieBox = new HBox(20);
-            movieBox.setStyle("-fx-alignment: top-left; -fx-spacing: 15px;");  // Đảm bảo các thành phần không bị chồng
-            movieBox.getChildren().addAll(posterBox, scheduleBox);  // Lịch chiếu nằm bên phải, poster bên trái
-
-            // Thêm movieBox vào scheduleContainer
-            scheduleContainer.getChildren().add(movieBox);
-        }
-    }
-
-    private void styleButton(Button button) {
-        button.setFont(new Font("Arial", 16));
-        button.setTextFill(Color.BLACK);
-        button.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 15; -fx-background-radius: 15;");
-        button.setMinWidth(150);
-        button.setMinHeight(50);
-        button.setEffect(new DropShadow(10, Color.BLACK));
-
-        // Cập nhật hover hiệu ứng để bỏ border-radius
-        button.setOnMouseEntered(e -> button.setStyle(
-                "-fx-background-color: #e0e0e0; -fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 0; -fx-background-radius: 0;"
-        ));
-        button.setOnMouseExited(e -> button.setStyle(
-                "-fx-background-color: white; -fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 15; -fx-background-radius: 15;"
-        ));
     }
 }
