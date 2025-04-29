@@ -5,18 +5,23 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1160.0" stylesheets="@../CSS/MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.MainMenuController">
+<AnchorPane maxWidth="1.7976931348623157E308" prefHeight="800.0" prefWidth="1160.0" stylesheets="@../CSS/MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.MainMenuController">
 
     <children>
       <Pane>
@@ -51,7 +56,7 @@
       </Pane>
       <Pane layoutY="153.0" prefHeight="650.0" prefWidth="1232.0">
          <children>
-             <Pane fx:id="mainMenuForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="main-content" visible="false">
+             <Pane fx:id="mainMenuForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="main-content">
                  <children>
                      <ImageView fx:id="bannerImage" fitHeight="350.0" fitWidth="700.0" layoutX="230.0" preserveRatio="true">
                          <image>
@@ -66,9 +71,9 @@
              </Pane>
 
 
-             <Pane fx:id="movieForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="movie-content" visible="false">
+             <Pane fx:id="movieForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1160.0" styleClass="movie-content" visible="false">
                <children>
-                  <ScrollPane layoutX="226.0" prefHeight="646.0" prefWidth="840.0">
+                  <ScrollPane layoutX="160.0" layoutY="2.0" prefHeight="646.0" prefWidth="840.0">
                      <content>
                         <FlowPane fx:id="moviePosters1" prefHeight="15.0" prefWidth="839.0" />
                      </content>
@@ -222,6 +227,89 @@
             <DatePicker fx:id="birthConfirm" layoutX="64.0" layoutY="235.0" styleClass="text-field-info" />
          </children>
       </Pane>
+      <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefWidth="1160.0" spacing="20.0" style="-fx-padding: 20;" visible="false">
+         <children>
+            <HBox alignment="CENTER" layoutX="20.0" layoutY="20.0" spacing="350.0">
+               <children>
+                  <Button fx:id="backButton" styleClass="back-button" text="← Quay lại" />
+                  <Label layoutX="20.0" styleClass="titleLabel" text="CHỌN GHẾ" />
+                  <Button fx:id="payButton" styleClass="pay-button" text="Thanh toán →" />
+               </children>
+            </HBox>
+            <Label alignment="CENTER" maxWidth="928.0" style="-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px;" text="MÀN HÌNH" />
+            <ScrollPane fx:id="seatScrollPane" fitToWidth="true" layoutY="-40.0" prefHeight="300.0" style="-fx-background-color: transparent;">
+               <content>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <GridPane fx:id="seatGrid" alignment="CENTER" hgap="10" vgap="10" />
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <HBox alignment="CENTER" layoutY="-100.0" spacing="30.0" style="-fx-padding: 10;">
+               <children>
+                  <HBox alignment="CENTER" spacing="8.0">
+                     <children>
+                        <StackPane />
+                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Ghế Thường: 70,000 VNĐ" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="8.0">
+                     <children>
+                        <StackPane />
+                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Ghế VIP: 100,000 VNĐ" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="8.0">
+                     <children>
+                        <StackPane />
+                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Đang chọn" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="8.0">
+                     <children>
+                        <StackPane />
+                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Đã đặt" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <Label layoutY="-50.0" prefHeight="40.0" prefWidth="206.0" text="CHỌN THỨC ĂN/ĐỒ UỐNG" textAlignment="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TableView fx:id="foodDrinkTableView" layoutY="-100.0" prefHeight="200.0" prefWidth="600.0" style="&#10;                            -fx-border-width: 2px; /* Viền dày */&#10;                        ">
+               <columns>
+                  <TableColumn fx:id="nameColumn" prefWidth="200.0" style="&#10;                                    -fx-text-fill: #003366; /* Màu chữ xanh đậm */&#10;                                " text="Tên Món">
+                     <cellValueFactory>
+                        <PropertyValueFactory property="food.name" />
+                     </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="descriptionColumn" prefWidth="272.66668701171875" style="&#10;                                    -fx-text-fill: #003366; /* Màu chữ xanh đậm */&#10;                                " text="Mô Tả">
+                     <cellValueFactory>
+                        <PropertyValueFactory property="food.description" />
+                     </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="quantityColumn" prefWidth="195.33331298828125" style="&#10;                                    -fx-text-fill: #003366; /* Màu chữ xanh đậm */&#10;                                " text="Số Lượng">
+                     <cellValueFactory>
+                        <PropertyValueFactory property="count" />
+                     </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="priceColumn" prefWidth="221.99993896484375" style="&#10;                                    -fx-text-fill: #003366; /* Màu chữ xanh đậm */&#10;                                " text="Giá">
+                     <cellValueFactory>
+                        <PropertyValueFactory property="food.cost" />
+                     </cellValueFactory>
+                  </TableColumn>
+                  <TableColumn fx:id="totalColumn" prefWidth="215.33319091796875" style="&#10;                                    -fx-text-fill: #003366; /* Màu chữ xanh đậm */&#10;                                " text="Tổng Tiền">
+                     <cellValueFactory>
+                        <PropertyValueFactory property="totalPrice" />
+                     </cellValueFactory>
+                  </TableColumn>
+               </columns>
+            </TableView>
+         </children>
+      </VBox>
 
 
 
