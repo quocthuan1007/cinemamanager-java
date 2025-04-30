@@ -126,6 +126,9 @@ public class MainManagerController implements Initializable {
     private TableColumn<UserAccount, String> emailUser;
 
     @FXML
+    private TextField searchEmailField;
+
+    @FXML
     private TableColumn<UserAccount, String> genderUser;
 
     @FXML
@@ -203,9 +206,18 @@ public class MainManagerController implements Initializable {
         userController.onPlayerCloseInfoConfirm(event);
     }
 
+    public TextField getSearchEmailField() {
+        return searchEmailField;
+    }
+
     @FXML
     void onPlayerSaveInfoConfirm(ActionEvent event) {
         userController.onPlayerSaveInfoConfirm(event);
+    }
+    @FXML
+    void onSearchByEmail(ActionEvent event)
+    {
+        userController.onSearchByEmail(event);
     }
     //
 }

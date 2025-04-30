@@ -40,7 +40,7 @@ public class ManageUserController {
     private DatePicker birthConfirm;
     private TextField addressConfirm;
     private Pane infoForm;
-
+    private TextField searchEmailField;
     private UserAccount currentSelectedUser;
 
     public ManageUserController(MainManagerController mainMenu) {
@@ -58,6 +58,7 @@ public class ManageUserController {
         this.emailUser = mainMenu.getEmailUser();
         this.addUser = mainMenu.getAddUser();
         this.tableUser = mainMenu.getTableUser();
+        this.searchEmailField = mainMenu.getSearchEmailField();
     }
 
     public void init()
@@ -231,6 +232,24 @@ public class ManageUserController {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Lưu thông tin thất bại. Vui lòng kiểm tra lại dữ liệu.");
         }
+    }
+    public void onSearchByEmail(ActionEvent event) {
+        String keyword = searchEmailField.getText().trim().toLowerCase();
+
+        if (keyword.isEmpty()) {
+            tableUser.setItems(userAccounts); // Hiển thị lại toàn bộ danh sách
+            return;
+        }
+
+        ObservableList<UserAccount> filteredList = FXCollections.observableArrayList();
+
+        for (UserAccount ua : userAccounts) {
+            if (ua.getEmail().toLowerCase().contains(keyword)) {
+                filteredList.add(ua);
+            }
+        }
+
+        tableUser.setItems(filteredList);
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
