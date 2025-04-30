@@ -6,6 +6,7 @@ import com.utc2.cinema.model.entity.Film;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -140,5 +141,37 @@ public class FilmDao {
 
         return films;
     }
+    public static boolean insertFilm(Film film) {
+        String sql = "INSERT INTO film (name, country, length, director, actor, ageLimit, filmStatus, trailer, content, adPosterUrl, posterUrl, releaseDate) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, film.getName());
+            stmt.setString(2, film.getCountry());
+            stmt.setInt(3, film.getLength());
+            stmt.setString(4, film.getDirector());
+            stmt.setString(5, film.getActor());
+            stmt.setInt(6, film.getAgeLimit());
+            stmt.setString(7, film.getFilmStatus());
+            stmt.setString(8, film.getTrailer());
+            stmt.setString(9, film.getContent());
+            stmt.setString(10, film.getAdPosterUrl());
+            stmt.setString(11, film.getPosterUrl());
+
+            // Dùng Timestamp thay vì Date
+            if (film.getReleaseDate() != null) {
+                stmt.setTimestamp(12, new java.sql.Timestamp(film.getReleaseDate().getTime()));
+            } else {
+                stmt.setTimestamp(12, null);
+            }
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
 
