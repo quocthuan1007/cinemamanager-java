@@ -87,7 +87,7 @@ public class FilmDisplayController
         filmBox.setPadding(new Insets(10));
         filmBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ccc; -fx-border-radius: 8; -fx-background-radius: 8;");
         filmBox.setPrefWidth(180);
-        FlowPane.setMargin(filmBox, new Insets(10, 14, 10,14));
+        FlowPane.setMargin(filmBox, new Insets(10, 12, 10,12));
         return filmBox;
     }
 

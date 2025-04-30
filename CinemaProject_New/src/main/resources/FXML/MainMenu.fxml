@@ -72,16 +72,13 @@
              </Pane>
 
 
-             <Pane fx:id="movieForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1160.0" styleClass="movie-content" visible="false">
+             <Pane fx:id="movieForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1160.0" styleClass="movie-content">
                <children>
 
-                  <ScrollPane layoutX="110.0" prefHeight="646.0" prefWidth="840.0">
                   <ScrollPane layoutX="160.0" layoutY="2.0" prefHeight="646.0" prefWidth="840.0">
-
                      <content>
-                        <FlowPane fx:id="moviePosters1" prefHeight="15.0" prefWidth="839.0" />
+                        <FlowPane fx:id="moviePosters1" prefHeight="10.0" prefWidth="831.0" />
                      </content>
-                  </ScrollPane>
                   </ScrollPane>
                </children>
              </Pane>
