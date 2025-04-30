@@ -22,6 +22,12 @@ public class Bill {
         this.datePurchased = datePurchased;
         this.billStatus = billStatus;
     }
+    public Bill( int userId, Date datePurchased, String billStatus) {
+
+        this.userId = userId;
+        this.datePurchased = datePurchased;
+        this.billStatus = billStatus;
+    }
 
     public String getBillStatus() {
         return billStatus;

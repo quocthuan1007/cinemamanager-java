@@ -56,7 +56,7 @@ public class ReservationDao {
     }
 
     // Thêm mới Reservation
-    public boolean insertReservation(Reservation reservation) {
+    public static boolean insertReservation(Reservation reservation) {
         String query = "INSERT INTO Reservation (BillId, SeatId, ShowId, Cost, SeatTypeName) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = Database.getConnection();

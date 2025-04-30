@@ -42,7 +42,7 @@ public class FoodDao {
     }
 
     // Lấy món ăn theo ID
-    public Food getFoodById(int foodId) {
+    public static Food getFoodById(int foodId) {
         if (foodId <= 0) {
             System.out.println("ID món ăn không hợp lệ.");
             return null; // Nếu foodId không hợp lệ (<= 0), trả về null.
