@@ -2,10 +2,7 @@ package com.utc2.cinema.controller;
 
 import com.utc2.cinema.dao.FilmDao;
 import com.utc2.cinema.dao.MovieShowDao;
-import com.utc2.cinema.model.entity.Film;
-import com.utc2.cinema.model.entity.MovieShow;
-import com.utc2.cinema.model.entity.User;
-import com.utc2.cinema.model.entity.UserSession;
+import com.utc2.cinema.model.entity.*;
 import com.utc2.cinema.service.FilmService;
 import com.utc2.cinema.service.UserService;
 import javafx.animation.FadeTransition;
@@ -118,11 +115,129 @@ public class MainMenuController implements Initializable {
     @FXML private Label filmContentLabel;
     @FXML private ImageView filmPosterImageView;
     @FXML private WebView webView; // WebView để hiển thị trailer
-
     @FXML
     private FlowPane dateFlowPane;
     @FXML
     private VBox scheduleContainer;
+
+
+    @FXML private Label filmNameLabel1;
+    @FXML private Label showTimeLabel;
+    @FXML private Label roomLabel;
+    @FXML private Label seatLabel;
+    @FXML private Label comboLabel;
+    @FXML private Label totalLabel;
+    @FXML private Pane billPane;
+    @FXML private Pane paySuccessPane;
+    @FXML private VBox scheduleContainerOfFilm;
+    @FXML private VBox filmsContainer;
+    @FXML private VBox filmListVBox;
+    @FXML private VBox scheduleListVBox;
+    @FXML private AnchorPane seatSelectionPane;
+    @FXML private Button backButton;
+    @FXML private GridPane seatGrid;
+    @FXML private Label screenLabel;
+    @FXML private VBox foodDrinkVBox;
+    @FXML private TableView<FoodOrder> foodDrinkTableView;
+    @FXML private TableColumn<FoodOrder, String> nameColumn;
+    @FXML private TableColumn<FoodOrder, String> descriptionColumn;
+    @FXML private TableColumn<FoodOrder, Integer> priceColumn;
+    @FXML private TableColumn<FoodOrder, Integer> quantityColumn;
+    @FXML private TableColumn<FoodOrder, Integer> totalColumn;
+
+    // Getter methods
+    public Label getFilmNameLabel1() {
+        return filmNameLabel1;
+    }
+
+    public Label getShowTimeLabel() {
+        return showTimeLabel;
+    }
+
+    public Label getRoomLabel() {
+        return roomLabel;
+    }
+
+    public Label getSeatLabel() {
+        return seatLabel;
+    }
+
+    public Label getComboLabel() {
+        return comboLabel;
+    }
+
+    public Label getTotalLabel() {
+        return totalLabel;
+    }
+
+    public Pane getBillPane() {
+        return billPane;
+    }
+
+    public Pane getPaySuccessPane() {
+        return paySuccessPane;
+    }
+
+    public VBox getScheduleContainerOfFilm() {
+        return scheduleContainerOfFilm;
+    }
+
+    public VBox getFilmsContainer() {
+        return filmsContainer;
+    }
+
+    public VBox getFilmListVBox() {
+        return filmListVBox;
+    }
+
+    public VBox getScheduleListVBox() {
+        return scheduleListVBox;
+    }
+
+    public AnchorPane getSeatSelectionPane() {
+        return seatSelectionPane;
+    }
+
+    public Button getBackButton() {
+        return backButton;
+    }
+
+    public GridPane getSeatGrid() {
+        return seatGrid;
+    }
+
+    public Label getScreenLabel() {
+        return screenLabel;
+    }
+
+    public VBox getFoodDrinkVBox() {
+        return foodDrinkVBox;
+    }
+
+    public TableView<FoodOrder> getFoodDrinkTableView() {
+        return foodDrinkTableView;
+    }
+
+    public TableColumn<FoodOrder, String> getNameColumn() {
+        return nameColumn;
+    }
+
+    public TableColumn<FoodOrder, String> getDescriptionColumn() {
+        return descriptionColumn;
+    }
+
+    public TableColumn<FoodOrder, Integer> getPriceColumn() {
+        return priceColumn;
+    }
+
+    public TableColumn<FoodOrder, Integer> getQuantityColumn() {
+        return quantityColumn;
+    }
+
+    public TableColumn<FoodOrder, Integer> getTotalColumn() {
+        return totalColumn;
+    }
+
 
     public TextField getAddressConfirm() {
         return addressConfirm;
@@ -271,6 +386,7 @@ public class MainMenuController implements Initializable {
     private FilmDisplayController filmDisplayController;
     private ScheduleDisplayController scheduleDisplayController;
     private UserConfirmController userConfirmController;
+    private BuyTicketController buyTicketController;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setupMainForm();
@@ -284,6 +400,10 @@ public class MainMenuController implements Initializable {
         
         filmDisplayController = new FilmDisplayController(this);
         filmDisplayController.setupFilms();
+
+        buyTicketController = new BuyTicketController(this);
+        buyTicketController.initialize();
+
     }
     ///  confirm-info
     @FXML
@@ -298,6 +418,27 @@ public class MainMenuController implements Initializable {
     void onPlayerCloseInfoConfirm(ActionEvent event) {
         userConfirmController.onPlayerCloseInfoConfirm(event);
     }
+
+    @FXML
+    void onBack() {
+        buyTicketController.onBack(); // ủy quyền xử lý qua controller thật sự
+    }
+    @FXML
+    void onBackToSchedule() {
+        buyTicketController.onBackToSchedule();
+    }
+
+    @FXML
+    void onPay() {
+        buyTicketController.onPay();
+    }
+
+    @FXML
+    void onAppcetPay() {
+        buyTicketController.onAppcetPay();
+    }
+
+
     private void setupMainForm() {
         mainMenuForm.setVisible(true);
         introForm.setVisible(false);

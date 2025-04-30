@@ -2,58 +2,93 @@ package com.utc2.cinema.controller;
 
 import com.utc2.cinema.dao.*;
 import com.utc2.cinema.model.entity.*;
+import com.utc2.cinema.service.FilmService;
+import com.utc2.cinema.service.UserService;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class test {
+public class BuyTicketController {
+    private MainMenuController mainMenu = new MainMenuController();
 
-    @FXML
+    private Label filmNameLabel1;
+    private Label showTimeLabel;
+    private Label roomLabel;
+    private Label seatLabel;
+    private Label comboLabel;
+    private Label totalLabel;
+    private Pane billPane;
+    private Pane paySuccessPane;
     private VBox scheduleContainerOfFilm;
-    @FXML
     private VBox filmsContainer;
-    @FXML
     private VBox filmListVBox; // Thêm phần chọn phim
-    @FXML
     private VBox scheduleListVBox; // Thêm phần chọn suất chiếu
-    @FXML
     private AnchorPane seatSelectionPane; // Phần chọn ghế
-    @FXML
     private Button backButton; // Nút quay lại
-    @FXML
     private GridPane seatGrid;
-    @FXML
+    private MovieShow selectedMovieShow;
     private Label screenLabel;
-    @FXML
     private VBox foodDrinkVBox;
+    private TableView<FoodOrder> foodDrinkTableView;
+    private TableColumn<FoodOrder, String> nameColumn;
+    private TableColumn<FoodOrder, String> descriptionColumn;
+    private TableColumn<FoodOrder, Integer> priceColumn;
+    private TableColumn<FoodOrder, Integer> quantityColumn;
+    private TableColumn<FoodOrder, Integer> totalColumn;
+
     private Set<String> selectedSeats = new HashSet<>();
     private double seatTotalPrice = 0;
     private final MovieShowDao movieShowDao = new MovieShowDao();
     private final RoomDao roomDao = new RoomDao();
     private final FilmDao filmDao = new FilmDao();
+    private Film selectedFilm;
+    private List<FoodOrder> foodOrderList = new ArrayList<>();
+    private ObservableList<FoodOrder> foodOrderObservableList = FXCollections.observableArrayList();
+    private List<Food> foodList = new ArrayList<>();
 
-    @FXML
+    public BuyTicketController(MainMenuController mainMenu) {
+
+        this.filmNameLabel1 = mainMenu.getFilmNameLabel1(); // Giả sử bạn đã tạo getter trong MainMenuController
+        this.showTimeLabel = mainMenu.getShowTimeLabel();
+        this.roomLabel = mainMenu.getRoomLabel();
+        this.seatLabel = mainMenu.getSeatLabel();
+        this.comboLabel = mainMenu.getComboLabel();
+        this.totalLabel = mainMenu.getTotalLabel();
+        this.billPane = mainMenu.getBillPane();
+        this.paySuccessPane = mainMenu.getPaySuccessPane();
+        this.scheduleContainerOfFilm = mainMenu.getScheduleContainerOfFilm();
+        this.filmsContainer = mainMenu.getFilmsContainer();
+        this.filmListVBox = mainMenu.getFilmListVBox();
+        this.scheduleListVBox = mainMenu.getScheduleListVBox();
+        this.seatSelectionPane = mainMenu.getSeatSelectionPane();
+        this.backButton = mainMenu.getBackButton();
+        this.seatGrid = mainMenu.getSeatGrid();
+        this.screenLabel = mainMenu.getScreenLabel();
+        this.foodDrinkVBox = mainMenu.getFoodDrinkVBox();
+        this.foodDrinkTableView = mainMenu.getFoodDrinkTableView();
+        this.nameColumn = mainMenu.getNameColumn();
+        this.descriptionColumn = mainMenu.getDescriptionColumn();
+        this.priceColumn = mainMenu.getPriceColumn();
+        this.quantityColumn = mainMenu.getQuantityColumn();
+        this.totalColumn = mainMenu.getTotalColumn();
+    }
+
     public void initialize() {
         showAllFilms();
 
@@ -67,7 +102,125 @@ public class test {
         billPane.setVisible(false);
         seatSelectionPane.setVisible(false);
     }
-    private Film selectedFilm;
+    @FXML
+    public void onBack() {
+        // Ẩn Pane hóa đơn khi nhấn Quay lại
+        billPane.setVisible(false);
+
+    }
+
+    @FXML
+    public void onBackToSchedule() {
+
+        total = 0;
+        seatTotalPrice = 0;
+        selectedSeats.clear();    // Xóa hết ghế đã chọn
+
+        displayFoodOrders();      // Cập nhật lại TableView đồ ăn
+
+        // Cập nhật hiển thị giao diện
+        filmListVBox.setVisible(true);
+        scheduleListVBox.setVisible(true);
+        seatSelectionPane.setVisible(false);
+        paySuccessPane.setVisible(false);
+        // Reset nhãn tổng tiền nếu hiển thị ở đây
+        totalLabel.setText("Tổng tiền: 0 VNĐ");
+
+    }
+    public void onPay() {
+        if (selectedFilm != null) {
+            String filmName = selectedFilm.getName();  // Lấy tên phim
+            String showTime = selectedMovieShow.getStartTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
+                    " | " + selectedMovieShow.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
+                    " - " + selectedMovieShow.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"));// Cập nhật thông tin thời gian chiếu
+            String room = "Phòng " + selectedMovieShow.getRoomId();  // Cập nhật thông tin phòng
+            String seat = String.join(", ", selectedSeats);   // Cập nhật thông tin ghế
+            String combo = foodOrderList.stream()
+                    .filter(foodOrder -> foodOrder.getCount() > 0)  // Chỉ lấy món ăn có số lượng lớn hơn 0
+                    .map(foodOrder -> foodOrder.getFood().getName() + " (" + foodOrder.getCount() + ")")  // Lấy tên món ăn và số lượng
+                    .collect(Collectors.joining(", "));  // Nối các tên món ăn và số lượng với dấu ", "
+            // Nối các tên món ăn và số lượng với dấu ", "
+            // Cập nhật combo
+            double totalPrice = total;  // Tổng tiền
+
+            // Cập nhật thông tin hóa đơn vào các Label
+            filmNameLabel1.setText(filmName);
+            showTimeLabel.setText(showTime);
+            roomLabel.setText(room);
+            seatLabel.setText(seat);
+            comboLabel.setText(combo);
+            totalLabel.setText(totalPrice + " VNĐ");
+
+            // Hiển thị Pane hóa đơn
+            billPane.setVisible(true);
+        }
+    }
+    public void onAppcetPay() {
+        try {
+            // Kiểm tra xem UserSession đã được tạo chưa
+            if (UserSession.getInstance() == null) {
+                System.out.println("User session is not available.");
+                return; // Nếu session không có, dừng hàm và thông báo lỗi
+            }
+
+            // Lấy thông tin người dùng từ UserService
+            User Info = UserService.getUser(UserSession.getInstance().getUserId());
+            if (Info == null) {
+                System.out.println("User information not found.");
+                return; // Nếu không tìm thấy thông tin người dùng, dừng hàm
+            }
+
+            int userId = Info.getId();
+            String billStatus = "PAID";
+            Date datePurchased = new Date(System.currentTimeMillis());
+
+            // Tạo đối tượng Bill
+            Bill bill = new Bill(userId, datePurchased, billStatus);
+            boolean isBillSaved = BillDao.insertBill(bill);
+
+            if (isBillSaved) {
+                int billId = bill.getId();
+
+                // Xử lý các ghế đã chọn
+                for (String seatPosition : selectedSeats) {
+                    Seats seat = SeatDao.getSeatByPositionAndRoom(seatPosition, selectedMovieShow.getRoomId());
+                    if (seat == null) continue;
+
+                    SeatType seatType = SeatTypeDao.getSeatTypeById(seat.getSeatTypeId());
+                    if (seatType == null) continue;
+
+                    // Tạo đối tượng Reservation
+                    Reservation reservation = new Reservation(
+                            0,                          // id (auto increment)
+                            bill.getId(),               // billId
+                            seat.getId(),               // seatId
+                            selectedMovieShow.getId(),  // showId
+                            seatType.getCost(),         // cost
+                            seatType.getName()          // seatTypeName
+                    );
+                    ReservationDao.insertReservation(reservation);
+                }
+
+                // Xử lý các món ăn đã chọn
+                for (FoodOrder foodOrder : foodOrderList) {
+                    if (foodOrder.getCount() > 0) {
+                        // Không cần tính tổng tiền vào cơ sở dữ liệu, chỉ cần lưu các món ăn đã chọn
+                        foodOrder.setBillId(billId);
+                        FoodOrderDao.insertFoodOrder(foodOrder);
+                    }
+                }
+
+                // Hiển thị giao diện thanh toán thành công
+                paySuccessPane.setVisible(true);
+                billPane.setVisible(false);
+            } else {
+                System.out.println("Thanh toán không thành công!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // In lỗi nếu có
+            System.out.println("Đã xảy ra lỗi trong quá trình thanh toán.");
+        }
+    }
 
     private void showAllFilms() {
         List<Film> allFilms = FilmDao.getAllFilms();
@@ -126,7 +279,6 @@ public class test {
             filmsContainer.getChildren().add(filmBox);
         }
     }
-    private MovieShow selectedMovieShow;
 
     private void showMovieShowOfFilm(int filmId) {
         selectedFilm = filmDao.getFilmById(filmId);
@@ -222,241 +374,91 @@ public class test {
                 return "PG";
         }
     }
-    @FXML
-    private Label filmNameLabel1;
-    @FXML
-    private Label showTimeLabel;
-    @FXML
-    private Label roomLabel;
-    @FXML
-    private Label seatLabel;
-    @FXML
-    private Label comboLabel;
-    @FXML
-    private Label totalLabel;
-    @FXML
-    private Pane billPane;
-    @FXML
-    private Pane paySuccessPane;
 
 
-    @FXML
-    public void onBack() {
-        // Ẩn Pane hóa đơn khi nhấn Quay lại
-        billPane.setVisible(false);
+    private void openSeatSelection(int roomId, int showId) {
+        Room room = roomDao.getRoomById(roomId);
+        int rows = room.getNumRows();
+        int columns = room.getNumCols();
 
-    }
+        seatGrid.getChildren().clear();
+        seatGrid.setPadding(new Insets(30));
+        seatGrid.setHgap(15);
+        seatGrid.setVgap(15);
+        seatGrid.setAlignment(Pos.CENTER);
 
-    @FXML
-    public void onBackToSchedule() {
+        Image seatNormal = new Image(getClass().getResourceAsStream("/Image/ghe thuong.png"));
+        Image seatVip = new Image(getClass().getResourceAsStream("/Image/ghe vip.png"));
 
-        total = 0;
-        seatTotalPrice = 0;
-        selectedSeats.clear();    // Xóa hết ghế đã chọn
+        List<String> reservedSeats = new ReservationDao().getReservedSeatsByShowId(showId);
+        int centerColumn = columns / 2;
 
-        displayFoodOrders();      // Cập nhật lại TableView đồ ăn
-
-        // Cập nhật hiển thị giao diện
-        filmListVBox.setVisible(true);
-        scheduleListVBox.setVisible(true);
-        seatSelectionPane.setVisible(false);
-        paySuccessPane.setVisible(false);
-        // Reset nhãn tổng tiền nếu hiển thị ở đây
-        totalLabel.setText("Tổng tiền: 0 VNĐ");
-
-    }
-    public void onPay() {
-        if (selectedFilm != null) {
-            String filmName = selectedFilm.getName();  // Lấy tên phim
-            String showTime = selectedMovieShow.getStartTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
-                    " | " + selectedMovieShow.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
-                    " - " + selectedMovieShow.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"));// Cập nhật thông tin thời gian chiếu
-            String room = "Phòng " + selectedMovieShow.getRoomId();  // Cập nhật thông tin phòng
-            String seat = String.join(", ", selectedSeats);   // Cập nhật thông tin ghế
-            String combo = foodOrderList.stream()
-                    .filter(foodOrder -> foodOrder.getCount() > 0)  // Chỉ lấy món ăn có số lượng lớn hơn 0
-                    .map(foodOrder -> foodOrder.getFood().getName() + " (" + foodOrder.getCount() + ")")  // Lấy tên món ăn và số lượng
-                    .collect(Collectors.joining(", "));  // Nối các tên món ăn và số lượng với dấu ", "
-            // Nối các tên món ăn và số lượng với dấu ", "
-            // Cập nhật combo
-            double totalPrice = total;  // Tổng tiền
-
-            // Cập nhật thông tin hóa đơn vào các Label
-            filmNameLabel1.setText(filmName);
-            showTimeLabel.setText(showTime);
-            roomLabel.setText(room);
-            seatLabel.setText(seat);
-            comboLabel.setText(combo);
-            totalLabel.setText(totalPrice + " VNĐ");
-
-            // Hiển thị Pane hóa đơn
-            billPane.setVisible(true);
-        }
-    }
-    public void onAppcetPay() {
-        int userId = 1;
-        String billStatus = "PAID";
-        Date datePurchased = new Date(System.currentTimeMillis());
-
-        // Tạo đối tượng Bill
-        Bill bill = new Bill(userId, datePurchased, billStatus);
-        boolean isBillSaved = BillDao.insertBill(bill);
-
-        if (isBillSaved) {
-            int billId = bill.getId();
-            // Xử lý các ghế đã chọn
-            for (String seatPosition : selectedSeats) {
-                Seats seat = SeatDao.getSeatByPositionAndRoom(seatPosition, selectedMovieShow.getRoomId());
-                if (seat == null) continue;
-
-                SeatType seatType = SeatTypeDao.getSeatTypeById(seat.getSeatTypeId());
-                if (seatType == null) continue;
-
-                // Tạo đối tượng Reservation
-                Reservation reservation = new Reservation(
-                        0,                          // id (auto increment)
-                        bill.getId(),               // billId
-                        seat.getId(),               // seatId
-                        selectedMovieShow.getId(),  // showId
-                        seatType.getCost(),         // cost
-                        seatType.getName()          // seatTypeName
-                );
-                ReservationDao.insertReservation(reservation);
-            }
-
-            // Xử lý các món ăn đã chọn
-            for (FoodOrder foodOrder : foodOrderList) {
-                if (foodOrder.getCount() > 0) {
-                    // Không cần tính tổng tiền vào cơ sở dữ liệu, chỉ cần lưu các món ăn đã chọn
-                    foodOrder.setBillId(billId);
-                    FoodOrderDao.insertFoodOrder(foodOrder);
-                }
-            }
-
-            // Hiển thị giao diện thanh toán thành công
-            paySuccessPane.setVisible(true);
-            billPane.setVisible(false);
-        } else {
-            System.out.println("Thanh toán không thành công!");
-        }
-    }
-
-
-
-
-private void openSeatSelection(int roomId, int showId) {
-    Room room = roomDao.getRoomById(roomId);
-    int rows = room.getNumRows();
-    int columns = room.getNumCols();
-
-    seatGrid.getChildren().clear();
-    seatGrid.setPadding(new Insets(30));
-    seatGrid.setHgap(15);
-    seatGrid.setVgap(15);
-    seatGrid.setAlignment(Pos.CENTER);
-
-    Image seatNormal = new Image(getClass().getResourceAsStream("/Image/ghe thuong.png"));
-    Image seatVip = new Image(getClass().getResourceAsStream("/Image/ghe vip.png"));
-
-    List<String> reservedSeats = new ReservationDao().getReservedSeatsByShowId(showId);
-    int centerColumn = columns / 2;
-
-    // Thêm header cột
-    for (int j = 0; j < columns; j++) {
-        Label columnLabel = new Label(String.valueOf(j + 1));
-        columnLabel.setPrefSize(60, 60);
-        columnLabel.setAlignment(Pos.CENTER);
-        columnLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-        seatGrid.add(columnLabel, j + 1, 0);
-    }
-
-    for (int i = 0; i < rows; i++) {
-        char rowLetter = (char) ('A' + i);
-        Label rowLabel = new Label(String.valueOf(rowLetter));
-        rowLabel.setPrefSize(60, 60);
-        rowLabel.setAlignment(Pos.CENTER);
-        rowLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-        seatGrid.add(rowLabel, 0, i + 1);
-
+        // Thêm header cột
         for (int j = 0; j < columns; j++) {
-            String seatName = rowLetter + String.valueOf(j + 1);
-            Button btn = new Button();
-            btn.setPrefSize(60, 60);
-            btn.setCursor(Cursor.HAND);
+            Label columnLabel = new Label(String.valueOf(j + 1));
+            columnLabel.setPrefSize(60, 60);
+            columnLabel.setAlignment(Pos.CENTER);
+            columnLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+            seatGrid.add(columnLabel, j + 1, 0);
+        }
 
-            ImageView iv = new ImageView(((columns % 2 == 0 && (j == centerColumn - 1 || j == centerColumn)) ||
-                    (columns % 2 != 0 && j == centerColumn)) ? seatVip : seatNormal);
-            iv.setFitWidth(50);
-            iv.setFitHeight(50);
-            iv.setPreserveRatio(true);
-            btn.setGraphic(iv);
+        for (int i = 0; i < rows; i++) {
+            char rowLetter = (char) ('A' + i);
+            Label rowLabel = new Label(String.valueOf(rowLetter));
+            rowLabel.setPrefSize(60, 60);
+            rowLabel.setAlignment(Pos.CENTER);
+            rowLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+            seatGrid.add(rowLabel, 0, i + 1);
 
-            boolean vip = ((columns % 2 == 0 && (j == centerColumn - 1 || j == centerColumn)) ||
-                    (columns % 2 != 0 && j == centerColumn));
-            btn.setStyle(vip
-                    ? (reservedSeats.contains(seatName) ? "-fx-background-color: darkred; -fx-border-color: black; -fx-border-radius: 5px;"
-                    : "-fx-background-color: gold; -fx-border-color: black; -fx-border-radius: 5px;")
-                    : (reservedSeats.contains(seatName) ? "-fx-background-color: red; -fx-border-color: black; -fx-border-radius: 5px;"
-                    : "-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 5px;"));
+            for (int j = 0; j < columns; j++) {
+                String seatName = rowLetter + String.valueOf(j + 1);
+                Button btn = new Button();
+                btn.setPrefSize(60, 60);
+                btn.setCursor(Cursor.HAND);
 
-            Tooltip tip = new Tooltip("Ghế " + seatName + (reservedSeats.contains(seatName) ? " - Đã đặt" : ""));
-            Tooltip.install(btn, tip);
-            btn.setDisable(reservedSeats.contains(seatName));
+                ImageView iv = new ImageView(((columns % 2 == 0 && (j == centerColumn - 1 || j == centerColumn)) ||
+                        (columns % 2 != 0 && j == centerColumn)) ? seatVip : seatNormal);
+                iv.setFitWidth(50);
+                iv.setFitHeight(50);
+                iv.setPreserveRatio(true);
+                btn.setGraphic(iv);
 
-            btn.setUserData(false);
-            final String sName = seatName;
-            final boolean isVip = vip;
-            btn.setOnAction(e -> {
-                boolean sel = (boolean) btn.getUserData();
-                if (!sel) {
-                    selectedSeats.add(sName);
-                    seatTotalPrice += isVip ? 100000 : 70000;
-                    btn.setStyle("-fx-background-color: green; -fx-border-color: black; -fx-border-radius: 5px;");
-                } else {
-                    selectedSeats.remove(sName);
-                    seatTotalPrice -= isVip ? 100000 : 70000;
-                    btn.setStyle(isVip
-                            ? "-fx-background-color: gold; -fx-border-color: black; -fx-border-radius: 5px;"
-                            : "-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 5px;");
-                }
-                btn.setUserData(!sel);
-                updateTotalPrice();
-            });
+                boolean vip = ((columns % 2 == 0 && (j == centerColumn - 1 || j == centerColumn)) ||
+                        (columns % 2 != 0 && j == centerColumn));
+                btn.setStyle(vip
+                        ? (reservedSeats.contains(seatName) ? "-fx-background-color: darkred; -fx-border-color: black; -fx-border-radius: 5px;"
+                        : "-fx-background-color: gold; -fx-border-color: black; -fx-border-radius: 5px;")
+                        : (reservedSeats.contains(seatName) ? "-fx-background-color: red; -fx-border-color: black; -fx-border-radius: 5px;"
+                        : "-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 5px;"));
 
-            seatGrid.add(btn, j + 1, i + 1);
+                Tooltip tip = new Tooltip("Ghế " + seatName + (reservedSeats.contains(seatName) ? " - Đã đặt" : ""));
+                Tooltip.install(btn, tip);
+                btn.setDisable(reservedSeats.contains(seatName));
+
+                btn.setUserData(false);
+                final String sName = seatName;
+                final boolean isVip = vip;
+                btn.setOnAction(e -> {
+                    boolean sel = (boolean) btn.getUserData();
+                    if (!sel) {
+                        selectedSeats.add(sName);
+                        seatTotalPrice += isVip ? 100000 : 70000;
+                        btn.setStyle("-fx-background-color: green; -fx-border-color: black; -fx-border-radius: 5px;");
+                    } else {
+                        selectedSeats.remove(sName);
+                        seatTotalPrice -= isVip ? 100000 : 70000;
+                        btn.setStyle(isVip
+                                ? "-fx-background-color: gold; -fx-border-color: black; -fx-border-radius: 5px;"
+                                : "-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 5px;");
+                    }
+                    btn.setUserData(!sel);
+                    updateTotalPrice();
+                });
+
+                seatGrid.add(btn, j + 1, i + 1);
+            }
         }
     }
-}
-
-
-
-
-    // foodId -> count
-
-
-
-    @FXML
-    private TableView<FoodOrder> foodDrinkTableView;
-
-    @FXML
-    private TableColumn<FoodOrder, String> nameColumn;
-
-    @FXML
-    private TableColumn<FoodOrder, String> descriptionColumn;
-
-    @FXML
-    private TableColumn<FoodOrder, Integer> priceColumn;
-
-    @FXML
-    private TableColumn<FoodOrder, Integer> quantityColumn;
-
-    @FXML
-    private TableColumn<FoodOrder, Integer> totalColumn;
-
-    private List<FoodOrder> foodOrderList = new ArrayList<>();
-    private ObservableList<FoodOrder> foodOrderObservableList = FXCollections.observableArrayList();
-    private List<Food> foodList = new ArrayList<>();
-
     private void loadFoodList() {
         // Lấy danh sách món ăn từ cơ sở dữ liệu
         foodList = FoodDao.getAllFoods();  // Giả sử FoodDao lấy danh sách món ăn từ cơ sở dữ liệu
@@ -564,5 +566,4 @@ private void openSeatSelection(int roomId, int showId) {
         foodOrderList.add(foodOrder);  // Thêm món ăn vào giỏ hàng
         displayFoodOrders();  // Cập nhật lại bảng giỏ hàng
     }
-
 }

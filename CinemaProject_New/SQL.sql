@@ -333,14 +333,14 @@ VALUES
 -- Giả sử BillId = 1 và ghế A1 (SeatId = 1) được đặt cho lịch chiếu MovieShowId = 1
 INSERT INTO Reservation (BillId, SeatId, ShowId, Cost, SeatTypeName)
 VALUES
-(1, 1, 1, 50000, 'Thường'),  -- A1 cho suất 1
-(1, 2, 1, 50000, 'Thường'),  -- A2 cho suất 1
-(2, 3, 2, 50000, 'Thường'),  -- A3 cho suất 2
-(2, 4, 2, 50000, 'Thường'),  -- A4 cho suất 2
-(3, 5, 3, 50000, 'Thường'),  -- A5 cho suất 3
-(3, 6, 3, 50000, 'Thường'),  -- B1 cho suất 3
-(4, 7, 4, 50000, 'Thường'),  -- B2 cho suất 4
-(4, 8, 4, 50000, 'Thường');  -- B3 cho suất 4
+(1, 1, 1, 70000, 'Thường'),  -- A1 cho suất 1
+(1, 2, 1, 70000, 'Thường'),  -- A2 cho suất 1
+(2, 3, 2, 70000, 'Thường'),  -- A3 cho suất 2
+(2, 4, 2, 70000, 'Thường'),  -- A4 cho suất 2
+(3, 5, 3, 70000, 'Thường'),  -- A5 cho suất 3
+(3, 6, 3, 70000, 'Thường'),  -- B1 cho suất 3
+(4, 7, 4, 70000, 'Thường'),  -- B2 cho suất 4
+(4, 8, 4, 70000, 'Thường');  -- B3 cho suất 4
 
 
 -- lenh truy van ghe da duoc dat o film nao
@@ -361,6 +361,13 @@ VALUES
 --     Film f ON ms.FilmId = f.Id;
 
 
-
+-- SELECT s.*
+-- FROM Reservation r
+-- JOIN Seats s ON r.SeatId = s.Id
+-- WHERE r.BillId = 5;
+-- SELECT f.name AS food_name, f.description AS food_description, fo.count AS quantity, f.cost AS food_cost
+-- FROM Food_Order fo
+-- JOIN Food f ON fo.FoodId = f.Id
+-- WHERE fo.BillId = 5;
 
 

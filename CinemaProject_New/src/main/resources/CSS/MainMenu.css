@@ -44,11 +44,11 @@
 }
 .buy-content
 {
-    -fx-background-color: #00AA00;
+    -fx-background-color: white;
 }
 .intro-content
 {
-    -fx-background-color: #663300;
+    -fx-background-color: white;
 }
 .confirm-info
 {
