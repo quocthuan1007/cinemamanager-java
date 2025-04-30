@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AccountDao implements DaoInterface<Account>
@@ -32,6 +33,12 @@ public class AccountDao implements DaoInterface<Account>
         }
 
     }
+    @Override
+    public int deleteData(Account target)
+    {
+        return 0;
+    }
+
     @Override
     public int updateData(Account target, int option)
     {
@@ -77,10 +84,21 @@ public class AccountDao implements DaoInterface<Account>
         return rowsAffected;
     }
 
-    @Override
-    public int deleteData(Account target) {
-        return 0;
+    public static int deleteAccount(Account target) {
+        int rowsAffected = 0;
+        Connection connect = Database.getConnection();
+        try {
+            PreparedStatement st = connect.prepareStatement("DELETE FROM account WHERE id = ?");
+            st.setInt(1, target.getId());
+            rowsAffected = st.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Database.closeConnection(connect);
+        }
+        return rowsAffected;
     }
+
 
     public String getEmail(String email)
     {
@@ -133,6 +151,30 @@ public class AccountDao implements DaoInterface<Account>
 
     @Override
     public List<Account> getAllData() {
-        return null;
+        List<Account> accounts = new ArrayList<>();
+        Connection connect = Database.getConnection();
+
+        try {
+            Statement st = connect.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM account");
+
+            while (rs.next()) {
+                Account account = new Account(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("accountstatus"),
+                        rs.getInt("roleid")
+                );
+                accounts.add(account);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Database.closeConnection(connect);
+        }
+
+        return accounts;
     }
 }

@@ -90,4 +90,25 @@ public class UserDao{
         }
         return false;
     }
+    public static boolean deleteByAccountId(int accountId) {
+        Connection conn = null;
+        PreparedStatement st = null;
+
+        try {
+            conn = Database.getConnection();
+            String sql = "DELETE FROM User WHERE AccountId = ?";
+            st = conn.prepareStatement(sql);
+            st.setInt(1, accountId);
+
+            int rowsDeleted = st.executeUpdate();
+            if (rowsDeleted > 0) {
+                return true;
+            }
+            Database.closeConnection(conn);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

@@ -10,5 +10,6 @@ module CinemaProject {
     exports com.utc2.cinema.view;
     exports com.utc2.cinema.controller;
     opens com.utc2.cinema.controller to javafx.fxml;
-    opens com.utc2.cinema.model.entity to javafx.base;
+    exports com.utc2.cinema.model.entity;
+    opens com.utc2.cinema.model.entity to javafx.base, javafx.fxml;
 }
