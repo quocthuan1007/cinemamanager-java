@@ -3,6 +3,8 @@ package com.utc2.cinema.service;
 import com.utc2.cinema.dao.AccountDao;
 import com.utc2.cinema.model.entity.Account;
 
+import java.util.List;
+
 public class AccountService
 {
     public static Account findAccount(String email, String password)
@@ -23,5 +25,11 @@ public class AccountService
     public static boolean updateAccount(Account account, int option)
     {
         return new AccountDao().updateData(account, option) > 0;
+    }
+    public static List<Account> getAllAccounts() {
+        return new AccountDao().getAllData();
+    }
+    public static int deleteAccount(Account target) {
+        return AccountDao.deleteAccount(target);
     }
 }

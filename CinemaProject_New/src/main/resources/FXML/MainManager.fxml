@@ -1,36 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="FXML.MainManager"
-            prefHeight="600.0" prefWidth="900.0">
+<AnchorPane prefHeight="800.0" prefWidth="1160.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
     <!-- Thanh menu bên trái -->
-    <VBox fx:id="sidebar" spacing="15" prefWidth="220"
-          style="-fx-background-color: #2c3e50;"
-          AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
-        <Label text="LHD Cinema" style="-fx-text-fill: white; -fx-font-size: 26px; -fx-font-weight: bold;" alignment="CENTER" />
-        <Button text="Thống kê" onAction="#handleThongKe"
-                maxWidth="180" style="-fx-background-color: transparent; -fx-text-fill: white;" />
-        <Button text="Quản lý nhân viên" onAction="#handleNhanVien"
-                maxWidth="180" style="-fx-background-color: transparent; -fx-text-fill: white;" />
-        <Button text="Quản lý phòng chiếu" onAction="#handlePhongChieu"
-                maxWidth="180" style="-fx-background-color: transparent; -fx-text-fill: white;" />
-        <Button text="Quản lý phim" onAction="#handleQuanLyPhim"
-                maxWidth="180" style="-fx-background-color: #34495e; -fx-text-fill: white;" />
-        <Button text="Quản lý lịch chiếu" onAction="#handleLichChieu"
-                maxWidth="180" style="-fx-background-color: transparent; -fx-text-fill: white;" />
-        <Button text="Đăng xuất" onAction="#handleDangXuat"
-                maxWidth="180" style="-fx-background-color: transparent; -fx-text-fill: white;" />
-        <Label text="Đăng nhập: Admin" style="-fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 20 0 0 0;" />
+    <VBox fx:id="sidebar" prefWidth="220.0" spacing="15" style="-fx-background-color: #2c3e50;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Label alignment="CENTER" style="-fx-text-fill: white; -fx-font-size: 26px; -fx-font-weight: bold;" text="BTH Cinema" />
+        <Button maxWidth="180" onAction="#handleThongKe" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Thống kê">
+         <font>
+            <Font size="26.0" />
+         </font></Button>
+        <Button maxWidth="180" onAction="#handleNhanVien" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Quản lý đồ ăn" />
+        <Button maxWidth="180" onAction="#handlePhongChieu" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Quản lý phòng chiếu" />
+        <Button maxWidth="180" onAction="#handleQuanLyPhim" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Quản lý phim" />
+        <Button maxWidth="180" onAction="#handleLichChieu" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Quản lý lịch chiếu" />
+        <Button maxWidth="180" onAction="#handleDangXuat" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Quản lý người dùng" />
+        <Label style="-fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 20 0 0 0;" text="Đăng nhập: Admin" />
+      <Button maxWidth="180" onAction="#handleDangXuat" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Đăng xuất" />
     </VBox>
 
     <!-- Phần nội dung thay đổi -->
-    <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;"
-               AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
-               AnchorPane.rightAnchor="0.0" AnchorPane.leftAnchor="220.0" />
+    <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+         <Pane prefHeight="200.0" prefWidth="200.0" visible="false" />
+         <Pane prefHeight="200.0" prefWidth="200.0" visible="false" />
+         <Pane prefHeight="200.0" prefWidth="200.0" visible="false" />
+         <Pane prefHeight="200.0" prefWidth="200.0" visible="false" />
+         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FF3333;">
+            <children>
+               <TableView fx:id="tableUser" layoutX="11.0" layoutY="122.0" prefHeight="660.0" prefWidth="916.0">
+                 <columns>
+                   <TableColumn fx:id="emailUser" prefWidth="167.20004272460938" text="Email" />
+                   <TableColumn fx:id="nameUser" prefWidth="161.59991455078125" text="Họ tên" />
+                     <TableColumn fx:id="genderUser" prefWidth="88.26678466796875" text="Giới tính" />
+                     <TableColumn fx:id="birthUser" prefWidth="126.66668701171875" text="Ngày sinh" />
+                     <TableColumn fx:id="numUser" prefWidth="175.4666748046875" text="Số điện thoại" />
+                     <TableColumn fx:id="addUser" prefWidth="202.13330078125" text="Địa chỉ" />
+                 </columns>
+               </TableView>
+               <Label layoutX="14.0" layoutY="14.0" text="Quản lý người dùng" textFill="WHITE">
+                  <font>
+                     <Font size="30.0" />
+                  </font>
+               </Label>
+               <Button fx:id="viewBtn" layoutX="699.0" layoutY="66.0" mnemonicParsing="false" onAction="#onClickView" text="xem">
+                  <font>
+                     <Font size="20.0" />
+                  </font>
+               </Button>
+               <Button fx:id="editBtn" layoutX="782.0" layoutY="66.0" mnemonicParsing="false" onAction="#onClickEdit" text="sửa">
+                  <font>
+                     <Font size="20.0" />
+                  </font>
+               </Button>
+               <Button fx:id="deleteBtn" layoutX="856.0" layoutY="65.0" mnemonicParsing="false" onAction="#onClickDelete" text="xoá">
+                  <font>
+                     <Font size="20.0" />
+                  </font>
+               </Button>
+               <Pane fx:id="infoForm" layoutX="299.0" layoutY="129.0" prefHeight="491.0" prefWidth="343.0" style="-fx-background-color: #FFFFFF;" stylesheets="@../CSS/MainMenu.css" visible="false">
+                  <children>
+                     <Button fx:id="saveConfirm" layoutX="146.0" layoutY="460.0" mnemonicParsing="false" onAction="#onPlayerSaveInfoConfirm" styleClass="button1" text="Save" />
+                     <Button fx:id="closeConfirm" layoutX="292.0" layoutY="-3.0" minWidth="40.0" mnemonicParsing="false" onAction="#onPlayerCloseInfoConfirm" prefHeight="34.0" prefWidth="40.0" styleClass="button1" text="X" />
+                     <TextField fx:id="nameConfirm" layoutX="52.0" layoutY="68.0" prefHeight="47.0" prefWidth="240.0" styleClass="text-field-info" />
+                     <Label layoutX="125.0" layoutY="32.0" text="Họ và tên">
+                        <font>
+                           <Font size="22.0" />
+                        </font>
+                     </Label>
+                     <Label layoutX="125.0" layoutY="117.0" text="Giới tính">
+                        <font>
+                           <Font size="22.0" />
+                        </font>
+                     </Label>
+                     <Label layoutX="118.0" layoutY="203.0" text="Ngày sinh">
+                        <font>
+                           <Font size="22.0" />
+                        </font>
+                     </Label>
+                     <Label layoutX="122.0" layoutY="282.0" text="Điện thoại">
+                        <font>
+                           <Font size="22.0" />
+                        </font>
+                     </Label>
+                     <Label layoutX="140.0" layoutY="360.0" text="Địa chỉ">
+                        <font>
+                           <Font size="22.0" />
+                        </font>
+                     </Label>
+                     <TextField fx:id="numberConfirm" layoutX="53.0" layoutY="314.0" prefHeight="46.0" prefWidth="240.0" styleClass="text-field-info" />
+                     <TextField fx:id="addressConfirm" layoutX="53.0" layoutY="392.0" prefHeight="46.0" prefWidth="240.0" styleClass="text-field-info" />
+                     <ChoiceBox fx:id="genderConfirm" layoutX="108.0" layoutY="149.0" prefHeight="10.0" prefWidth="129.0" styleClass="text-field-info" />
+                     <DatePicker fx:id="birthConfirm" layoutX="64.0" layoutY="235.0" styleClass="text-field-info" />
+                  </children>
+               </Pane>
+            </children>
+         </Pane>
+      </children></StackPane>
 </AnchorPane>

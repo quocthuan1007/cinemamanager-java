@@ -16,6 +16,8 @@ public class UserService {
     {
         return UserDao.insertUser(a);
     }
-
+    public static boolean deleteUserByAccountId(int accountId) {
+        return UserDao.deleteByAccountId(accountId);
+    }
 
 }

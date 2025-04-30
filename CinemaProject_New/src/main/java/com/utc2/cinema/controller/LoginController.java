@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -43,6 +44,23 @@ public class LoginController {
             e.printStackTrace();
         }
     }
+    private void showManagerMenu()
+    {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("/FXML/MainManager.fxml"));
+            MainManagerController a = new MainManagerController();
+            fxmlLoader.setController(a);
+            AnchorPane root = fxmlLoader.load();
+            Scene scene = new Scene(root, 1160, 800);
+            Stage stage = new Stage();
+            stage.setTitle("Cinema Manager");
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     public void onClickLoginButton(ActionEvent event) {
@@ -58,7 +76,12 @@ public class LoginController {
                 passWord.setText("");
                 Stage loginWin = (Stage) userName.getScene().getWindow();
                 loginWin.close();
-                showMainMenu();
+                if(UserSession.getInstance().getRoleId() == 1)
+                    showManagerMenu();
+                else if(UserSession.getInstance().getRoleId() == 3)
+                {
+                    showMainMenu();
+                }
             }
             else {
                 messLogin.setText("Không tìm thấy tài khoản!");
