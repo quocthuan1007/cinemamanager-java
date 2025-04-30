@@ -118,4 +118,22 @@
 .back-button:hover {
     -fx-effect: dropshadow(three-pass-box, rgba(255,0,0,0.5), 10, 0, 0, 0);
 }
+/* CSS cho header của bảng */
+.custom-table .column-header-background {
+    -fx-background-color: orange;
+}
+
+.custom-table .column-header .label {
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
+
+/* CSS cho các phần tử trong bảng */
+.custom-table .table-row-cell {
+    -fx-background-color: white;
+}
+.custom-table .table-cell {
+    -fx-text-fill: black;
+}
+
 

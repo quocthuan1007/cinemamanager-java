@@ -61,7 +61,6 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private Pane introForm;
-
     @FXML
     private Button mainMenuBtn;
 
@@ -144,6 +143,54 @@ public class MainMenuController implements Initializable {
     @FXML private TableColumn<FoodOrder, Integer> priceColumn;
     @FXML private TableColumn<FoodOrder, Integer> quantityColumn;
     @FXML private TableColumn<FoodOrder, Integer> totalColumn;
+
+    @FXML private TableView<Invoice> invoiceTable;
+    @FXML private TableColumn<Invoice, String> colNgay;
+    @FXML private TableColumn<Invoice, String> colSuatChieu;
+    @FXML private TableColumn<Invoice, String> colPhim;
+    @FXML private TableColumn<Invoice, String> colPhong;
+    @FXML private TableColumn<Invoice, String> colSoGhe;
+    @FXML private TableColumn<Invoice, String> colGiaTri;
+
+    @FXML private TextField dateRangeField;
+    @FXML private Label greetingLabel;
+
+    // Getter methods
+    public TableView<Invoice> getInvoiceTable() {
+        return invoiceTable;
+    }
+
+    public TableColumn<Invoice, String> getColNgay() {
+        return colNgay;
+    }
+
+    public TableColumn<Invoice, String> getColSuatChieu() {
+        return colSuatChieu;
+    }
+
+    public TableColumn<Invoice, String> getColPhim() {
+        return colPhim;
+    }
+
+    public TableColumn<Invoice, String> getColPhong() {
+        return colPhong;
+    }
+
+    public TableColumn<Invoice, String> getColSoGhe() {
+        return colSoGhe;
+    }
+
+    public TableColumn<Invoice, String> getColGiaTri() {
+        return colGiaTri;
+    }
+
+    public TextField getDateRangeField() {
+        return dateRangeField;
+    }
+
+    public Label getGreetingLabel() {
+        return greetingLabel;
+    }
 
     // Getter methods
     public Label getFilmNameLabel1() {
@@ -387,6 +434,7 @@ public class MainMenuController implements Initializable {
     private ScheduleDisplayController scheduleDisplayController;
     private UserConfirmController userConfirmController;
     private BuyTicketController buyTicketController;
+    private  HistoryController historyController;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setupMainForm();
@@ -403,6 +451,9 @@ public class MainMenuController implements Initializable {
 
         buyTicketController = new BuyTicketController(this);
         buyTicketController.initialize();
+
+        historyController = new HistoryController(this);
+        historyController.initialize();
 
     }
     ///  confirm-info
@@ -437,6 +488,7 @@ public class MainMenuController implements Initializable {
     void onAppcetPay() {
         buyTicketController.onAppcetPay();
     }
+
 
 
     private void setupMainForm() {

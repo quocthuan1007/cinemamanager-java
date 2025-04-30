@@ -2,20 +2,15 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="800.0" prefWidth="1160.0" stylesheets="@../CSS/MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.test">
@@ -42,243 +37,28 @@
                 </Label>
             </children>
         </Pane>
-        <AnchorPane prefHeight="706.0" prefWidth="1160.0">
-            <HBox alignment="CENTER" layoutX="0.0" layoutY="94.0" prefHeight="706.0" prefWidth="1160.0" spacing="60" style="-fx-padding: 20;">
-
-                <!-- Cột chọn phim -->
-                <VBox fx:id="filmListVBox" alignment="TOP_CENTER" prefWidth="500.0" spacing="20">
-                    <Label styleClass="titleLabel" text="CHỌN PHIM" />
-                    <ScrollPane fitToWidth="true" prefHeight="600.0" prefWidth="500.0">
-                        <content>
-                            <VBox fx:id="filmsContainer" alignment="TOP_CENTER" spacing="15" />
-                        </content>
-                    </ScrollPane>
-                </VBox>
-
-                <!-- Cột chọn suất -->
-                <VBox fx:id="scheduleListVBox" alignment="TOP_CENTER" prefWidth="500.0" spacing="20">
-                    <Label styleClass="titleLabel" text="CHỌN SUẤT" />
-                    <ScrollPane fitToWidth="true" prefHeight="600.0" prefWidth="500.0">
-                        <content>
-                            <VBox fx:id="scheduleContainerOfFilm" alignment="TOP_CENTER" spacing="15" />
-                        </content>
-                    </ScrollPane>
-                </VBox>
-
-            </HBox>
-        </AnchorPane>
-        <!-- Phần chọn ghế (seat selection) -->
-        <AnchorPane fx:id="seatSelectionPane" layoutY="94.0" prefHeight="800.0" prefWidth="1160.0" visible="false">
-
-            <VBox alignment="TOP_CENTER" prefWidth="1160.0" spacing="20.0" style="-fx-padding: 20;">
-
-                <!-- Hàng chứa nút và màn hình -->
-                <HBox alignment="CENTER" layoutX="20.0" layoutY="20.0" spacing="350.0">
-                    <!-- Nút Quay lại ở góc trái -->
-                    <Button fx:id="backButton" onAction="#onBackToSchedule" styleClass="back-button" text="← Quay lại" />
-
-                    <!-- Tiêu đề ở giữa -->
-                    <Label layoutX="20.0" styleClass="titleLabel" text="CHỌN GHẾ" />
-
-                    <!-- Nút Thanh toán ở góc phải -->
-                    <Button fx:id="payButton" onAction="#onPay" styleClass="pay-button" text="Thanh toán →" />
-
-                </HBox>
-                <Label alignment="CENTER" maxWidth="928.0" style="-fx-background-color: gray; -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10px;" text="MÀN HÌNH" />
-
-
-                <!-- Scroll ghế -->
-                <ScrollPane fx:id="seatScrollPane" fitToWidth="true" layoutY="-40.0" prefHeight="300.0" prefWidth="1120.0" style="-fx-background-color: transparent;">
-                    <VBox alignment="CENTER">
-                        <GridPane fx:id="seatGrid" alignment="CENTER" hgap="10" vgap="10" />
-                    </VBox>
-                </ScrollPane>
-
-                <!-- Ghi chú ghế -->
-                <HBox alignment="CENTER" layoutY="-100.0" prefHeight="9.0" prefWidth="1120.0" spacing="30.0" style="-fx-padding: 10;">
-
-                    <!-- Ghế Thường -->
-                    <HBox alignment="CENTER" spacing="8.0">
-                        <StackPane>
-                            <ImageView fitHeight="24" fitWidth="24">
-                                <image>
-                                    <Image url="@../Image/ghe thuong.png" />
-                                </image>
-                            </ImageView>
-                        </StackPane>
-                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Ghế Thường: 70,000 VNĐ" />
-                    </HBox>
-
-                    <!-- Ghế VIP (tô màu vàng) -->
-                    <HBox alignment="CENTER" spacing="8.0">
-                        <StackPane>
-                            <ImageView fitHeight="24" fitWidth="24">
-                                <image>
-                                    <Image url="@../Image/ghe vip.png" />
-                                </image>
-                            </ImageView>
-                            <Rectangle arcHeight="5" arcWidth="5" fill="yellow" height="24" opacity="0.3" width="24" />
-                        </StackPane>
-                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Ghế VIP: 100,000 VNĐ" />
-                    </HBox>
-
-                    <!-- Ghế Đang Chọn (tô xanh lá) -->
-                    <HBox alignment="CENTER" spacing="8.0">
-                        <StackPane>
-                            <ImageView fitHeight="24" fitWidth="24">
-                                <image>
-                                    <Image url="@../Image/ghe thuong.png" />
-                                </image>
-                            </ImageView>
-                            <Rectangle arcHeight="5" arcWidth="5" fill="limegreen" height="24" opacity="0.3" width="24" />
-                        </StackPane>
-                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Đang chọn" />
-                    </HBox>
-
-                    <!-- Ghế Đã Có Người Đặt (tô đỏ) -->
-                    <HBox alignment="CENTER" spacing="8.0">
-                        <StackPane>
-                            <ImageView fitHeight="24" fitWidth="24">
-                                <image>
-                                    <Image url="@../Image/ghe thuong.png" />
-                                </image>
-                            </ImageView>
-                            <Rectangle arcHeight="5" arcWidth="5" fill="red" height="24" opacity="0.3" width="24" />
-                        </StackPane>
-                        <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Đã đặt" />
-                    </HBox>
-
+        <AnchorPane prefHeight="63.0" prefWidth="1160.0">
+            <VBox layoutX="115.0" layoutY="183.0" prefHeight="374.0" prefWidth="929.0" spacing="10.0">
+                <!-- Bộ lọc theo ngày -->
+                <HBox spacing="10">
+                    <Label text="Chọn khoảng ngày:" />
+                    <TextField fx:id="dateRangeField" promptText="dd/MM/yyyy - dd/MM/yyyy" />
+                    <Button onAction="#handleFilterInvoices" prefHeight="25.0" prefWidth="67.0" text="Lọc" />
                 </HBox>
 
-
-
-
-
-
-
-
-                <Label layoutY="-50.0" prefHeight="10.0" prefWidth="200.0" text="CHỌN THỨC ĂN/ĐỒ UỐNG" textAlignment="CENTER">
-                    <font>
-                        <Font size="16.0" />
-                    </font>
-                </Label>
-
-
-                    <TableView fx:id="foodDrinkTableView" layoutY="-100.0" prefHeight="213.0" prefWidth="1120.0">
-                        <style>
-                            -fx-background-color: transparent; /* Nền bảng trong suốt */
-                            -fx-border-color: #003366; /* Viền bảng màu xanh đậm */
-                            -fx-border-width: 2px; /* Viền dày */
-                        </style>
-                        <columns>
-                            <!-- Cột Tên Món -->
-                            <TableColumn fx:id="nameColumn" prefWidth="200.0" text="Tên Món">
-                                <cellValueFactory>
-                                    <PropertyValueFactory property="food.name" />
-                                </cellValueFactory>
-                                <style>
-                                    -fx-text-fill: #003366; /* Màu chữ xanh đậm */
-                                </style>
-                            </TableColumn>
-
-                            <!-- Cột Mô Tả -->
-                            <TableColumn fx:id="descriptionColumn" prefWidth="272.66668701171875" text="Mô Tả">
-                                <cellValueFactory>
-                                    <PropertyValueFactory property="food.description" />
-                                </cellValueFactory>
-                                <style>
-                                    -fx-text-fill: #003366; /* Màu chữ xanh đậm */
-                                </style>
-                            </TableColumn>
-
-                            <!-- Cột Số Lượng -->
-                            <TableColumn fx:id="quantityColumn" prefWidth="195.33331298828125" text="Số Lượng">
-                                <cellValueFactory>
-                                    <PropertyValueFactory property="count" />
-                                </cellValueFactory>
-                                <style>
-                                    -fx-text-fill: #003366; /* Màu chữ xanh đậm */
-                                </style>
-                            </TableColumn>
-
-                            <!-- Cột Giá -->
-                            <TableColumn fx:id="priceColumn" prefWidth="221.99993896484375" text="Giá">
-                                <cellValueFactory>
-                                    <PropertyValueFactory property="food.cost" />
-                                </cellValueFactory>
-                                <style>
-                                    -fx-text-fill: #003366; /* Màu chữ xanh đậm */
-                                </style>
-                            </TableColumn>
-
-                            <!-- Cột Tổng Tiền -->
-                            <TableColumn fx:id="totalColumn" prefWidth="215.33319091796875" text="Tổng Tiền">
-                                <cellValueFactory>
-                                    <PropertyValueFactory property="totalPrice" />
-                                </cellValueFactory>
-                                <style>
-                                    -fx-text-fill: #003366; /* Màu chữ xanh đậm */
-                                </style>
-                            </TableColumn>
-                        </columns>
-                    </TableView>
-
-
+                   <!-- Bảng hiển thị lịch sử hóa đơn -->
+                <TableView fx:id="invoiceTable" prefHeight="369.0" prefWidth="929.0">
+                    <columns>
+                        <TableColumn fx:id="colNgay" prefWidth="150" text="Ngày" />
+                        <TableColumn fx:id="colSuatChieu" prefWidth="157.33334350585938" text="Suất Chiếu" />
+                        <TableColumn fx:id="colPhim" prefWidth="276.6667175292969" text="Phim" />
+                        <TableColumn fx:id="colPhong" prefWidth="105.99993896484375" text="Phòng Chiếu" />
+                        <TableColumn fx:id="colSoGhe" prefWidth="99.33331298828125" text="Số Ghế" />
+                        <TableColumn fx:id="colGiaTri" prefWidth="141.33319091796875" text="Giá Trị" />
+                    </columns>
+                </TableView>
             </VBox>
 
         </AnchorPane>
-        <Pane fx:id="billPane" layoutX="363.0" layoutY="137.0" prefHeight="403.0" prefWidth="433.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0.3, 0, 4);" visible="false">
-
-            <children>
-                <!-- Tiêu đề hóa đơn -->
-                <Label layoutX="115.0" layoutY="20.0" prefHeight="40.0" prefWidth="200.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-background-color: #f39c12; -fx-text-fill: white; -fx-alignment: center;" text="HÓA ĐƠN" />
-
-                <!-- Tên phim -->
-                <Label layoutX="40.0" layoutY="80.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Phim:" />
-                <Label fx:id="filmNameLabel" layoutX="120.0" layoutY="80.0" prefWidth="250.0" style="-fx-font-size: 16px;" />
-
-                <!-- Suất chiếu -->
-                <Label layoutX="40.0" layoutY="110.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Suất chiếu:" />
-                <Label fx:id="showTimeLabel" layoutX="120.0" layoutY="110.0" prefWidth="250.0" style="-fx-font-size: 16px;" />
-
-                <!-- Phòng chiếu -->
-                <Label layoutX="40.0" layoutY="140.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Phòng:" />
-                <Label fx:id="roomLabel" layoutX="120.0" layoutY="140.0" prefWidth="250.0" style="-fx-font-size: 16px;" />
-
-                <!-- Ghế -->
-                <Label layoutX="40.0" layoutY="170.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Ghế:" />
-                <Label fx:id="seatLabel" layoutX="120.0" layoutY="170.0" prefWidth="250.0" style="-fx-font-size: 16px;" />
-
-                <!-- Combo -->
-                <Label layoutX="40.0" layoutY="200.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Combo:" />
-                <Label fx:id="comboLabel" layoutX="120.0" layoutY="200.0" prefWidth="250.0" style="-fx-font-size: 16px;" />
-
-                <!-- Tổng tiền -->
-                <Label layoutX="40.0" layoutY="240.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Tổng tiền:" />
-                <Label fx:id="totalLabel" layoutX="150.0" layoutY="240.0" prefWidth="200.0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #e67e22;" />
-
-                <!-- Nút Thanh toán -->
-                <Button layoutX="281.0" layoutY="338.0" onAction="#onAppcetPay" prefHeight="36.0" prefWidth="109.0" styleClass="button1" text="Thanh toán" />
-
-                <!-- Nút Quay lại -->
-                <Button layoutX="46.0" layoutY="338.0" onAction="#onBack" styleClass="button1" text="Quay lại" />
-            </children>
-        </Pane>
-        <Pane fx:id="paySuccessPane" layoutX="375.0" layoutY="177.0" prefHeight="285.0" prefWidth="409.0" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-width: 2;" visible="false">
-            <Label layoutX="77.0" layoutY="108.0" style="-fx-font-size: 24px; -fx-text-fill: green;" text="Thanh toán thành công!" />
-
-                  <Button layoutX="165.0" layoutY="185.0" onAction="#onBackToSchedule" prefWidth="80.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="OK" />
-        </Pane>
-
-
-
-
-
-
-
-
-
-
-
     </children>
 </AnchorPane>

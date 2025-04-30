@@ -2,8 +2,10 @@ package com.utc2.cinema.dao;
 
 import com.utc2.cinema.config.Database;
 import com.utc2.cinema.model.entity.Bill;
+import com.utc2.cinema.model.entity.Invoice;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,5 +136,57 @@ public class BillDao {
         }
         return false;
     }
+    public List<Invoice> getBillsByUserAndDateRange(int userId) {
+        List<Invoice> invoices = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            conn = Database.getConnection();
+            String query = "SELECT b.DatePurchased, ms.StartTime AS SuatChieu, f.Name AS Phim, r.Name AS PhongChieu, " +
+                    "COUNT(s.Id) AS SoGhe, " +
+                    "SUM(rsv.Cost) AS GiaTriGhe, " +
+                    "SUM(COALESCE(fo.Count * fd.Cost, 0)) AS GiaTriDoAn, " +
+                    "(SUM(rsv.Cost) + SUM(COALESCE(fo.Count * fd.Cost, 0))) AS GiaTri " +
+                    "FROM Bill b " +
+                    "JOIN Reservation rsv ON b.Id = rsv.BillId " +
+                    "JOIN MovieShow ms ON rsv.ShowId = ms.Id " +
+                    "JOIN Film f ON ms.FilmId = f.Id " +
+                    "JOIN Room r ON ms.RoomId = r.Id " +
+                    "JOIN Seats s ON rsv.SeatId = s.Id " +
+                    "LEFT JOIN Food_Order fo ON b.Id = fo.BillId " +
+                    "LEFT JOIN Food fd ON fo.FoodId = fd.Id " +
+                    "WHERE b.UserId = ?  " +
+                    "GROUP BY b.DatePurchased, ms.StartTime, f.Name, r.Name";
+
+            st = conn.prepareStatement(query);
+            st.setInt(1, userId);
+            rs = st.executeQuery();
+
+            while (rs.next()) {
+                Invoice invoice = new Invoice(
+                        rs.getDate("DatePurchased").toLocalDate(),
+                        rs.getString("SuatChieu"),
+                        rs.getString("Phim"),
+                        rs.getString("PhongChieu"),
+                        rs.getInt("SoGhe"),
+                        rs.getDouble("GiaTriGhe"),
+                        rs.getDouble("GiaTriDoAn"),
+                        rs.getDouble("GiaTri")
+                );
+                invoices.add(invoice);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            Database.closeConnection(conn);
+            if (st != null) try { st.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return invoices;
+    }
+
+
+
 
 }
