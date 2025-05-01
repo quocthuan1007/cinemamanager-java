@@ -1,6 +1,7 @@
 package com.utc2.cinema.controller;
 
 import com.utc2.cinema.dao.FilmDao;
+import com.utc2.cinema.model.entity.CustomAlert;
 import com.utc2.cinema.model.entity.Film;
 import com.utc2.cinema.model.entity.UserAccount;
 import com.utc2.cinema.service.FilmService;
@@ -186,7 +187,7 @@ public class ManageFilmController {
                 if (name.isEmpty() || country.isEmpty() || lenText.isEmpty() || director.isEmpty()
                         || actor.isEmpty() || ageText.isEmpty() || status.isEmpty()
                         || trailer.isEmpty() || content.isEmpty() || releaseDateValue == null) {
-                    showAlert("Thiếu thông tin", "Vui lòng nhập đầy đủ các trường bắt buộc.");
+                    CustomAlert.showError("Lỗi định dạng", "Có lỗi xảy ra", "Vui lòng nhập đầy đủ các trường bắt buộc.");
                     return;
                 }
                 int length, ageLimit;
@@ -194,26 +195,26 @@ public class ManageFilmController {
                     length = Integer.parseInt(lenText);
                     ageLimit = Integer.parseInt(ageText);
                 } catch (NumberFormatException e) {
-                    showAlert("Lỗi định dạng", "Độ dài phim và tuổi giới hạn phải là số.");
+                    CustomAlert.showError("Lỗi định dạng","Có lỗi xảy ra", "Độ dài phim và tuổi giới hạn phải là số.");
                     return;
                 }
                 if (name.length() > 100 || country.length() > 100 || director.length() > 100 || actor.length() > 100) {
-                    showAlert("Giới hạn ký tự", "Tên, Quốc gia, Đạo diễn và Diễn viên không được vượt quá 100 ký tự.");
+                    CustomAlert.showError("Lỗi định dạng","Có lỗi xảy ra", "Tên, Quốc gia, Đạo diễn và Diễn viên không được vượt quá 100 ký tự.");
                     return;
                 }
 
                 if (trailer.length() > 500 || content.length() > 500) {
-                    showAlert("Giới hạn ký tự", "Nội dung và Trailer không được vượt quá 500 ký tự.");
+                    CustomAlert.showError("Lỗi định dạng","Có lỗi xảy ra", "Nội dung và Trailer không được vượt quá 500 ký tự.");
                     return;
                 }
 
                 if (length <= 0 || length > 500) {
-                    showAlert("Giới hạn độ dài", "Độ dài phim phải từ 1 đến 500 phút.");
+                    CustomAlert.showError("Lỗi định dạng","Có lỗi xảy ra", "Độ dài phim phải từ 1 đến 500 phút.");
                     return;
                 }
 
                 if (ageLimit < 0 || ageLimit > 21) {
-                    showAlert("Giới hạn tuổi", "Tuổi giới hạn phải từ 0 đến 21.");
+                    CustomAlert.showError("Lỗi định dạng","Có lỗi xảy ra", "Tuổi giới hạn phải từ 0 đến 21.");
                     return;
                 }
                 Date releaseDate = java.sql.Timestamp.valueOf(releaseDateValue.atStartOfDay());
@@ -223,16 +224,16 @@ public class ManageFilmController {
 
                 boolean success = FilmDao.insertFilm(film);
                 if (success) {
-                    System.out.println("Thêm phim thành công!");
+                    CustomAlert.showInfo("Thành công", "Thêm phim", "Bạn vừa thêm phim thành công!");
                     clearFilmForm();
                     filmList.add(film);
                 } else {
-                    showAlert("Lỗi", "Thêm phim thất bại.");
+                    CustomAlert.showError("Lỗi hệ thống","Có lỗi xảy ra", "Thêm phim thất bại.");
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
-                showAlert("Lỗi hệ thống", "Đã xảy ra lỗi: " + e.getMessage());
+                CustomAlert.showError("Lỗi hệ thống","Có lỗi xảy ra", "Đã xảy ra lỗi: " + e.getMessage());
             }
         });
     }
@@ -264,12 +265,6 @@ public class ManageFilmController {
                 if(filmForm.isVisible()) filmForm.setVisible(false);
             }
         });
-    }
-    private static void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     public void onClickEditFilm(ActionEvent event) {
@@ -321,7 +316,7 @@ public class ManageFilmController {
                     if (name.isEmpty() || country.isEmpty() || lenText.isEmpty() || director.isEmpty()
                             || actor.isEmpty() || ageText.isEmpty() || status.isEmpty()
                             || trailer.isEmpty() || content.isEmpty() || localDate == null) {
-                        showAlert("Thiếu thông tin", "Vui lòng nhập đầy đủ các trường bắt buộc.");
+                        CustomAlert.showError("Lỗi định dạng", "Có lỗi xảy ra", "Vui lòng không được để trống!");
                         return;
                     }
                     int length, ageLimit;
@@ -329,23 +324,23 @@ public class ManageFilmController {
                         length = Integer.parseInt(lenText);
                         ageLimit = Integer.parseInt(ageText);
                     } catch (NumberFormatException ex) {
-                        showAlert("Lỗi định dạng", "Độ dài phim và tuổi giới hạn phải là số.");
+                        CustomAlert.showError("Lỗi định dạng", "Có lỗi xảy ra", "Độ dài phim là số!");
                         return;
                     }
                     if (name.length() > 100 || country.length() > 100 || director.length() > 100 || actor.length() > 100) {
-                        showAlert("Giới hạn ký tự", "Tên, Quốc gia, Đạo diễn và Diễn viên không được vượt quá 100 ký tự.");
+                        CustomAlert.showError("Lỗi định dạng", "Có lỗi xảy ra", "Tên, Quốc gia, Đạo diễn và Diễn viên không được vượt quá 100 ký tự.");
                         return;
                     }
                     if (trailer.length() > 500 || content.length() > 500) {
-                        showAlert("Giới hạn ký tự", "Nội dung và Trailer không được vượt quá 500 ký tự.");
+                        CustomAlert.showError("Lỗi định dạng", "Có lỗi xảy ra", "Nội dung và Trailer không được vượt quá 500 ký tự.");
                         return;
                     }
                     if (length <= 0 || length > 500) {
-                        showAlert("Giới hạn độ dài", "Độ dài phim phải từ 1 đến 500 phút.");
+                        CustomAlert.showError("Lỗi định dạng", "Có lỗi xảy ra", "Độ dài phim phải từ 1 đến 500 phút.");
                         return;
                     }
                     if (ageLimit < 0 || ageLimit > 21) {
-                        showAlert("Giới hạn tuổi", "Tuổi giới hạn phải từ 0 đến 21.");
+                        CustomAlert.showError("Lỗi định dạng", "Có lỗi xảy ra", "Tuổi giới hạn phải từ 0 đến 21.");
                         return;
                     }
                     selectedFilm.setName(name);
@@ -363,21 +358,21 @@ public class ManageFilmController {
 
                     boolean updated = FilmDao.updateFilm(selectedFilm);
                     if (updated) {
-                        System.out.println("Cập nhật phim thành công!");
+                        CustomAlert.showInfo("", "Hoàn tất", "Bạn vừa cập nhật phim");
                         tableFilm.refresh();
                     } else {
-                        showAlert("Lỗi", "Cập nhật thất bại.");
+                        CustomAlert.showError("", "Có lỗi xảy ra", "Cập nhật thất bại.");
                     }
 
                     addFilmBtn.setOnAction(this::onClickAddFilm);
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    showAlert("Lỗi", "Đã xảy ra lỗi: " + ex.getMessage());
+                    CustomAlert.showError("Lỗi định dạng", "Có lỗi xảy ra", "Đã xảy ra lỗi: " + ex.getMessage());
                 }
             });
         } else {
-            showAlert("Chưa chọn phim", "Vui lòng chọn một phim để chỉnh sửa.");
+            CustomAlert.showError("Lỗi định dạng", "Có lỗi xảy ra", "Vui lòng chọn một phim để chỉnh sửa.");
         }
     }
 

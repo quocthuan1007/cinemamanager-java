@@ -1,0 +1,85 @@
+/* Giao diện alert thông thường */
+.alert {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-padding: 20px;
+    -fx-border-color: #90CAF9;
+    -fx-border-width: 1.5px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 8, 0.1, 0, 2);
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.alert-error {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-padding: 20px;
+    -fx-border-color: #EF5350; /* màu đỏ cảnh báo */
+    -fx-border-width: 1.5px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 8, 0.1, 0, 2);
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.alert .header-panel,
+.alert-error .header-panel {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-padding: 0 0 8px 0;
+}
+
+.alert .content.label,
+.alert-error .content.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666666;
+    -fx-padding: 0 0 12px 0;
+}
+
+.alert .button-bar .button,
+.alert-error .button-bar .button {
+    -fx-background-color: #64B5F6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 4, 0.1, 0, 1);
+}
+
+.alert-error .button-bar .button {
+    -fx-background-color: #EF5350; /* đỏ */
+}
+
+.alert-error .button-bar .button:hover {
+    -fx-background-color: #E53935;
+}
+
+.alert-confirm {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-padding: 20px;
+    -fx-border-color: #FFD54F; /* vàng nhẹ */
+    -fx-border-width: 1.5px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0.1, 0, 2);
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+/* Nút OK - màu xanh */
+.ok-button {
+    -fx-background-color: #66BB6A; /* xanh lá */
+}
+
+.ok-button:hover {
+    -fx-background-color: #43A047;
+}
+
+/* Nút Cancel - màu xám */
+.cancel-button {
+    -fx-background-color: #BDBDBD;
+    -fx-text-fill: #212121;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #9E9E9E;
+}

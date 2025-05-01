@@ -1,5 +1,6 @@
 package com.utc2.cinema.controller;
 
+import com.utc2.cinema.model.entity.CustomAlert;
 import com.utc2.cinema.model.entity.Film;
 import com.utc2.cinema.model.entity.Food;
 import com.utc2.cinema.service.FilmService;
@@ -72,12 +73,7 @@ public class ManageFoodController {
             }
         });
     }
-    private static void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+
     private void clearFoodForm() {
         nameFood.clear();
         descripFood.clear();
@@ -94,15 +90,15 @@ public class ManageFoodController {
                 String description = descripFood.getText().trim();
                 String costText = costFood.getText().trim();
                 if (name.isEmpty()) {
-                    showAlert("Thiếu thông tin", "Vui lòng nhập tên món ăn.");
+                    CustomAlert.showError("","Có lỗi xảy ra",  "Vui lòng nhập tên món ăn.");
                     return;
                 }
                 if (description.isEmpty()) {
-                    showAlert("Thiếu thông tin", "Vui lòng nhập mô tả món ăn.");
+                    CustomAlert.showError("","Có lỗi xảy ra",  "Vui lòng nhập mô tả món ăn.");
                     return;
                 }
                 if (costText.isEmpty()) {
-                    showAlert("Thiếu thông tin", "Vui lòng nhập giá món ăn.");
+                    CustomAlert.showError("","Có lỗi xảy ra",  "Vui lòng nhập giá món ăn.");
                     return;
                 }
 
@@ -110,22 +106,22 @@ public class ManageFoodController {
                 try {
                     cost = Float.parseFloat(costText);
                 } catch (NumberFormatException e) {
-                    showAlert("Lỗi định dạng", "Giá món ăn phải là số hợp lệ.");
+                    CustomAlert.showError("","Có lỗi xảy ra",  "Giá món ăn phải là số hợp lệ.");
                     return;
                 }
 
                 if (name.length() > 100) {
-                    showAlert("Giới hạn ký tự", "Tên món ăn không được vượt quá 100 ký tự.");
+                    CustomAlert.showError("","Có lỗi xảy ra", "Tên món ăn không được vượt quá 100 ký tự.");
                     return;
                 }
 
                 if (description.length() > 500) {
-                    showAlert("Giới hạn ký tự", "Mô tả món ăn không được vượt quá 500 ký tự.");
+                    CustomAlert.showError("","Có lỗi xảy ra",  "Mô tả món ăn không được vượt quá 500 ký tự.");
                     return;
                 }
 
                 if (cost <= 0) {
-                    showAlert("Giới hạn giá", "Giá món ăn phải lớn hơn 0.");
+                    CustomAlert.showError("","Có lỗi xảy ra",  "Giá món ăn phải lớn hơn 0.");
                     return;
                 }
 
@@ -137,12 +133,12 @@ public class ManageFoodController {
                     clearFoodForm();
                     listFood.add(food);
                 } else {
-                    showAlert("Lỗi", "Thêm món ăn thất bại.");
+                    CustomAlert.showError("","Có lỗi xảy ra",  "Thêm món ăn thất bại.");
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
-                showAlert("Lỗi hệ thống", "Đã xảy ra lỗi: " + e.getMessage());
+                CustomAlert.showError("","Có lỗi xảy ra",  "Đã xảy ra lỗi: " + e.getMessage());
             }
         });
     }
@@ -166,7 +162,7 @@ public class ManageFoodController {
 
                     // Kiểm tra thông tin bắt buộc
                     if (name.isEmpty() || description.isEmpty() || costText.isEmpty()) {
-                        showAlert("Thiếu thông tin", "Vui lòng nhập đầy đủ các trường bắt buộc.");
+                        CustomAlert.showError("","Có lỗi xảy ra",  "Vui lòng nhập đầy đủ các trường bắt buộc.");
                         return;
                     }
 
@@ -175,23 +171,23 @@ public class ManageFoodController {
                     try {
                         cost = Float.parseFloat(costText);
                     } catch (NumberFormatException ex) {
-                        showAlert("Lỗi định dạng", "Giá món ăn phải là số hợp lệ.");
+                        CustomAlert.showError("","Có lỗi xảy ra",  "Giá món ăn phải là số hợp lệ.");
                         return;
                     }
 
                     // Kiểm tra các điều kiện khác
                     if (name.length() > 100) {
-                        showAlert("Giới hạn ký tự", "Tên món ăn không được vượt quá 100 ký tự.");
+                        CustomAlert.showError("","Có lỗi xảy ra",  "Tên món ăn không được vượt quá 100 ký tự.");
                         return;
                     }
 
                     if (description.length() > 500) {
-                        showAlert("Giới hạn ký tự", "Mô tả món ăn không được vượt quá 500 ký tự.");
+                        CustomAlert.showError("","Có lỗi xảy ra",  "Mô tả món ăn không được vượt quá 500 ký tự.");
                         return;
                     }
 
                     if (cost <= 0) {
-                        showAlert("Giới hạn giá", "Giá món ăn phải lớn hơn 0.");
+                        CustomAlert.showError("","Có lỗi xảy ra",  "Giá món ăn phải lớn hơn 0.");
                         return;
                     }
 
@@ -204,7 +200,7 @@ public class ManageFoodController {
                         System.out.println("Cập nhật món ăn thành công!");
                         tableFood.refresh();  // Cập nhật lại bảng
                     } else {
-                        showAlert("Lỗi", "Cập nhật món ăn thất bại.");
+                        CustomAlert.showError("","Có lỗi xảy ra",  "Cập nhật món ăn thất bại.");
                     }
 
                     // Reset lại hành động của nút "Thêm món ăn"
@@ -212,11 +208,11 @@ public class ManageFoodController {
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    showAlert("Lỗi hệ thống", "Đã xảy ra lỗi: " + ex.getMessage());
+                    CustomAlert.showError("","Có lỗi xảy ra",  "Đã xảy ra lỗi: " + ex.getMessage());
                 }
             });
         } else {
-            showAlert("Chưa chọn món ăn", "Vui lòng chọn một món ăn để chỉnh sửa.");
+            CustomAlert.showError("","Có lỗi xảy ra",  "Vui lòng chọn một món ăn để chỉnh sửa.");
         }
     }
     public void onClickDeleteFood(ActionEvent event)
@@ -224,30 +220,28 @@ public class ManageFoodController {
         Food select = tableFood.getSelectionModel().getSelectedItem();
         if(select == null)
         {
-            showAlert("Lỗi", "Vui lòng chọn 1 món ăn muốn xoá!!");
+            CustomAlert.showError("","Có lỗi xảy ra", "Vui lòng chọn 1 món ăn muốn xoá!!");
             return;
         }
-        Alert ConfirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        ConfirmAlert.setTitle("Bạn có chắc chắn muốn xoá : "+ select.getName());
-        ConfirmAlert.setContentText("Bấm 'Có' để tiếp túc xoá!");
-        ConfirmAlert.setHeaderText(null);
-        ConfirmAlert.showAndWait().ifPresent(response ->{
-            if(response == ButtonType.OK)
-            {
-                boolean deleted = FoodService.deleteFood(select.getId());
-                if(deleted == true)
-                {
-                    System.out.println("Xoá thành công món ăn: "+select.getName());
-                    listFood.remove(select);
-                }
-                else {
-                    System.out.println("Xóa đồ ăn thất bại.");
-                }
-                clearFoodForm();
-                if(foodForm.isVisible()) foodForm.setVisible(false);
-            }
-        });
+        boolean result = CustomAlert.showConfirmation(
+                "Xác nhận",
+                "Bạn có chắc chắn muốn xóa?",
+                "Dữ liệu sẽ không thể phục hồi sau khi xóa!"
+        );
 
+        if (result) {
+            boolean deleted = FoodService.deleteFood(select.getId());
+            if(deleted == true)
+            {
+                System.out.println("Xoá thành công món ăn: "+select.getName());
+                listFood.remove(select);
+            }
+            else {
+                System.out.println("Xóa đồ ăn thất bại.");
+            }
+            clearFoodForm();
+            if(foodForm.isVisible()) foodForm.setVisible(false);
+        }
     }
     private ObservableList<Food> getDataFood() {
         ObservableList<Food> listFood = FXCollections.observableArrayList();

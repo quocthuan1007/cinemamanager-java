@@ -4,19 +4,23 @@ import com.utc2.cinema.dao.FilmDao;
 import com.utc2.cinema.model.entity.*;
 import com.utc2.cinema.service.AccountService;
 import com.utc2.cinema.service.UserService;
+import com.utc2.cinema.view.Login;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
@@ -200,10 +204,30 @@ public class MainManagerController implements Initializable {
         });
     }
     /// ////////////////////////////////////////////////
-
+    @FXML
+    Pane MainManagerPane;
 
     @FXML
     void handleDangXuat(ActionEvent event) {
+        Stage MainManager = (Stage) MainManagerPane.getScene().getWindow();
+        MainManager.close();
+        UserSession.getInstance().cleanUserSession();
+        try {
+            Stage stage = new Stage();
+            FXMLLoader fxmlLoader = new FXMLLoader(Login.class.getResource("/FXML/Login.fxml"));
+            LoginController control = new LoginController();
+            fxmlLoader.setController(control);
+            Pane root = fxmlLoader.load();
+            Scene scene = new Scene(root, 600, 400);
+            stage.setTitle("Hello !");
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.show();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
         System.out.println("Đăng xuất");
     }
     @FXML

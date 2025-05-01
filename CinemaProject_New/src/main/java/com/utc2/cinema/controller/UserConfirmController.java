@@ -3,11 +3,16 @@ package com.utc2.cinema.controller;
 import com.utc2.cinema.model.entity.User;
 import com.utc2.cinema.model.entity.UserSession;
 import com.utc2.cinema.service.UserService;
+import com.utc2.cinema.view.Login;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -83,17 +88,64 @@ public class UserConfirmController {
             genderConfirm.setValue(Info.isGender() == 0 ? "Nam" : "Nữ");
         }
     }
-    public void onPlayerClickInfoConfirm(MouseEvent event)
-    {
-        if(!infoForm.isVisible()) {
-            loadUserInfo();
-            FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), infoForm);
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1);
-            fadeIn.play();
-            infoForm.setVisible(true);
+    private ContextMenu infoMenu = new ContextMenu();
+
+    public void onPlayerClickInfoConfirm(MouseEvent event) {
+        if (infoMenu.isShowing()) {
+            infoMenu.hide();
+            return;
         }
+
+        infoMenu.getItems().clear();
+        Label editLabel = new Label("✏️  Thông tin");
+        Label logoutLabel = new Label("🚪  Đăng xuất");
+
+        String labelStyle = "-fx-padding: 8 16; -fx-font-size: 14; -fx-text-fill: #333;";
+        editLabel.setStyle(labelStyle);
+        logoutLabel.setStyle(labelStyle);
+
+        CustomMenuItem editItem = new CustomMenuItem(editLabel, true);
+        CustomMenuItem logoutItem = new CustomMenuItem(logoutLabel, true);
+
+        editLabel.setOnMouseClicked(e -> {
+            if (!infoForm.isVisible()) {
+                loadUserInfo();
+                FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), infoForm);
+                fadeIn.setFromValue(0);
+                fadeIn.setToValue(1);
+                fadeIn.play();
+                infoForm.setVisible(true);
+            }
+            infoMenu.hide();
+        });
+
+        logoutLabel.setOnMouseClicked(e -> {
+            Stage parentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            parentStage.close();
+            UserSession.getInstance().cleanUserSession();
+            try {
+                Stage stage = new Stage();
+                FXMLLoader fxmlLoader = new FXMLLoader(Login.class.getResource("/FXML/Login.fxml"));
+                LoginController control = new LoginController();
+                fxmlLoader.setController(control);
+                Pane root = fxmlLoader.load();
+                Scene scene = new Scene(root, 600, 400);
+                stage.setTitle("Hello !");
+                stage.setScene(scene);
+                stage.setResizable(false);
+                stage.show();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            infoMenu.hide();
+        });
+
+        infoMenu.getItems().addAll(editItem, logoutItem);
+        infoMenu.show((Node) event.getSource(), event.getScreenX(), event.getScreenY());
     }
+
+
+
 
     public void onPlayerCloseInfoConfirm(ActionEvent event) {
         if(infoForm.isVisible())

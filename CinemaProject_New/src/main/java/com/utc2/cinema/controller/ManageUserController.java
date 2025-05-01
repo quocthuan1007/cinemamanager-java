@@ -1,9 +1,6 @@
 package com.utc2.cinema.controller;
 
-import com.utc2.cinema.model.entity.Account;
-import com.utc2.cinema.model.entity.User;
-import com.utc2.cinema.model.entity.UserAccount;
-import com.utc2.cinema.model.entity.UserSession;
+import com.utc2.cinema.model.entity.*;
 import com.utc2.cinema.service.AccountService;
 import com.utc2.cinema.service.UserService;
 import javafx.animation.FadeTransition;
@@ -72,6 +69,25 @@ public class ManageUserController {
 
         userAccounts.setAll(getUserAccountList());
         tableUser.setItems(userAccounts);
+
+        tableUser.setOnMouseClicked(event ->{
+            if(event.getClickCount() == 2)
+            {
+                UserAccount userSelect = tableUser.getSelectionModel().getSelectedItem();
+                User user = userSelect.getUser();
+                Account account = userSelect.getAccount();
+
+                StringBuilder info = new StringBuilder();
+                info.append("Tên: ").append(user.getName()).append("\n");
+                info.append("SĐT: ").append(user.getPhone()).append("\n");
+                info.append("Giới tính: ").append(user.isGender() == 0 ? "Nam" : "Nữ").append("\n");
+                info.append("Ngày sinh: ").append(user.getBirth()).append("\n");
+                info.append("Địa chỉ: ").append(user.getAddress()).append("\n");
+                info.append("Email: ").append(account.getEmail());
+
+                CustomAlert.showInfo("Thông tin người dùng","Chi tiết người dùng",info.toString());
+            }
+        });
     }
 
     private ObservableList<UserAccount> getUserAccountList() {
@@ -123,11 +139,7 @@ public class ManageUserController {
     {
         UserAccount selected = tableUser.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Chưa chọn người dùng");
-            alert.setHeaderText(null);
-            alert.setContentText("Vui lòng chọn một người dùng để xem thông tin.");
-            alert.showAndWait();
+            CustomAlert.showError("","Có lỗi xảy ra","Vui lòng chọn 1 người để xem thông tin!!");
             return;
         }
 
