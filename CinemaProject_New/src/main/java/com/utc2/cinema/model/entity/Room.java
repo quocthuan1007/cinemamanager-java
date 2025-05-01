@@ -22,6 +22,12 @@ public class Room {
         this.roomStatus = roomStatus;
         this.name = name;
     }
+    public Room(String name, int numRows, int numCols, String roomStatus) {
+        this.name = name;
+        this.numRows = numRows;
+        this.numCols = numCols;
+        this.roomStatus = roomStatus;
+    }
 
     public int getId() {
         return id;

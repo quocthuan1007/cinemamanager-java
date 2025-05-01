@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.ComboBox?>
 <AnchorPane fx:id="MainManagerPane" prefHeight="800.0" prefWidth="1160.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
     <!-- Thanh menu bên trái -->
@@ -214,7 +215,70 @@
                <TextField fx:id="searchFilm" layoutX="419.0" layoutY="68.0" onAction="#onSearchFilm" prefHeight="43.0" prefWidth="240.0" />
             </children>
          </Pane>
-         <Pane fx:id="schedulePane" prefHeight="200.0" prefWidth="200.0" visible="false" />
+         <Pane fx:id="schedulePane" prefHeight="200.0" prefWidth="200.0" visible="false" >
+            <Pane layoutX="173.0" layoutY="108.0" prefHeight="561.0" prefWidth="700.0" stylesheets="@../CSS/MainManager.css">
+               <!-- Tiêu đề -->
+               <Label layoutX="10.0" layoutY="10.0" style="-fx-font-size: 20px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Quản lý lịch chiếu" />
+
+               <!-- Nút thêm lịch chiếu -->
+               <Button layoutX="570.0" layoutY="10.0" onAction="#onAddShowClick" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;" text="+ Thêm lịch chiếu" />
+
+               <!-- TableView đẹp -->
+               <TableView fx:id="scheduleTable" layoutX="10.0" layoutY="50.0" prefHeight="500.0" prefWidth="680.0" style="-fx-border-color: #bdc3c7;">
+                  <columns>
+                     <TableColumn fx:id="colStart" prefWidth="120.0" text="Giờ bắt đầu" />
+                     <TableColumn fx:id="colEnd" prefWidth="120.0" text="Giờ kết thúc" />
+                     <TableColumn fx:id="colFilm" prefWidth="222.0" text="Phim" />
+                     <TableColumn fx:id="colRoom" prefWidth="147.0" text="Phòng" />
+                     <TableColumn fx:id="colDelete" prefWidth="70.0" text="Xóa" />
+                  </columns>
+               </TableView>
+               <Pane fx:id="confirmDeletePane" layoutX="150.0" layoutY="100.0" prefHeight="200.0" prefWidth="400.0" style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-width: 2; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0.5, 0, 4);" visible="false">
+
+                  <children>
+                     <Label layoutX="70.0" layoutY="40.0" style="-fx-font-size: 16px; -fx-text-fill: #333333;" text="Bạn có chắc chắn muốn xóa lịch chiếu này?" />
+
+                     <Button layoutX="70.0" layoutY="120.0" onAction="#onCancelDelete" prefWidth="100.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="Hủy" />
+
+                     <Button layoutX="230.0" layoutY="120.0" onAction="#onConfirmDelete" prefWidth="100.0" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Xác nhận" />
+                  </children>
+               </Pane>
+
+               <Pane fx:id="RemoveSuccessPane" layoutX="376.0" layoutY="14.0" prefHeight="285.0" prefWidth="409.0" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-width: 2;" visible="false">
+                  <Label layoutX="77.0" layoutY="108.0" style="-fx-font-size: 24px; -fx-text-fill: green;" text="Xóa thành công!" />
+
+                  <Button layoutX="165.0" layoutY="185.0" onAction="#onBackMannagerSchedule" prefWidth="80.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="OK" />
+               </Pane>
+            </Pane>
+            <!-- Thêm lịch chiếu -->
+            <Pane fx:id="addMovieShowPane" layoutX="167.0" layoutY="108.0" prefHeight="300.0" prefWidth="521.0" style="-fx-background-color: #ffffff; -fx-border-color: #bdc3c7; -fx-border-width: 2;" visible="false">
+               <children>
+                  <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 18px; -fx-text-fill: #2c3e50;" text="Thêm lịch chiếu mới" />
+
+                  <!-- Film -->
+                  <Label layoutX="20.0" layoutY="60.0" style="-fx-font-size: 14px;" text="Phim:" />
+                  <ComboBox fx:id="filmComboBox" layoutX="180.0" layoutY="58.0" prefWidth="200.0" />
+
+                  <!-- Phòng -->
+                  <Label layoutX="20.0" layoutY="100.0" style="-fx-font-size: 14px;" text="Phòng:" />
+                  <ComboBox fx:id="roomComboBox" layoutX="180.0" layoutY="98.0" prefWidth="200.0" />
+
+                  <!-- Thời gian bắt đầu -->
+                  <Label layoutX="20.0" layoutY="140.0" style="-fx-font-size: 14px;" text="Thời gian bắt đầu:" />
+                  <TextField fx:id="startTimeField" layoutX="180.0" layoutY="138.0" prefWidth="200.0" promptText="HH:mm dd/MM/yyyy" />
+
+                  <!-- Thời gian kết thúc -->
+                  <Label layoutX="20.0" layoutY="180.0" style="-fx-font-size: 14px;" text="Thời gian kết thúc:" />
+                  <TextField fx:id="endTimeField" layoutX="180.0" layoutY="178.0" prefWidth="200.0" promptText="HH:mm dd/MM/yyyy" />
+
+                  <!-- Nút Lưu -->
+                  <Button layoutX="84.0" layoutY="245.0" onAction="#onSaveMovieShow" prefWidth="100.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Lưu" />
+                  <!-- Nút Hủy -->
+                  <Button layoutX="330.0" layoutY="245.0" onAction="#onCancelAddMovieShow" prefWidth="100.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="Hủy" />
+               </children>
+            </Pane>
+         </Pane>
+
          <Pane fx:id="userPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FF3333;" visible="false">
             <children>
                <TableView fx:id="tableUser" layoutX="11.0" layoutY="122.0" prefHeight="660.0" prefWidth="916.0">

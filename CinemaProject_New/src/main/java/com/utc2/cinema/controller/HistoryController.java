@@ -63,6 +63,7 @@ public class HistoryController {
     // Hàm khởi tạo các cột trong bảng
     @FXML
     void initialize() {
+        billDao = new BillDao();
         User Info = UserService.getUser(UserSession.getInstance().getUserId());
         int userID = Info.getId();
         // Tự động hiển thị tất cả hóa đơn khi giao diện được khởi tạo

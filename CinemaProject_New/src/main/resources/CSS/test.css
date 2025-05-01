@@ -1,0 +1,157 @@
+/* Cấu hình chung cho các phần tử */
+* {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-base: #f4f4f4;
+}
+
+/* Tiêu đề */
+#titleLabel {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-padding: 10px 0;
+}
+
+/* Nút bấm */
+.add-button, .delete-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.add-button:hover, .delete-button:hover {
+    -fx-background-color: #45a049;
+}
+
+#saveButton, #cancelButton {
+    -fx-background-color: #007BFF;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}
+
+#saveButton:hover, #cancelButton:hover {
+    -fx-background-color: #0056b3;
+}
+
+/* GridPane */
+.GridPane {
+    -fx-padding: 20px;
+    -fx-hgap: 20px;
+    -fx-vgap: 10px;
+}
+
+.GridPane Label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+.GridPane TextField {
+    -fx-font-size: 14px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+/* ComboBox */
+.ComboBox {
+    -fx-font-size: 14px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+.ComboBox .combo-box-cell {
+    -fx-font-size: 14px;
+}
+
+/* Nút bấm Lưu (màu xanh nước) */
+#saveButton {
+    -fx-background-color: #4CAF50;  /* Màu xanh nước */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}
+
+#saveButton:hover {
+    -fx-background-color: #45a049;  /* Màu xanh đậm khi hover */
+}
+
+/* Nút Hủy Bỏ (màu đỏ) */
+#cancelButton {
+    -fx-background-color: #FF5733;  /* Màu đỏ */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}
+
+#cancelButton:hover {
+    -fx-background-color: #c44e2d;  /* Màu đỏ đậm khi hover */
+}
+
+/* Nút Xóa Phòng Chiếu (màu đỏ) */
+#deleteRoomBtn {
+    -fx-background-color: #FF5733;  /* Màu đỏ */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}
+
+#deleteRoomBtn:hover {
+    -fx-background-color: #c44e2d;  /* Màu đỏ đậm khi hover */
+}
+
+/* Nút Thêm Phòng Chiếu (màu xanh) */
+.add-button {
+    -fx-background-color: #4CAF50;  /* Màu xanh */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.add-button:hover {
+    -fx-background-color: #45a049;  /* Màu xanh đậm khi hover */
+}
+
+/* ScrollPane */
+#seatScrollPane {
+    -fx-background-color: transparent;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1px;
+}
+
+/* Label màn hình */
+#screenLabel {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-border-color: gray;
+    -fx-border-width: 1px;
+    -fx-padding: 10px;
+    -fx-background-color: #f4f4f4;
+    -fx-text-fill: #333333;
+    -fx-alignment: center;
+}
+
+/* Phần tử VBox */
+.VBox {
+    -fx-padding: 20px;
+}
+
+.HBox {
+    -fx-padding: 10px 0;
+}

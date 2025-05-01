@@ -176,6 +176,7 @@ public class MainManagerController implements Initializable {
     private ManageUserController userController;
     private ManageFilmController filmController;
     private ManageFoodController foodController;
+    private ManageScheduleController scheduleController;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         userController = new ManageUserController(this);
@@ -186,6 +187,9 @@ public class MainManagerController implements Initializable {
 
         foodController = new ManageFoodController(this);
         foodController.init();
+
+        scheduleController = new ManageScheduleController(this);
+        scheduleController.initialize();
 
         hideAllPanes();
         thongKePane.setVisible(true);
@@ -656,6 +660,128 @@ public class MainManagerController implements Initializable {
     @FXML
     void onSearchFood() {
         foodController.onSearchFood();
+    }
+    /// ////////////////////////////////////////Schedule-Manage////////////////////////////////////////////////////////
+    /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @FXML
+    private TableView<MovieShow> scheduleTable;
+
+    @FXML
+    private TableColumn<MovieShow, String> colStart;
+
+    @FXML
+    private TableColumn<MovieShow, String> colEnd;
+
+    @FXML
+    private TableColumn<MovieShow, String> colFilm;
+
+    @FXML
+    private TableColumn<MovieShow, Integer> colRoom;
+
+    @FXML
+    private TableColumn<MovieShow, Void> colDelete;
+
+    @FXML
+    private Pane confirmDeletePane;
+
+    @FXML
+    private Pane removePane;
+
+    @FXML
+    private Pane RemoveSuccessPane;
+
+    @FXML
+    private Pane addMovieShowPane;
+
+    @FXML
+    private ComboBox<Film> filmComboBox;
+
+    @FXML
+    private ComboBox<Integer> roomComboBox;
+
+    @FXML
+    private TextField startTimeField;
+
+    @FXML
+    private TextField endTimeField;
+
+// GETTERS
+
+    public TableView<MovieShow> getScheduleTable() {
+        return scheduleTable;
+    }
+
+    public TableColumn<MovieShow, String> getColStart() {
+        return colStart;
+    }
+
+    public TableColumn<MovieShow, String> getColEnd() {
+        return colEnd;
+    }
+
+    public TableColumn<MovieShow, String> getColFilm() {
+        return colFilm;
+    }
+
+    public TableColumn<MovieShow, Integer> getColRoom() {
+        return colRoom;
+    }
+
+    public TableColumn<MovieShow, Void> getColDelete() {
+        return colDelete;
+    }
+
+    public Pane getConfirmDeletePane() {
+        return confirmDeletePane;
+    }
+
+    public Pane getRemovePane() {
+        return removePane;
+    }
+
+    public Pane getRemoveSuccessPane() {
+        return RemoveSuccessPane;
+    }
+
+    public Pane getAddMovieShowPane() {
+        return addMovieShowPane;
+    }
+
+    public ComboBox<Film> getFilmComboBox() {
+        return filmComboBox;
+    }
+
+    public ComboBox<Integer> getRoomComboBox() {
+        return roomComboBox;
+    }
+
+    public TextField getStartTimeField() {
+        return startTimeField;
+    }
+
+    public TextField getEndTimeField() {
+        return endTimeField;
+    }
+    @FXML
+    void onCancelDelete() {
+        scheduleController.onCancelDelete();
+    }
+    @FXML
+    void onConfirmDelete() {
+        scheduleController.onConfirmDelete();
+    }
+    @FXML
+    void onBackMannagerSchedule() {
+        scheduleController.onBackMannagerSchedule();
+    }
+    @FXML
+    void onSaveMovieShow() {
+        scheduleController.onSaveMovieShow();
+    }
+    @FXML
+    void onCancelAddMovieShow() {
+        scheduleController.onCancelAddMovieShow();
     }
 
 }

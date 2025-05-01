@@ -1,64 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1160.0" stylesheets="@../CSS/MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.test">
+<AnchorPane prefHeight="800.0" prefWidth="1160.0" stylesheets="@../CSS/test.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.test">
 
-    <children>
-        <!-- Thanh menu -->
-        <Pane prefHeight="94.0" prefWidth="1160.0" styleClass="pane1">
-            <children>
-                <Button layoutX="127.0" layoutY="35.0" styleClass="button1" text="Trang Chủ" />
-                <Button layoutX="221.0" layoutY="35.0" styleClass="button1" text="Phim" />
-                <Button layoutX="278.0" layoutY="35.0" styleClass="button1" text="Lịch Chiếu" />
-                <Button layoutX="372.0" layoutY="35.0" styleClass="button1" text="Mua Vé" />
-                <Button layoutX="448.0" layoutY="35.0" styleClass="button1" text="Giới Thiệu" />
-                <TextField layoutX="601.0" layoutY="40.0" promptText="Nhập Tên Phim" />
-                <ImageView fx:id="posterImage" fitHeight="94.0" fitWidth="109.0" layoutX="805.0" layoutY="13.0" preserveRatio="true">
-                    <image>
-                        <Image url="@../Image/logo.png" />
-                    </image>
-                </ImageView>
-                <Label layoutX="914.0" layoutY="40.0" text="Xin Chào" textFill="WHITE">
-                    <font>
-                        <Font size="16.0" />
-                    </font>
-                </Label>
-            </children>
-        </Pane>
-        <AnchorPane prefHeight="63.0" prefWidth="1160.0">
-            <VBox layoutX="115.0" layoutY="183.0" prefHeight="374.0" prefWidth="929.0" spacing="10.0">
-                <!-- Bộ lọc theo ngày -->
-                <HBox spacing="10">
-                    <Label text="Chọn khoảng ngày:" />
-                    <TextField fx:id="dateRangeField" promptText="dd/MM/yyyy - dd/MM/yyyy" />
-                    <Button onAction="#handleFilterInvoices" prefHeight="25.0" prefWidth="67.0" text="Lọc" />
-                </HBox>
+    <VBox spacing="20">
 
-                   <!-- Bảng hiển thị lịch sử hóa đơn -->
-                <TableView fx:id="invoiceTable" prefHeight="369.0" prefWidth="929.0">
-                    <columns>
-                        <TableColumn fx:id="colNgay" prefWidth="150" text="Ngày" />
-                        <TableColumn fx:id="colSuatChieu" prefWidth="157.33334350585938" text="Suất Chiếu" />
-                        <TableColumn fx:id="colPhim" prefWidth="276.6667175292969" text="Phim" />
-                        <TableColumn fx:id="colPhong" prefWidth="105.99993896484375" text="Phòng Chiếu" />
-                        <TableColumn fx:id="colSoGhe" prefWidth="99.33331298828125" text="Số Ghế" />
-                        <TableColumn fx:id="colGiaTri" prefWidth="141.33319091796875" text="Giá Trị" />
-                    </columns>
-                </TableView>
-            </VBox>
+        <!-- Tiêu đề và nút chức năng -->
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <Label fx:id="titleLabel" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Quản lý phòng chiếu" />
+        </HBox>
 
-        </AnchorPane>
-    </children>
+        <!-- Form nhập thông tin -->
+        <GridPane hgap="20" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" />
+                <ColumnConstraints prefWidth="200" />
+            </columnConstraints>
+
+            <Label text="Tên phòng chiếu:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <ComboBox fx:id="roomNameComboBox" editable="false" prefHeight="25.0" prefWidth="116.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <Label text="Tên phòng:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <TextField fx:id="roomNameField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+            <Label text="Số lượng hàng ghế:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <TextField fx:id="rowCountField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+            <Label text="Số lượng cột ghế:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <TextField fx:id="columnCountField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+            <Label text="Trạng thái phòng chiếu:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            <ComboBox fx:id="roomStatusComboBox" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Bình thường" />
+                        <String fx:value="Bảo trì" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+        </GridPane>
+
+        <!-- Nút lưu / hủy -->
+        <HBox alignment="CENTER" spacing="20" />
+    </VBox>
+
+     <!-- Label màn hình -->
+     <Label alignment="CENTER" layoutX="363.0" layoutY="270.0" maxWidth="Infinity" prefHeight="30.0" prefWidth="507.0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-border-color: gray;" text="MÀN HÌNH" />
+      <Button fx:id="cancelButton" layoutX="572.0" layoutY="728.0" text="HỦY BỎ" />
+      <Button fx:id="saveButton" layoutX="679.0" layoutY="71.0" text="LƯU / Thêm phòng chiếu" />
+      <Button fx:id="deleteRoomBtn" layoutX="929.0" layoutY="71.0" styleClass="delete-button" text="Xóa phòng chiếu" />
+
+     <!-- Scroll ghế -->
+     <ScrollPane fx:id="seatScrollPane" fitToWidth="true" layoutX="130.0" layoutY="315.0" prefHeight="405.0" prefWidth="869.0" style="-fx-background-color: transparent;">
+         <VBox alignment="CENTER">
+             <GridPane fx:id="seatGrid" alignment="CENTER" hgap="10" vgap="10" />
+         </VBox>
+     </ScrollPane>
+
+    <Pane fx:id="deleteConfirmationPane" layoutX="363.0" layoutY="49.0" prefHeight="200.0" prefWidth="433.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0.3, 0, 4);" visible="false">
+        <children>
+            <!-- Tiêu đề xác nhận -->
+            <Label layoutX="65.0" layoutY="20.0" prefHeight="40.0" prefWidth="300.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-background-color: #e74c3c; -fx-text-fill: white; -fx-alignment: center;" text="XÁC NHẬN XÓA" />
+
+            <!-- Nội dung xác nhận -->
+            <Label layoutX="40.0" layoutY="80.0" style="-fx-font-size: 16px;" text="Bạn có chắc chắn muốn xóa?" />
+
+            <!-- Nút Xóa -->
+            <Button fx:id="confirmDeleteButton" layoutX="100.0" layoutY="130.0" onAction="#onConfirmDelete" prefWidth="100.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="Xóa" />
+
+            <!-- Nút Hủy -->
+            <Button fx:id="cancelDeleteButton" layoutX="230.0" layoutY="130.0" onAction="#onCancelDelete" prefWidth="100.0" style="-fx-background-color: #95a5a6; -fx-text-fill: white;" text="Hủy" />
+        </children>
+    </Pane>
+    
 </AnchorPane>

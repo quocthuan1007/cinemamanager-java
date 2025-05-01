@@ -452,8 +452,8 @@ public class MainMenuController implements Initializable {
         buyTicketController = new BuyTicketController(this);
         buyTicketController.initialize();
 
-//        historyController = new HistoryController(this);
-//        historyController.initialize();
+        historyController = new HistoryController(this);
+        historyController.initialize();
 
     }
     ///  confirm-info

@@ -18,7 +18,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class test implements Initializable {
+public class RoomManageController implements Initializable {
 
     @FXML
     private TextField roomNameField;
