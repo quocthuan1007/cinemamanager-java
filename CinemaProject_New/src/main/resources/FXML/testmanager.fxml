@@ -11,9 +11,7 @@
 
 <AnchorPane prefHeight="989.0" prefWidth="934.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.test">
 
-
     <Pane layoutX="173.0" layoutY="108.0" prefHeight="561.0" prefWidth="700.0" stylesheets="@../CSS/MainManager.css">
-
         <!-- Tiêu đề -->
         <Label layoutX="10.0" layoutY="10.0" style="-fx-font-size: 20px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Quản lý lịch chiếu" />
 
@@ -74,5 +72,4 @@
             <Button layoutX="330.0" layoutY="245.0" onAction="#onCancelAddMovieShow" prefWidth="100.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="Hủy" />
         </children>
     </Pane>
-
 </AnchorPane>
