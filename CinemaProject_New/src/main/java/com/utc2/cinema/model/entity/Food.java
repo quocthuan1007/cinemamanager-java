@@ -11,7 +11,7 @@ public class Food {
     private int id;
     private String name;
     private String description;
-    private int cost;
+    private float cost;
 
     public Food(int id, String name, String description, int cost) {
         this.id = id;
@@ -20,7 +20,7 @@ public class Food {
         this.cost = cost;
     }
 
-    public int getCost() {
+    public float getCost() {
         return cost;
     }
 

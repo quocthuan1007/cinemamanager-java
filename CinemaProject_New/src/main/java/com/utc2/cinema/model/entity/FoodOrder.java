@@ -16,7 +16,7 @@ public class FoodOrder {
     private int billId;  // ID của hóa đơn
     private int count;   // Số lượng món ăn
     private Food food;   // Món ăn liên quan
-    private int totalPrice;
+    private float totalPrice;
 
     // Constructor
     public FoodOrder(int id, int foodId, int billId, int count, Food food) {
@@ -69,9 +69,10 @@ public class FoodOrder {
     }
 
     // Tính tổng tiền của món ăn trong giỏ hàng
-    public int getTotalPrice() {
-        return food.getCost() * count;  // Tính tổng tiền = giá món ăn * số lượng
+    public float getTotalPrice() {
+        return food.getCost() * (float) count;
     }
+
 
     // Cập nhật lại tổng tiền khi số lượng thay đổi
     public void updateTotalPrice() {
@@ -79,8 +80,8 @@ public class FoodOrder {
         // Mặc dù tổng tiền có thể được tính trực tiếp qua getTotalPrice(), bạn cũng có thể gọi updateTotalPrice nếu cần thêm thao tác
     }
     // Cập nhật lại tổng tiền của món ăn
-    public void setTotalPrice(int cost, int count) {
-        this.totalPrice = cost * count;  // Tính tổng tiền = giá món ăn * số lượng
+    public void setTotalPrice(float cost, int count) {
+        this.totalPrice = cost * (float)count;  // Tính tổng tiền = giá món ăn * số lượng
     }
 
 }

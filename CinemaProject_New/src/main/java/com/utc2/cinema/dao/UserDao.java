@@ -19,7 +19,7 @@ public class UserDao{
             String sql = "UPDATE User SET Name = ?, Gender = ?, Birth = ?, Phone = ?, Address = ? WHERE AccountId = ?";
             st = conn.prepareStatement(sql);
             st.setString(1, target.getName());
-            st.setBoolean(2, target.isGender());
+            st.setInt(2, target.isGender());
             st.setDate(3, new java.sql.Date(target.getBirth().getTime()));
             st.setString(4, target.getPhone());
             st.setString(5, target.getAddress());
@@ -47,7 +47,7 @@ public class UserDao{
             {
                 int id = rs.getInt("Id");
                 String name = rs.getString("Name");
-                boolean gender = rs.getBoolean("Gender");
+                int gender = rs.getInt("Gender");
                 Date birth = rs.getDate("Birth");
                 String phone = rs.getString("Phone");
                 String address = rs.getString("Address");
@@ -73,7 +73,7 @@ public class UserDao{
             st = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             st.setString(1, user.getName());
-            st.setBoolean(2, user.isGender());
+            st.setInt(2, user.isGender());
             st.setDate(3, new java.sql.Date(user.getBirth().getTime()));
             st.setString(4, user.getPhone());
             st.setString(5, user.getAddress());

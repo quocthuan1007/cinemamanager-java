@@ -8,6 +8,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
@@ -35,89 +36,151 @@
     <!-- Phần nội dung thay đổi -->
     <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
-         <Pane prefHeight="200.0" prefWidth="200.0" visible="false" />
-         <Pane prefHeight="200.0" prefWidth="200.0" visible="false" />
-         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FF3333;" visible="false">
+         <Pane fx:id="foodForm" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FF3333;">
             <children>
-               <Pane layoutX="652.0" layoutY="122.0" prefHeight="561.0" prefWidth="282.0" style="-fx-background-color: #FFFFFF;">
+               <Pane fx:id="filmForm1" layoutX="651.0" layoutY="122.0" prefHeight="315.0" prefWidth="282.0" style="-fx-background-color: #FFFFFF;">
                   <children>
-                     <Button fx:id="viewBtn11" layoutX="104.0" layoutY="507.0" mnemonicParsing="false" onAction="#onClickAddFilm" prefHeight="43.0" prefWidth="75.0" text="thêm">
+                     <Button fx:id="addOrSaveFood" layoutX="104.0" layoutY="253.0" mnemonicParsing="false" onAction="#onClickAddFood" prefHeight="43.0" prefWidth="75.0" text="thêm">
                         <font>
                            <Font size="20.0" />
                         </font>
                      </Button>
-                     <Label layoutX="7.0" layoutY="7.0" text="Tên phim">
+                     <Label layoutX="8.0" layoutY="43.0" text="Tên món">
                         <font>
                            <Font size="18.0" />
                         </font>
                      </Label>
-                     <TextField fx:id="nameFilm" layoutX="88.0" layoutY="8.0" prefHeight="25.0" prefWidth="188.0" />
-                     <Label layoutX="8.0" layoutY="40.0" text="Quốc gia">
+                     <TextField fx:id="nameFood" layoutX="89.0" layoutY="44.0" prefHeight="25.0" prefWidth="188.0" />
+                     <Label layoutX="10.0" layoutY="202.0" text="Giá">
                         <font>
                            <Font size="18.0" />
                         </font>
                      </Label>
-                     <TextField fx:id="CountryFilm" layoutX="88.0" layoutY="41.0" prefHeight="25.0" prefWidth="188.0" />
-                     <Label layoutX="7.0" layoutY="74.0" text="Độ dài">
+                     <TextField fx:id="costFood" layoutX="86.0" layoutY="203.0" prefHeight="25.0" prefWidth="188.0" />
+                     <Label layoutX="8.0" layoutY="70.0" text="Mô tả">
                         <font>
                            <Font size="18.0" />
                         </font>
                      </Label>
-                     <TextField fx:id="lenFilm" layoutX="66.0" layoutY="75.0" prefHeight="25.0" prefWidth="209.0" />
-                     <Label layoutX="8.0" layoutY="111.0" text="Đạo diễn">
+                     <TextArea fx:id="descripFood" layoutX="9.0" layoutY="97.0" prefHeight="94.0" prefWidth="265.0" />
+                     <Button layoutX="256.0" layoutY="2.0" mnemonicParsing="false" onAction="#onClickFoodFormClose" text="X" />
+                  </children>
+               </Pane>
+               <TableView fx:id="tableFilm1" layoutX="11.0" layoutY="122.0" prefHeight="660.0" prefWidth="634.0">
+                  <columns>
+                     <TableColumn fx:id="foodCol" prefWidth="208.80003356933594" text="Tên món" />
+                     <TableColumn fx:id="descripCol" prefWidth="296.0" text="Mô tả" />
+                     <TableColumn fx:id="costCol" prefWidth="129.5999755859375" text="Giá" />
+                  </columns>
+               </TableView>
+               <Label layoutX="14.0" layoutY="14.0" text="Quản lý đồ ăn" textFill="WHITE">
+                  <font>
+                     <Font size="30.0" />
+                  </font>
+               </Label>
+               <Button fx:id="addFoodBtn" layoutX="785.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickAddFood" text="Thêm">
+                  <font>
+                     <Font size="20.0" />
+                  </font>
+               </Button>
+               <Button fx:id="editFoodBtn" layoutX="667.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickEditFood" text="Xem/Sửa">
+                  <font>
+                     <Font size="20.0" />
+                  </font>
+               </Button>
+               <Button fx:id="deleteFoodBtn" layoutX="872.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickDeleteFood" text="Xoá">
+                  <font>
+                     <Font size="20.0" />
+                  </font>
+               </Button>
+               <TextField fx:id="searchFood" layoutX="419.0" layoutY="68.0" onAction="#onSearchFood" prefHeight="43.0" prefWidth="240.0" />
+            </children>
+         </Pane>
+         <Pane prefHeight="200.0" prefWidth="200.0" visible="false" />
+         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FF3333;" visible="false">
+            <children>
+               <Pane fx:id="filmForm" layoutX="651.0" layoutY="122.0" prefHeight="660.0" prefWidth="282.0" style="-fx-background-color: #FFFFFF;" visible="false">
+                  <children>
+                     <Button fx:id="addOrSaveBtn" layoutX="105.0" layoutY="603.0" mnemonicParsing="false" onAction="#onClickAddFilm" prefHeight="43.0" prefWidth="75.0" text="thêm">
+                        <font>
+                           <Font size="20.0" />
+                        </font>
+                     </Button>
+                     <Label layoutX="8.0" layoutY="43.0" text="Tên phim">
                         <font>
                            <Font size="18.0" />
                         </font>
                      </Label>
-                     <TextField fx:id="direFilm" layoutX="87.0" layoutY="112.0" prefHeight="25.0" prefWidth="188.0" />
-                     <Label layoutX="8.0" layoutY="147.0" text="Diễn viên">
+                     <TextField fx:id="nameFilm" layoutX="89.0" layoutY="44.0" prefHeight="25.0" prefWidth="188.0" />
+                     <Label layoutX="9.0" layoutY="76.0" text="Quốc gia">
                         <font>
                            <Font size="18.0" />
                         </font>
                      </Label>
-                     <TextField fx:id="actorFilm" layoutX="86.0" layoutY="148.0" prefHeight="25.0" prefWidth="188.0" />
-                     <Label layoutX="9.0" layoutY="183.0" text="Giới hạn tuổi">
+                     <TextField fx:id="CountryFilm" layoutX="89.0" layoutY="77.0" prefHeight="25.0" prefWidth="188.0" />
+                     <Label layoutX="8.0" layoutY="110.0" text="Độ dài">
                         <font>
                            <Font size="18.0" />
                         </font>
                      </Label>
-                     <TextField fx:id="ageFilm" layoutX="114.0" layoutY="184.0" prefHeight="25.0" prefWidth="160.0" />
-                     <Label layoutX="5.0" layoutY="225.0" text="Trạng thái">
+                     <TextField fx:id="lenFilm" layoutX="67.0" layoutY="111.0" prefHeight="25.0" prefWidth="209.0" />
+                     <Label layoutX="9.0" layoutY="147.0" text="Đạo diễn">
                         <font>
                            <Font size="18.0" />
                         </font>
                      </Label>
-                     <TextField fx:id="staFilm" layoutX="88.0" layoutY="226.0" prefHeight="25.0" prefWidth="188.0" />
-                     <Label layoutX="6.0" layoutY="261.0" text="Nội dung">
+                     <TextField fx:id="direFilm" layoutX="88.0" layoutY="148.0" prefHeight="25.0" prefWidth="188.0" />
+                     <Label layoutX="9.0" layoutY="183.0" text="Diễn viên">
                         <font>
                            <Font size="18.0" />
                         </font>
                      </Label>
-                     <Label layoutX="9.0" layoutY="394.0" text="Trailer">
+                     <TextField fx:id="actorFilm" layoutX="87.0" layoutY="184.0" prefHeight="25.0" prefWidth="188.0" />
+                     <Label layoutX="10.0" layoutY="219.0" text="Giới hạn tuổi">
                         <font>
                            <Font size="18.0" />
                         </font>
                      </Label>
-                     <TextField fx:id="trailerFilm" layoutX="67.0" layoutY="395.0" prefHeight="25.0" prefWidth="203.0" />
-                     <Label layoutX="6.0" layoutY="434.0" text="Ad Poster">
+                     <TextField fx:id="ageFilm" layoutX="115.0" layoutY="220.0" prefHeight="25.0" prefWidth="160.0" />
+                     <Label layoutX="6.0" layoutY="261.0" text="Trạng thái">
                         <font>
                            <Font size="18.0" />
                         </font>
                      </Label>
-                     <Label layoutX="169.0" layoutY="434.0" text="Poster">
+                     <TextField fx:id="staFilm" layoutX="89.0" layoutY="262.0" prefHeight="25.0" prefWidth="188.0" />
+                     <Label layoutX="7.0" layoutY="297.0" text="Nội dung">
                         <font>
                            <Font size="18.0" />
                         </font>
                      </Label>
-                     <Label layoutX="12.0" layoutY="473.0" text="Release Day">
+                     <Label layoutX="10.0" layoutY="430.0" text="Trailer">
                         <font>
                            <Font size="18.0" />
                         </font>
                      </Label>
-                     <DatePicker fx:id="releaseFilm" layoutX="114.0" layoutY="474.0" prefHeight="25.0" prefWidth="160.0" />
-                     <Button fx:id="adPosterBtn" layoutX="90.0" layoutY="435.0" mnemonicParsing="false" onAction="#onClickAdPoster" text="Button" />
-                     <Button fx:id="posterBtn" layoutX="220.0" layoutY="435.0" mnemonicParsing="false" onAction="#onClickPoster" text="Button" />
-                     <TextArea fx:id="conFilm" layoutX="7.0" layoutY="288.0" prefHeight="94.0" prefWidth="265.0" />
+                     <TextField fx:id="trailerFilm" layoutX="68.0" layoutY="431.0" prefHeight="25.0" prefWidth="203.0" />
+                     <Label layoutX="7.0" layoutY="470.0" text="Ad Poster">
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+                     <Label layoutX="170.0" layoutY="470.0" text="Poster">
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+                     <Label layoutX="12.0" layoutY="570.0" text="Release Day">
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+                     <DatePicker fx:id="releaseFilm" layoutX="115.0" layoutY="571.0" prefHeight="25.0" prefWidth="160.0" />
+                     <Button fx:id="adPosterBtn" layoutX="85.0" layoutY="471.0" mnemonicParsing="false" onAction="#onClickAdPoster" text="Chọn" />
+                     <Button fx:id="posterBtn" layoutX="220.0" layoutY="471.0" mnemonicParsing="false" onAction="#onClickPoster" text="Chọn" />
+                     <TextArea fx:id="conFilm" layoutX="8.0" layoutY="324.0" prefHeight="94.0" prefWidth="265.0" />
+                     <Button layoutX="256.0" layoutY="2.0" mnemonicParsing="false" onAction="#onClickFilmFormClose" text="X" />
+                     <ImageView fx:id="adPosterImg" fitHeight="56.0" fitWidth="96.0" layoutX="33.0" layoutY="504.0" pickOnBounds="true" preserveRatio="true" />
+                     <ImageView fx:id="posterImg" fitHeight="56.0" fitWidth="96.0" layoutX="172.0" layoutY="504.0" pickOnBounds="true" preserveRatio="true" />
                   </children>
                </Pane>
                <TableView fx:id="tableFilm" layoutX="11.0" layoutY="122.0" prefHeight="660.0" prefWidth="634.0">
@@ -133,26 +196,26 @@
                      <Font size="30.0" />
                   </font>
                </Label>
-               <Button fx:id="addFilmBtn" layoutX="681.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickViewFilm" text="xem">
+               <Button fx:id="addFilmBtn" layoutX="785.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickAddFilm" text="Thêm">
                   <font>
                      <Font size="20.0" />
                   </font>
                </Button>
-               <Button fx:id="editFilmBtn" layoutX="756.0" layoutY="67.0" mnemonicParsing="false" onAction="#onClickEditFilm" text="sửa">
+               <Button fx:id="editFilmBtn" layoutX="667.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickEditFilm" text="Xem/Sửa">
                   <font>
                      <Font size="20.0" />
                   </font>
                </Button>
-               <Button fx:id="deleteFilmBtn" layoutX="826.0" layoutY="67.0" mnemonicParsing="false" onAction="#onClickDeleteFilm" text="xoá">
+               <Button fx:id="deleteFilmBtn" layoutX="872.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickDeleteFilm" text="Xoá">
                   <font>
                      <Font size="20.0" />
                   </font>
                </Button>
-               <TextField fx:id="searchFilm" layoutX="425.0" layoutY="68.0" onAction="#onSearchFilm" prefHeight="43.0" prefWidth="240.0" />
+               <TextField fx:id="searchFilm" layoutX="419.0" layoutY="68.0" onAction="#onSearchFilm" prefHeight="43.0" prefWidth="240.0" />
             </children>
          </Pane>
          <Pane prefHeight="200.0" prefWidth="200.0" visible="false" />
-         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FF3333;">
+         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FF3333;" visible="false">
             <children>
                <TableView fx:id="tableUser" layoutX="11.0" layoutY="122.0" prefHeight="660.0" prefWidth="916.0">
                  <columns>

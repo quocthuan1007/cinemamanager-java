@@ -13,13 +13,13 @@ import java.util.Date;
 public class User {
     private int id;
     private String name;
-    private boolean gender;
+    private int gender;
     private Date birth;
     private String phone;
     private String address;
     private int accountId;
 
-    public User(int id, String name, boolean gender, Date birth, String phone, String address, int accountId) {
+    public User(int id, String name, int gender, Date birth, String phone, String address, int accountId) {
         this.id = id;
         this.name = name;
         this.gender = gender;
@@ -45,11 +45,11 @@ public class User {
         this.name = name;
     }
 
-    public boolean isGender() {
+    public int isGender() {
         return gender;
     }
 
-    public void setGender(boolean gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 

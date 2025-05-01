@@ -11,4 +11,11 @@ public class FilmService {
     public List<Film> getAllFilms() {
         return filmDao.getAllFilms();
     }
+    public static boolean deleteFilm(int filmId) {
+        return FilmDao.deleteFilm(filmId);
+    }
+    public static boolean updateFilm(Film filmId){
+        return FilmDao.updateFilm(filmId);
+    }
+
 }

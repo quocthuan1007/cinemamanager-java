@@ -80,7 +80,7 @@ public class UserConfirmController {
             birthConfirm.setValue(localDate);
             addressConfirm.setText(Info.getAddress() != null ? Info.getAddress() : "Null");
             numberConfirm.setText(Info.getPhone() != null ? Info.getPhone() : "Null");
-            genderConfirm.setValue(Info.isGender() ? "Nam" : "Nữ");
+            genderConfirm.setValue(Info.isGender() == 0 ? "Nam" : "Nữ");
         }
     }
     public void onPlayerClickInfoConfirm(MouseEvent event)
@@ -117,7 +117,7 @@ public class UserConfirmController {
                 return;
             }
 
-            boolean gender = genderText.equals("Nam");
+            int gender = genderText.equals("Nam") ? 1 : 0;
             java.util.Date birth = java.sql.Date.valueOf(birthValue);
 
             int accountId = UserSession.getInstance().getUserId();

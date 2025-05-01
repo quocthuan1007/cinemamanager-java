@@ -140,9 +140,9 @@ public class MainMenuController implements Initializable {
     @FXML private TableView<FoodOrder> foodDrinkTableView;
     @FXML private TableColumn<FoodOrder, String> nameColumn;
     @FXML private TableColumn<FoodOrder, String> descriptionColumn;
-    @FXML private TableColumn<FoodOrder, Integer> priceColumn;
+    @FXML private TableColumn<FoodOrder, Float> priceColumn;
     @FXML private TableColumn<FoodOrder, Integer> quantityColumn;
-    @FXML private TableColumn<FoodOrder, Integer> totalColumn;
+    @FXML private TableColumn<FoodOrder, Float> totalColumn;
 
     @FXML private TableView<Invoice> invoiceTable;
     @FXML private TableColumn<Invoice, String> colNgay;
@@ -273,7 +273,7 @@ public class MainMenuController implements Initializable {
         return descriptionColumn;
     }
 
-    public TableColumn<FoodOrder, Integer> getPriceColumn() {
+    public TableColumn<FoodOrder, Float> getPriceColumn() {
         return priceColumn;
     }
 
@@ -281,7 +281,7 @@ public class MainMenuController implements Initializable {
         return quantityColumn;
     }
 
-    public TableColumn<FoodOrder, Integer> getTotalColumn() {
+    public TableColumn<FoodOrder, Float> getTotalColumn() {
         return totalColumn;
     }
 

@@ -81,11 +81,11 @@ public class ManageUserController {
         for (Account account : listAccount) {
             User user = UserService.getUser(account.getId());
             if (user == null) {
-                list.add(new UserAccount(new User(-1, "Null", false, null, "Null", "Null", account.getId()), account));
+                list.add(new UserAccount(new User(-1, "Null", 3, null, "Null", "Null", account.getId()), account));
             } else {
                 String name = user.getName() != null ? user.getName() : "Null";
                 String phone = user.getPhone() != null ? user.getPhone() : "Null";
-                boolean gender = user.isGender();
+                int gender = user.isGender();
                 String address = user.getAddress() != null ? user.getAddress() : "Null";
                 Date birth = user.getBirth();
 
@@ -137,7 +137,7 @@ public class ManageUserController {
         StringBuilder info = new StringBuilder();
         info.append("Tên: ").append(user.getName()).append("\n");
         info.append("SĐT: ").append(user.getPhone()).append("\n");
-        info.append("Giới tính: ").append(user.isGender() ? "Nam" : "Nữ").append("\n");
+        info.append("Giới tính: ").append(user.isGender() == 0 ? "Nam" : "Nữ").append("\n");
         info.append("Ngày sinh: ").append(user.getBirth()).append("\n");
         info.append("Địa chỉ: ").append(user.getAddress()).append("\n");
         info.append("Email: ").append(account.getEmail());
@@ -188,7 +188,7 @@ public class ManageUserController {
 
             addressConfirm.setText(info.getAddress() != null ? info.getAddress() : "Null");
             numberConfirm.setText(info.getPhone() != null ? info.getPhone() : "Null");
-            genderConfirm.setValue(info.isGender() ? "Nam" : "Nữ");
+            genderConfirm.setValue(info.isGender() == 0 ? "Nam" : "Nữ");
         }
     }
 
@@ -212,7 +212,7 @@ public class ManageUserController {
                 return;
             }
 
-            boolean gender = genderText.equals("Nam");
+            int gender = genderText.equals("Nam") ? 0 : 1;
             Date birth = java.sql.Date.valueOf(birthValue);
 
             int accountId = (currentSelectedUser != null) ? currentSelectedUser.getAccountId() : UserSession.getInstance().getUserId();
@@ -233,7 +233,8 @@ public class ManageUserController {
             showAlert(Alert.AlertType.ERROR, "Lỗi", "Lưu thông tin thất bại. Vui lòng kiểm tra lại dữ liệu.");
         }
     }
-    public void onSearchByEmail(ActionEvent event) {
+
+    public void onSearchByEmail() {
         String keyword = searchEmailField.getText().trim().toLowerCase();
 
         if (keyword.isEmpty()) {

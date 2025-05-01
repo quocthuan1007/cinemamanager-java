@@ -4,6 +4,7 @@ import com.utc2.cinema.dao.*;
 import com.utc2.cinema.model.entity.*;
 import com.utc2.cinema.service.FilmService;
 import com.utc2.cinema.service.UserService;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -48,9 +49,9 @@ public class BuyTicketController {
     private TableView<FoodOrder> foodDrinkTableView;
     private TableColumn<FoodOrder, String> nameColumn;
     private TableColumn<FoodOrder, String> descriptionColumn;
-    private TableColumn<FoodOrder, Integer> priceColumn;
+    private TableColumn<FoodOrder, Float> priceColumn;
     private TableColumn<FoodOrder, Integer> quantityColumn;
-    private TableColumn<FoodOrder, Integer> totalColumn;
+    private TableColumn<FoodOrder, Float> totalColumn;
 
     private Set<String> selectedSeats = new HashSet<>();
     private double seatTotalPrice = 0;
@@ -475,7 +476,7 @@ public class BuyTicketController {
     private void initializeTable() {
         nameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getFood().getName()));
         descriptionColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getFood().getDescription()));
-        priceColumn.setCellValueFactory(param -> new SimpleIntegerProperty(param.getValue().getFood().getCost()).asObject());
+        priceColumn.setCellValueFactory(param -> new SimpleFloatProperty(param.getValue().getFood().getCost()).asObject());
 
         // Cột Số Lượng với nút cộng và trừ
         quantityColumn.setCellFactory(col -> {
@@ -519,7 +520,7 @@ public class BuyTicketController {
             return cell;
         });
 
-        totalColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getTotalPrice()).asObject());
+        totalColumn.setCellValueFactory(cellData -> new SimpleFloatProperty(cellData.getValue().getTotalPrice()).asObject());
     }
 
 

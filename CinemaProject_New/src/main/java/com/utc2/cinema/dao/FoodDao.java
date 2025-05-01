@@ -79,7 +79,7 @@ public class FoodDao {
 
             pstmt.setString(1, food.getName());
             pstmt.setString(2, food.getDescription());
-            pstmt.setInt(3, food.getCost());
+            pstmt.setFloat(3, food.getCost());
             pstmt.executeUpdate();
 
             System.out.println("Món ăn đã được thêm thành công.");
@@ -98,7 +98,7 @@ public class FoodDao {
 
             pstmt.setString(1, food.getName());
             pstmt.setString(2, food.getDescription());
-            pstmt.setInt(3, food.getCost());
+            pstmt.setFloat(3, food.getCost());
             pstmt.setInt(4, food.getId());
             pstmt.executeUpdate();
 

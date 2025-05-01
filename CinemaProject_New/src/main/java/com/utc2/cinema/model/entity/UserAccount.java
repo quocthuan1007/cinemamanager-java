@@ -27,7 +27,7 @@ public class UserAccount {
     }
 
     public String getGender() {
-        return user.isGender() ? "Nam" : "Nữ";
+        return user.isGender() == 0 ? "Nam" : "Nữ";
     }
 
     public User getUser() {

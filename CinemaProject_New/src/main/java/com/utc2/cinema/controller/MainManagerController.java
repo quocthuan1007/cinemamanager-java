@@ -15,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -101,6 +102,8 @@ public class MainManagerController implements Initializable {
     private TextField addressConfirm;
 
     @FXML
+    private Pane filmForm;
+    @FXML
     private DatePicker birthConfirm;
     @FXML
     private Button closeConfirm;
@@ -114,7 +117,10 @@ public class MainManagerController implements Initializable {
     private TextField numberConfirm;
     @FXML
     private Button saveConfirm;
-    //
+    @FXML
+    private ImageView adPosterImg;
+    @FXML
+    private ImageView posterImg;
     @FXML
     private TableColumn<UserAccount, String> addUser;
 
@@ -154,12 +160,33 @@ public class MainManagerController implements Initializable {
     @FXML
     private Button viewBtn;
 
+
+
+    /// ////////////////////////////////////////////////
     private ManageUserController userController;
+    private ManageFilmController filmController;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         userController = new ManageUserController(this);
         userController.init();
+
+        filmController = new ManageFilmController(this);
+        filmController.init();
+
+        onInitialize();
     }
+    void onInitialize() {
+        searchFilm.textProperty().addListener((observable, oldValue, newValue) -> {
+            onSearchFilm();
+        });
+        searchEmailField.textProperty().addListener((observable, oldValue, newValue) -> {
+            onSearchByEmail();
+        });
+    }
+    /// ////////////////////////////////////////////////
+
+
+
     @FXML
     void handleDangXuat(ActionEvent event) {
         System.out.println("Đăng xuất");
@@ -223,9 +250,9 @@ public class MainManagerController implements Initializable {
         userController.onPlayerSaveInfoConfirm(event);
     }
     @FXML
-    void onSearchByEmail(ActionEvent event)
+    void onSearchByEmail()
     {
-        userController.onSearchByEmail(event);
+        userController.onSearchByEmail();
     }
     //===========================================================film-manage=====================================
     //===========================================================================================================
@@ -236,7 +263,7 @@ public class MainManagerController implements Initializable {
     private TextField actorFilm;
 
     @FXML
-    private TableColumn<?, ?> actorFilmCol;
+    private TableColumn<Film, String> actorFilmCol;
 
     @FXML
     private Button adPosterBtn;
@@ -251,7 +278,7 @@ public class MainManagerController implements Initializable {
     private TextArea conFilm;
 
     @FXML
-    private TableColumn<?, ?> countryFilmCol;
+    private TableColumn<Film, String> countryFilmCol;
 
     @FXML
     private Button deleteFilmBtn;
@@ -269,7 +296,7 @@ public class MainManagerController implements Initializable {
     private TextField nameFilm;
 
     @FXML
-    private TableColumn<?, ?> nameFilmCol;
+    private TableColumn<Film, String> nameFilmCol;
 
     @FXML
     private Button posterBtn;
@@ -282,146 +309,237 @@ public class MainManagerController implements Initializable {
 
     @FXML
     private TextField staFilm;
-
     @FXML
-    private TableColumn<?, ?> statusFilmCol;
-
+    private TableColumn<Film, String> statusFilmCol;
     @FXML
-    private TableView<?> tableFilm;
-
+    private TableView<Film> tableFilm;
     @FXML
     private TextField trailerFilm;
-
     @FXML
-    private Button viewBtn11;
+    private Button addOrSaveBtn;
     private String adPosterPath = "";
     private String posterPath = "";
 
-    // Copy ảnh và trả về đường dẫn tương đối
-    private String copyImageToFolder(File sourceFile, String folderName) throws IOException {
-        // Lấy phần mở rộng của file
-        String fileExtension = sourceFile.getName().substring(sourceFile.getName().lastIndexOf('.'));
+    public TextField getCountryFilm() {
+        return CountryFilm;
+    }
 
-        // Tên file mới, có thể thêm UUID tránh trùng tên
-        String fileNameWithoutExtension = UUID.randomUUID() + "_" + sourceFile.getName().substring(0, sourceFile.getName().lastIndexOf('.'));
+    public TextField getActorFilm() {
+        return actorFilm;
+    }
 
-        // Thư mục đích
-        File destDir = new File("src/main/resources/Image/" + folderName);
-        if (!destDir.exists()) destDir.mkdirs();
+    public TableColumn<Film, String> getActorFilmCol() {
+        return actorFilmCol;
+    }
 
-        // File đích
-        File destFile = new File(destDir, fileNameWithoutExtension + fileExtension); // Lưu file với đuôi mở rộng
+    public Button getAdPosterBtn() {
+        return adPosterBtn;
+    }
 
-        // Sao chép file vào thư mục đích
-        Files.copy(sourceFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    public Button getAddFilmBtn() {
+        return addFilmBtn;
+    }
 
-        // Trả về đường dẫn tương đối mà không có phần mở rộng
-        return folderName + "/" + fileNameWithoutExtension; // Trả về tên file không đuôi
+    public TextField getAgeFilm() {
+        return ageFilm;
+    }
+
+    public TextArea getConFilm() {
+        return conFilm;
+    }
+
+    public TableColumn<Film, String> getCountryFilmCol() {
+        return countryFilmCol;
+    }
+
+    public Button getDeleteFilmBtn() {
+        return deleteFilmBtn;
+    }
+
+    public TextField getDireFilm() {
+        return direFilm;
+    }
+
+    public Button getEditFilmBtn() {
+        return editFilmBtn;
+    }
+
+    public TextField getLenFilm() {
+        return lenFilm;
+    }
+
+    public TextField getNameFilm() {
+        return nameFilm;
+    }
+
+    public TableColumn<Film, String> getNameFilmCol() {
+        return nameFilmCol;
+    }
+
+    public DatePicker getReleaseFilm() {
+        return releaseFilm;
+    }
+
+    public TextField getSearchFilm() {
+        return searchFilm;
+    }
+
+    public TextField getStaFilm() {
+        return staFilm;
+    }
+
+    public TableColumn<Film, String> getStatusFilmCol() {
+        return statusFilmCol;
+    }
+    public Pane getFilmForm() {
+        return filmForm;
+    }
+    public TableView<Film> getTableFilm() {
+        return tableFilm;
+    }
+
+    public TextField getTrailerFilm() {
+        return trailerFilm;
+    }
+
+    public String getAdPosterPath() {
+        return adPosterPath;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public Button getPosterBtn() {
+        return posterBtn;
+    }
+
+    public void setAdPosterPath(String adPosterPath) {
+        this.adPosterPath = adPosterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public Button getAddOrSaveBtn() {
+        return addOrSaveBtn;
+    }
+    @FXML
+    public ImageView getAdPosterImg() {
+        return adPosterImg;
+    }
+    @FXML
+    public ImageView getPosterImg() {
+        return posterImg;
     }
 
     @FXML
     void onClickAddFilm(ActionEvent event) {
-        try {
-            // Lấy dữ liệu từ các input
-            String name = nameFilm.getText();
-            String country = CountryFilm.getText();
-            int length = Integer.parseInt(lenFilm.getText());
-            String director = direFilm.getText();
-            String actor = actorFilm.getText();
-            int ageLimit = Integer.parseInt(ageFilm.getText());
-            String status = staFilm.getText();
-            String trailer = trailerFilm.getText();
-            String content = conFilm.getText();
-            LocalDate releaseDateValue = releaseFilm.getValue();
-
-            if (releaseDateValue == null) {
-                System.out.println("Chưa chọn ngày phát hành!");
-                return;
-            }
-            LocalDate localDate = releaseFilm.getValue();
-
-            // Chuyển LocalDate sang java.util.Date
-            Date releaseDate = null;
-            if (localDate != null) {
-                releaseDate = java.sql.Timestamp.valueOf(localDate.atStartOfDay());
-            }
-
-            Film film = new Film(0, name, country, length, director, actor, ageLimit,
-                    status, trailer, content, adPosterPath, posterPath, releaseDate);     // từ onClickPoster
-
-            // Gọi insert
-            boolean success = FilmDao.insertFilm(film);
-            if (success) {
-                System.out.println("Thêm phim thành công!");
-                // TODO: reload table, clear fields nếu cần
-            } else {
-                System.out.println("Thêm phim thất bại.");
-            }
-
-        } catch (NumberFormatException e) {
-            System.out.println("Lỗi định dạng số!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        filmController.onClickAddFilm(event);
     }
 
     @FXML
     void onClickDeleteFilm(ActionEvent event) {
-
+        filmController.onClickDeleteFilm(event);
     }
 
     @FXML
     void onClickEditFilm(ActionEvent event) {
-
+        filmController.onClickEditFilm(event);
     }
 
     @FXML
     void onClickAdPoster(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Chọn ảnh Poster quảng cáo");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Hình ảnh", "*.png", "*.jpg", "*.jpeg")
-        );
-        File selectedFile = fileChooser.showOpenDialog(null);
-        if (selectedFile != null) {
-            try {
-                adPosterPath = copyImageToFolder(selectedFile, "poster");
-                adPosterBtn.setText("Đã chọn");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        filmController.onClickAdPoster(event);
     }
-
     @FXML
     void onClickPoster(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Chọn ảnh Poster chính");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Hình ảnh", "*.png", "*.jpg", "*.jpeg")
-        );
-        File selectedFile = fileChooser.showOpenDialog(null);
-        if (selectedFile != null) {
-            try {
-                // Lấy tên file mà không có phần mở rộng
-                String fileNameWithoutExtension = selectedFile.getName().substring(0, selectedFile.getName().lastIndexOf('.'));
-                // Thêm đường dẫn mới (bỏ đuôi file)
-                posterPath = copyImageToFolder(selectedFile, "poster/" + fileNameWithoutExtension);
-                posterBtn.setText("Đã chọn");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        filmController.onClickPoster(event);
     }
-
-
     @FXML
     void onClickViewFilm(ActionEvent event) {
 
     }
+    @FXML
+    void onSearchFilm() {
+        filmController.onSearchFilm();
+    }
+    @FXML
+    void onClickFilmFormClose(ActionEvent event) {
+        if(filmForm.isVisible())
+        {
+            filmForm.setVisible(false);
+        }
+    }
+
+    /// ////////////////////////////////////////Food-Manage////////////////////////////////////////////////////////
+    /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @FXML
+    private Button addFoodBtn;
 
     @FXML
-    void onSearchFilm(ActionEvent event) {
+    private Button addOrSaveFood;
+
+    @FXML
+    private TableColumn<?, ?> costCol;
+
+    @FXML
+    private TextField costFood;
+
+    @FXML
+    private Button deleteFoodBtn;
+
+    @FXML
+    private TableColumn<?, ?> descripCol;
+
+    @FXML
+    private TextArea descripFood;
+
+    @FXML
+    private Button editFoodBtn;
+
+    @FXML
+    private Pane filmForm1;
+
+    @FXML
+    private TableColumn<?, ?> foodCol;
+
+    @FXML
+    private Pane foodForm;
+
+    @FXML
+    private TextField nameFood;
+
+    @FXML
+    private TextField searchFood;
+
+    @FXML
+    private TableView<?> tableFilm1;
+
+    @FXML
+    void onClickAddFood(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onClickDeleteFood(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onClickEditFood(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onClickFoodFormClose(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onSearchFood(ActionEvent event) {
 
     }
 
