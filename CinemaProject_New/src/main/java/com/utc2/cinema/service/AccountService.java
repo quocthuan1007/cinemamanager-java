@@ -7,9 +7,9 @@ import java.util.List;
 
 public class AccountService
 {
-    public static Account findAccount(String email, String password)
+    public static Account findAccount(String email)
     {
-        Account findAccount = new AccountDao().getData(email, password);
+        Account findAccount = new AccountDao().getDataByEmail(email);
         if(findAccount == null)
             return null;
         return findAccount;
@@ -31,5 +31,10 @@ public class AccountService
     }
     public static int deleteAccount(Account target) {
         return AccountDao.deleteAccount(target);
+    }
+    public static String getPassword(String email)
+    {
+        AccountDao a = new AccountDao();
+        return a.getPassword(email);
     }
 }

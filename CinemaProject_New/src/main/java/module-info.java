@@ -5,6 +5,7 @@ module CinemaProject {
     requires javafx.graphics;
     requires javafx.web;
     requires java.desktop;
+    requires jbcrypt;
 
     opens com.utc2.cinema.view to javafx.fxml;
     exports com.utc2.cinema.view;

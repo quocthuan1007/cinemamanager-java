@@ -1,7 +1,11 @@
 package com.utc2.cinema.controller;
 
 import com.utc2.cinema.model.entity.Account;
+import com.utc2.cinema.model.entity.CustomAlert;
+import com.utc2.cinema.model.entity.UserSession;
 import com.utc2.cinema.service.AccountService;
+import com.utc2.cinema.utils.PasswordUtils;
+import com.utc2.cinema.utils.ValidationUtils;
 import com.utc2.cinema.view.Login;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -90,35 +94,66 @@ public class RegisterController
 
         @FXML
         void onClickRegisterButton(ActionEvent event) {
-            // Lấy dữ liệu từ các trường
             String email = emailRegister.getText().trim();
             String password = passwordTf.isVisible() ? passwordTf.getText() : passwordPf.getText();
             String confirmPass = passConfirmTf.isVisible() ? passConfirmTf.getText() : passConfirmPf.getText();
 
             if (email.isEmpty() || password.isEmpty() || confirmPass.isEmpty()) {
-                labelError.setText("Vui lòng điền đầy đủ!!");
+                CustomAlert.showError("", "Có lỗi xảy ra", "Vui lòng điền đầy đủ!");
+                return;
+            }
+
+            if (!ValidationUtils.isValidEmail(email)) {
+                CustomAlert.showError("", "Có lỗi xảy ra", "Email không đúng định dạng (thuan@gmail.com)!");
+                return;
+            }
+            if (!PasswordUtils.isValidPassword(password)) {
+                CustomAlert.showError("", "Có lỗi xảy ra",
+                        "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
                 return;
             }
             if (!password.equals(confirmPass)) {
-                labelError.setText("Mật khẩu không trùng khớp!");
+                CustomAlert.showError("", "Có lỗi xảy ra", "Mật khẩu không trùng khớp!");
                 return;
             }
-            //xử lý
-            if(AccountService.checkEmail(email) == true)
-            {
-                labelError.setText("Email tồn tại!");
+            if (AccountService.checkEmail(email)) {
+                CustomAlert.showError("", "Có lỗi xảy ra", "Email này đã tồn tại!");
                 return;
             }
-            else
-            {
-                Account accRegis = new Account(0, email, password, "OFF", 3);
-                if(AccountService.registerAccount(accRegis))
+            Account accRegis = new Account(0, email, PasswordUtils.hashPassword(password), "OFFLINE", 3);
+            emailRegister.clear();
+            passwordTf.clear();
+            passwordPf.clear();
+            passConfirmTf.clear();
+            passConfirmPf.clear();
+            if (AccountService.registerAccount(accRegis)) {
+                boolean check = CustomAlert.showConfirmation("","Hoàn tất","Đăng ký thành công, bạn có muốn đăng nhập không?");
+                if(check == true)
                 {
-                    labelError.setText("Thành công");
-                }
-            }
+                    try {
+                        Account findAccount = AccountService.findAccount(accRegis.getEmail());
+                        UserSession.createUserSession(findAccount.getId(),findAccount.getEmail(),findAccount.getPassword(),findAccount.getAccountStatus(),findAccount.getRoleId());
 
+                        Stage loginWin = (Stage) emailRegister.getScene().getWindow();
+                        loginWin.close();
+
+                        FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("/FXML/MainMenu.fxml"));
+                        Pane root = fxmlLoader.load();
+                        Scene scene = new Scene(root, 1160, 800);
+                        Stage stage = new Stage();
+                        stage.setTitle("Cinema Manager");
+                        stage.setScene(scene);
+                        stage.setResizable(false);
+                        stage.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                CustomAlert.showError("", "Có lỗi xảy ra", "Đăng ký thất bại!");
+            }
         }
+
 
         @FXML
         void onClickShowPass(ActionEvent event) {

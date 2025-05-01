@@ -118,17 +118,19 @@ public class AccountDao implements DaoInterface<Account>
         }
         return null;
     }
-
     @Override
-    public Account getData(String email, String password)
+    public Account getData(String email,String pass)
+    {
+        return null;
+    }
+    public Account getDataByEmail(String email)
     {
         Connection connect = Database.getConnection();
         Account account = null;
         try
         {
-            PreparedStatement st = connect.prepareStatement("Select * From account WHERE email = ? AND password = ?");
+            PreparedStatement st = connect.prepareStatement("Select * From account WHERE email = ?");
             st.setString(1 ,email);
-            st.setString(2,password);
             ResultSet rs = st.executeQuery();
             while(rs.next())
             {
@@ -176,5 +178,27 @@ public class AccountDao implements DaoInterface<Account>
         }
 
         return accounts;
+    }
+    public String getPassword(String userName)
+    {
+        Connection connect = Database.getConnection();
+        String password = null;
+        try
+        {
+            // Truy vấn chỉ lấy mật khẩu từ username
+            PreparedStatement st = connect.prepareStatement("SELECT password FROM account WHERE email = ?");
+            st.setString(1, userName);  // Sử dụng userName để tìm kiếm
+            ResultSet rs = st.executeQuery();
+
+            if (rs.next()) {
+                password = rs.getString("password");  // Lấy mật khẩu từ cơ sở dữ liệu
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        Database.closeConnection(connect);
+        return password;  // Trả về mật khẩu nếu tìm thấy, nếu không thì null
     }
 }
