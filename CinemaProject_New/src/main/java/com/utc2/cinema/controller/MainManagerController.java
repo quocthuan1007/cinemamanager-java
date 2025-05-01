@@ -180,6 +180,7 @@ public class MainManagerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         userController = new ManageUserController(this);
+        userController.setupGenderComboBox();
         userController.init();
 
         filmController = new ManageFilmController(this);

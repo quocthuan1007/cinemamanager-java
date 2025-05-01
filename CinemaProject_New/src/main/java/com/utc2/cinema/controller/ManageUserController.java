@@ -3,6 +3,7 @@ package com.utc2.cinema.controller;
 import com.utc2.cinema.model.entity.*;
 import com.utc2.cinema.service.AccountService;
 import com.utc2.cinema.service.UserService;
+import com.utc2.cinema.utils.ValidationUtils;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -94,7 +95,10 @@ public class ManageUserController {
         ObservableList<UserAccount> list = FXCollections.observableArrayList();
         List<Account> listAccount = AccountService.getAllAccounts();
 
-        for (Account account : listAccount) {
+        for (Account account : listAccount)
+        {
+            if(account.getRoleId() == 1) continue;
+
             User user = UserService.getUser(account.getId());
             if (user == null) {
                 list.add(new UserAccount(new User(-1, "Null", 3, null, "Null", "Null", account.getId()), account));
@@ -116,12 +120,14 @@ public class ManageUserController {
     public void onClickDelete(ActionEvent event) {
         UserAccount select = tableUser.getSelectionModel().getSelectedItem();
         if (select != null) {
+            UserService.deleteUserByAccountId(select.getAccountId());
+            // Sau đó mới xóa account
             if (AccountService.deleteAccount(select.getAccount()) != 0) {
-                UserService.deleteUserByAccountId(select.getAccountId());
-                userAccounts.remove(select);
+                userAccounts.remove(select); // Cập nhật UI
             }
         }
     }
+
 
     public void onClickEdit(ActionEvent event) {
         UserAccount select = tableUser.getSelectionModel().getSelectedItem();
@@ -220,7 +226,27 @@ public class ManageUserController {
             String phone = numberConfirm.getText();
 
             if (name.isEmpty() || genderText == null || birthValue == null || address.isEmpty() || phone.isEmpty()) {
-                showAlert(Alert.AlertType.WARNING, "Thiếu thông tin", "Vui lòng điền đầy đủ tất cả các thông tin trước khi lưu.");
+                CustomAlert.showError("", "Có lỗi xảy ra", "Vui lòng điền đầy đủ tất cả các thông tin trước khi lưu.");
+                return;
+            }
+
+            if (name.length() < 2 || name.length() > 50) {
+                CustomAlert.showError("", "Tên không hợp lệ", "Tên phải có từ 2 đến 50 ký tự.");
+                return;
+            }
+
+            if (!ValidationUtils.isValidPhone(phone)) {
+                CustomAlert.showError("", "Số điện thoại không hợp lệ", "Số điện thoại phải bắt đầu bằng 0 và có đúng 10 chữ số.");
+                return;
+            }
+
+            if (address.length() < 5 || address.length() > 100) {
+                CustomAlert.showError("", "Địa chỉ không hợp lệ", "Địa chỉ phải có từ 5 đến 100 ký tự.");
+                return;
+            }
+
+            if (birthValue.isAfter(LocalDate.now().minusYears(10)) || birthValue.isBefore(LocalDate.now().minusYears(120))) {
+                CustomAlert.showError("", "Ngày sinh không hợp lệ", "Vui lòng nhập ngày sinh hợp lý (tuổi từ 10 đến 120).");
                 return;
             }
 
@@ -236,15 +262,16 @@ public class ManageUserController {
                 UserService.insertUser(user);
             }
 
-            showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Thông tin đã được lưu thành công!");
+            CustomAlert.showInfo("", "Hoàn tất", "Thông tin đã được lưu thành công!");
 
             userAccounts.setAll(getUserAccountList());
             infoForm.setVisible(false);
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Lưu thông tin thất bại. Vui lòng kiểm tra lại dữ liệu.");
+            CustomAlert.showError("", "Có lỗi xảy ra", "Lưu thông tin thất bại. Vui lòng kiểm tra lại dữ liệu.");
         }
     }
+
 
     public void onSearchByEmail() {
         String keyword = searchEmailField.getText().trim().toLowerCase();
@@ -263,13 +290,5 @@ public class ManageUserController {
         }
 
         tableUser.setItems(filteredList);
-    }
-
-    private void showAlert(Alert.AlertType type, String title, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }
