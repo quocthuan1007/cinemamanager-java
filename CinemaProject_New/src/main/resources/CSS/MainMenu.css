@@ -27,7 +27,7 @@
 
 .main-content
 {
-    -fx-background-color: #a01616;
+    -fx-background-color: white;
 
 }
 .movie-content
@@ -40,7 +40,7 @@
 }
 .schedule-content
 {
-    -fx-background-color: #a01616;
+    -fx-background-color: white;
 }
 .buy-content
 {

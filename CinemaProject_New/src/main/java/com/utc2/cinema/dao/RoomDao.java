@@ -190,6 +190,17 @@ public class RoomDao {
             e.printStackTrace();
         }
     }
+    public static void clearSeatsForRoom(int roomId) {
+        String sql = "DELETE FROM Seats WHERE roomId = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, roomId);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

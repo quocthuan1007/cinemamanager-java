@@ -16,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -170,6 +171,8 @@ public class MainManagerController implements Initializable {
     private Pane thongKePane;
     @FXML
     private Pane movieManPane;
+    @FXML
+    private Pane roomPane;
 
 
     /// ////////////////////////////////////////////////
@@ -177,6 +180,7 @@ public class MainManagerController implements Initializable {
     private ManageFilmController filmController;
     private ManageFoodController foodController;
     private ManageScheduleController scheduleController;
+    private  ManageRoomController roomController;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         userController = new ManageUserController(this);
@@ -191,6 +195,9 @@ public class MainManagerController implements Initializable {
 
         scheduleController = new ManageScheduleController(this);
         scheduleController.initialize();
+
+        roomController =new ManageRoomController(this);
+        roomController.initialize();
 
         hideAllPanes();
         thongKePane.setVisible(true);
@@ -244,7 +251,9 @@ public class MainManagerController implements Initializable {
     @FXML
     void handlePhongChieu(ActionEvent event)
     {
-        System.out.println("OKE");
+        System.out.println("Phòng chiếu");
+        hideAllPanes();
+        roomPane.setVisible(true);
     }
     @FXML
     void handleLichChieu(ActionEvent event) {
@@ -783,6 +792,98 @@ public class MainManagerController implements Initializable {
     @FXML
     void onCancelAddMovieShow() {
         scheduleController.onCancelAddMovieShow();
+    }
+    @FXML
+    void onAddShowClick(){
+        scheduleController.onAddShowClick();
+    }
+    /// ////////////////////////////////////////Room-Manage////////////////////////////////////////////////////////
+    /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @FXML
+    private TextField roomNameField;
+
+    @FXML
+    private TextField rowCountField;
+
+    @FXML
+    private TextField columnCountField;
+
+    @FXML
+    private ComboBox<String> roomStatusComboBox;
+
+    @FXML
+    private GridPane seatGrid;
+
+    @FXML
+    private Button addRoomBtn;
+
+    @FXML
+    private Button deleteRoomBtn;
+
+    @FXML
+    private Button saveButton;
+
+    @FXML
+    private Button cancelButton;
+
+    @FXML
+    private ComboBox<String> roomNameComboBox;
+
+    @FXML
+    private Pane deleteConfirmationPane;
+
+    public TextField getRoomNameField() {
+        return roomNameField;
+    }
+
+    public TextField getRowCountField() {
+        return rowCountField;
+    }
+
+    public TextField getColumnCountField() {
+        return columnCountField;
+    }
+
+    public ComboBox<String> getRoomStatusComboBox() {
+        return roomStatusComboBox;
+    }
+
+    public GridPane getSeatGrid() {
+        return seatGrid;
+    }
+
+    public Button getAddRoomBtn() {
+        return addRoomBtn;
+    }
+
+    public Button getDeleteRoomBtn() {
+        return deleteRoomBtn;
+    }
+
+    public Button getSaveButton() {
+        return saveButton;
+    }
+
+    public Button getCancelButton() {
+        return cancelButton;
+    }
+
+    public ComboBox<String> getRoomNameComboBox() {
+        return roomNameComboBox;
+    }
+
+    public Pane getDeleteConfirmationPane() {
+        return deleteConfirmationPane;
+    }
+    @FXML
+    void onCancelDelete1(){
+        roomController.onCancelDelete();
+    }
+
+    @FXML
+    void onConfirmDelete1(){
+        roomController.onConfirmDelete();
     }
 
 }

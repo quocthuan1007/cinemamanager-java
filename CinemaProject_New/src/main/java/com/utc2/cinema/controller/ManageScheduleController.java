@@ -197,7 +197,7 @@ public class ManageScheduleController  {
 
 
     @FXML
-    private void onAddShowClick() {
+    void onAddShowClick() {
         addMovieShowPane.setVisible(true);
     }
 

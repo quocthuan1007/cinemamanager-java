@@ -115,7 +115,7 @@
 }
 
 /* Nút Thêm Phòng Chiếu (màu xanh) */
-.add-button {
+#addRoomBtn {
     -fx-background-color: #4CAF50;  /* Màu xanh */
     -fx-text-fill: white;
     -fx-font-size: 14px;
@@ -124,7 +124,7 @@
     -fx-cursor: hand;
 }
 
-.add-button:hover {
+#addRoomBtn:hover {
     -fx-background-color: #45a049;  /* Màu xanh đậm khi hover */
 }
 

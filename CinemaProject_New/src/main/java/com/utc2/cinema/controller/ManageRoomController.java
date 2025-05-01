@@ -19,7 +19,7 @@ import javafx.scene.layout.Pane;
 import java.net.URL;
 import java.util.*;
 
-public class test implements Initializable {
+public class ManageRoomController {
 
     @FXML
     private TextField roomNameField;
@@ -58,9 +58,25 @@ public class test implements Initializable {
     private final SeatDao seatDao = new SeatDao();
     private Room currentRoom;
 
+    public ManageRoomController(MainManagerController mainMenu) {
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+        this.roomNameField = mainMenu.getRoomNameField();
+        this.rowCountField = mainMenu.getRowCountField();
+        this.columnCountField = mainMenu.getColumnCountField();
+        this.roomStatusComboBox = mainMenu.getRoomStatusComboBox();
+        this.seatGrid = mainMenu.getSeatGrid();
+
+        this.addRoomBtn = mainMenu.getAddRoomBtn();
+        this.deleteRoomBtn = mainMenu.getDeleteRoomBtn();
+        this.saveButton = mainMenu.getSaveButton();
+        this.cancelButton = mainMenu.getCancelButton();
+        this.roomNameComboBox = mainMenu.getRoomNameComboBox();
+        this.deleteConfirmationPane = mainMenu.getDeleteConfirmationPane();
+    }
+
+
+    @FXML
+    public void initialize() {
         roomStatusComboBox.setItems(FXCollections.observableArrayList("Bình thường", "Bảo trì"));
         roomStatusComboBox.getSelectionModel().selectFirst();
 
@@ -261,7 +277,7 @@ public class test implements Initializable {
     }
 
     @FXML
-    private void onConfirmDelete() {
+    void onConfirmDelete() {
         if (currentRoom != null) {
             roomDao.deleteRoom(currentRoom.getName());
             currentRoom = null; // Reset sau khi xóa
@@ -274,7 +290,7 @@ public class test implements Initializable {
 
 
     @FXML
-    private void onCancelDelete() {
+    void onCancelDelete() {
         deleteConfirmationPane.setVisible(false);
     }
 

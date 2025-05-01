@@ -19,6 +19,15 @@ public class Seats {
         this.roomId = roomId;
         this.seatTypeId = seatTypeId;
     }
+    public Seats( String position, int roomId, int seatTypeId) {
+        this.id = id;
+        this.position = position;
+        this.roomId = roomId;
+        this.seatTypeId = seatTypeId;
+    }
+    public Seats() {
+        // constructor mặc định
+    }
 
     public int getId() {
         return id;
