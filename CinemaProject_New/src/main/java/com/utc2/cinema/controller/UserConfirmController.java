@@ -31,7 +31,7 @@ public class UserConfirmController {
         this.numberConfirm = mainMenu.getNumberConfirm();
         this.birthConfirm = mainMenu.getBirthConfirm();
         this.addressConfirm = mainMenu.getAddressConfirm();
-        this.infoForm = mainMenu.getInfoForm();
+        this.infoForm = mainMenu.getInfoContainer();
     }
     public void setupUser() {
         if (UserSession.getInstance() != null) {
