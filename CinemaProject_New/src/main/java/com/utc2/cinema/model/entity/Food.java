@@ -13,7 +13,7 @@ public class Food {
     private String description;
     private float cost;
 
-    public Food(int id, String name, String description, int cost) {
+    public Food(int id, String name, String description, float cost) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -36,7 +36,7 @@ public class Food {
         return name;
     }
 
-    public void setCost(int cost) {
+    public void setCost(float cost) {
         this.cost = cost;
     }
 

@@ -1,10 +1,7 @@
 package com.utc2.cinema.controller;
 
 import com.utc2.cinema.dao.FilmDao;
-import com.utc2.cinema.model.entity.Account;
-import com.utc2.cinema.model.entity.Film;
-import com.utc2.cinema.model.entity.User;
-import com.utc2.cinema.model.entity.UserAccount;
+import com.utc2.cinema.model.entity.*;
 import com.utc2.cinema.service.AccountService;
 import com.utc2.cinema.service.UserService;
 import javafx.beans.property.SimpleObjectProperty;
@@ -159,12 +156,22 @@ public class MainManagerController implements Initializable {
 
     @FXML
     private Button viewBtn;
-
+    @FXML
+    private Pane userPane;
+    @FXML
+    private Pane schedulePane;
+    @FXML
+    private Pane foodPane;
+    @FXML
+    private Pane thongKePane;
+    @FXML
+    private Pane movieManPane;
 
 
     /// ////////////////////////////////////////////////
     private ManageUserController userController;
     private ManageFilmController filmController;
+    private ManageFoodController foodController;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         userController = new ManageUserController(this);
@@ -173,11 +180,20 @@ public class MainManagerController implements Initializable {
         filmController = new ManageFilmController(this);
         filmController.init();
 
+        foodController = new ManageFoodController(this);
+        foodController.init();
+
+        hideAllPanes();
+        thongKePane.setVisible(true);
+
         onInitialize();
     }
     void onInitialize() {
         searchFilm.textProperty().addListener((observable, oldValue, newValue) -> {
             onSearchFilm();
+        });
+        searchFood.textProperty().addListener((observable, oldValue, newValue) -> {
+            onSearchFood();
         });
         searchEmailField.textProperty().addListener((observable, oldValue, newValue) -> {
             onSearchByEmail();
@@ -186,35 +202,56 @@ public class MainManagerController implements Initializable {
     /// ////////////////////////////////////////////////
 
 
-
     @FXML
     void handleDangXuat(ActionEvent event) {
         System.out.println("Đăng xuất");
     }
-
+    @FXML
+    void handleNguoiDung(ActionEvent event) {
+        System.out.println("Người dùng");
+        hideAllPanes();
+        userPane.setVisible(true);
+    }
+    @FXML
+    void handlePhongChieu(ActionEvent event)
+    {
+        System.out.println("OKE");
+    }
     @FXML
     void handleLichChieu(ActionEvent event) {
         System.out.println("Lịch chiếu");
+        hideAllPanes();
+        schedulePane.setVisible(true);
     }
 
     @FXML
-    void handleNhanVien(ActionEvent event) {
-        System.out.println("Nhân viên");
-    }
-
-    @FXML
-    void handlePhongChieu(ActionEvent event) {
-        System.out.println("Phòng chiếu");
+    void handleDoAn(ActionEvent event) {
+        System.out.println("Đồ ăn");
+        hideAllPanes();
+        foodPane.setVisible(true);
     }
 
     @FXML
     void handleQuanLyPhim(ActionEvent event) {
         System.out.println("Quản lý phim");
+        hideAllPanes();
+        movieManPane.setVisible(true);
     }
 
     @FXML
     void handleThongKe(ActionEvent event) {
         System.out.println("Thống kê");
+        hideAllPanes();
+        thongKePane.setVisible(true);
+    }
+
+    // Hàm ẩn tất cả các Pane
+    private void hideAllPanes() {
+        userPane.setVisible(false);
+        schedulePane.setVisible(false);
+        foodPane.setVisible(false);
+        thongKePane.setVisible(false);
+        movieManPane.setVisible(false);
     }
     private ObservableList<UserAccount> userAccounts = FXCollections.observableArrayList();
 
@@ -483,7 +520,7 @@ public class MainManagerController implements Initializable {
     private Button addOrSaveFood;
 
     @FXML
-    private TableColumn<?, ?> costCol;
+    private TableColumn<Food, Float> costCol;
 
     @FXML
     private TextField costFood;
@@ -492,7 +529,7 @@ public class MainManagerController implements Initializable {
     private Button deleteFoodBtn;
 
     @FXML
-    private TableColumn<?, ?> descripCol;
+    private TableColumn<Food, String> descripCol;
 
     @FXML
     private TextArea descripFood;
@@ -501,13 +538,10 @@ public class MainManagerController implements Initializable {
     private Button editFoodBtn;
 
     @FXML
-    private Pane filmForm1;
-
-    @FXML
-    private TableColumn<?, ?> foodCol;
-
-    @FXML
     private Pane foodForm;
+
+    @FXML
+    private TableColumn<Food, String> foodCol;
 
     @FXML
     private TextField nameFood;
@@ -516,31 +550,88 @@ public class MainManagerController implements Initializable {
     private TextField searchFood;
 
     @FXML
-    private TableView<?> tableFilm1;
+    private TableView<Food> tableFood;
+
+    public TextField getSearchFood() {
+        return searchFood;
+    }
+
+    public TableView<Food> getTableFood() {
+        return tableFood;
+    }
+
+    public TextField getNameFood() {
+        return nameFood;
+    }
+
+    public Pane getFoodForm() {
+        return foodForm;
+    }
+
+    public Pane getFoodPane() {
+        return foodPane;
+    }
+
+    public TextArea getDescripFood() {
+        return descripFood;
+    }
+
+    public TableColumn<Food, String> getDescripCol() {
+        return descripCol;
+    }
+
+    public TextField getCostFood() {
+        return costFood;
+    }
+
+    public TableColumn<Food, Float> getCostCol() {
+        return costCol;
+    }
+
+    public Button getAddFoodBtn() {
+        return addFoodBtn;
+    }
+
+    public Button getAddOrSaveFood() {
+        return addOrSaveFood;
+    }
+
+    public Button getEditFoodBtn() {
+        return editFoodBtn;
+    }
+
+    public TableColumn<Food, String> getFoodCol() {
+        return foodCol;
+    }
+
+    public Button getDeleteFoodBtn() {
+        return deleteFoodBtn;
+    }
 
     @FXML
     void onClickAddFood(ActionEvent event) {
-
+        foodController.onClickAddFood(event);
     }
 
     @FXML
     void onClickDeleteFood(ActionEvent event) {
-
+        foodController.onClickDeleteFood(event);
     }
 
     @FXML
     void onClickEditFood(ActionEvent event) {
-
+        foodController.onClickEditFood(event);
     }
 
     @FXML
-    void onClickFoodFormClose(ActionEvent event) {
-
+    void onClickFoodFormClose(ActionEvent event)
+    {
+        if(foodForm.isVisible())foodForm.setVisible(false);
     }
 
     @FXML
-    void onSearchFood(ActionEvent event) {
-
+    void onSearchFood() {
+        foodController.onSearchFood();
     }
 
 }

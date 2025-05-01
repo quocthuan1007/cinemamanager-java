@@ -70,8 +70,7 @@ public class FoodDao {
         return food; // Trả về đối tượng Food nếu tìm thấy, hoặc null nếu không tìm thấy.
     }
 
-    // Thêm món ăn mới vào cơ sở dữ liệu
-    public void addFood(Food food) {
+    public boolean insertFood(Food food) {
         String query = "INSERT INTO Food (name, description, cost) VALUES (?, ?, ?)";
 
         try (Connection conn = Database.getConnection();
@@ -80,17 +79,25 @@ public class FoodDao {
             pstmt.setString(1, food.getName());
             pstmt.setString(2, food.getDescription());
             pstmt.setFloat(3, food.getCost());
-            pstmt.executeUpdate();
+            int result = pstmt.executeUpdate(); // Đọc số lượng bản ghi ảnh hưởng
 
-            System.out.println("Món ăn đã được thêm thành công.");
+            if (result > 0) {
+                System.out.println("Món ăn đã được thêm thành công.");
+                return true;  // Thành công
+            } else {
+                System.out.println("Không có bản ghi nào được thêm.");
+                return false; // Không có gì được thêm
+            }
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Lỗi khi thêm món ăn.");
+            return false;  // Nếu có lỗi xảy ra, trả về false
         }
     }
 
+
     // Cập nhật thông tin món ăn
-    public void updateFood(Food food) {
+    public boolean updateFood(Food food) {
         String query = "UPDATE Food SET name = ?, description = ?, cost = ? WHERE id = ?";
 
         try (Connection conn = Database.getConnection();
@@ -100,17 +107,25 @@ public class FoodDao {
             pstmt.setString(2, food.getDescription());
             pstmt.setFloat(3, food.getCost());
             pstmt.setInt(4, food.getId());
-            pstmt.executeUpdate();
+            int rowsAffected = pstmt.executeUpdate();
 
-            System.out.println("Thông tin món ăn đã được cập nhật.");
+            if (rowsAffected > 0) {
+                System.out.println("Thông tin món ăn đã được cập nhật.");
+                return true;  // Trả về true nếu cập nhật thành công
+            } else {
+                System.out.println("Không tìm thấy món ăn với ID đã cho.");
+                return false;  // Trả về false nếu không có món ăn nào được cập nhật
+            }
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Lỗi khi cập nhật món ăn.");
+            return false;  // Trả về false nếu có lỗi xảy ra
         }
     }
 
+
     // Xóa món ăn theo ID
-    public void deleteFood(int foodId) {
+    public boolean deleteFood(int foodId) {
         String query = "DELETE FROM Food WHERE id = ?";
 
         try (Connection conn = Database.getConnection();
@@ -120,9 +135,11 @@ public class FoodDao {
             pstmt.executeUpdate();
 
             System.out.println("Món ăn đã được xóa thành công.");
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Lỗi khi xóa món ăn.");
+            return false;
         }
     }
 }
