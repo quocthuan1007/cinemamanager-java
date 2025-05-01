@@ -223,5 +223,6 @@
                <TextField fx:id="searchEmailField" layoutX="436.0" layoutY="67.0" onAction="#onSearchByEmail" prefHeight="43.0" prefWidth="240.0" />
             </children>
          </Pane>
-      </children></StackPane>
+      </children>
+    </StackPane>
 </AnchorPane>
