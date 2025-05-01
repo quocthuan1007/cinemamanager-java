@@ -406,7 +406,6 @@
                          <TableColumn fx:id="colGiaTri" prefWidth="141.33319091796875" text="Giá Trị" />
                      </columns>
                  </TableView>
-
                  <!-- Nếu bạn muốn giữ nguyên VBox (đang rỗng) -->
                  <VBox layoutX="115.0" layoutY="183.0" prefHeight="374.0" prefWidth="929.0" spacing="10.0" />
 
@@ -416,7 +415,6 @@
                        <Label layoutX="61.0" layoutY="44.0" style="-fx-font-size: 24px; -fx-text-fill: #0077cc; -fx-font-weight: bold;" text="Lịch sử mua hàng" />
                   </children></Pane>
              </Pane>
-
          </children>
       </Pane>
       <Pane fx:id="infoContainer" layoutX="444.0" layoutY="138.0" prefHeight="491.0" prefWidth="343.0" styleClass="confirm-info" visible="false">

@@ -11,6 +11,54 @@ import java.util.List;
 
 public class MovieShowDao {
 
+    public List<MovieShow> getAllMovieShows() {
+        List<MovieShow> list = new ArrayList<>();
+        String sql = "SELECT * FROM MovieShow WHERE isDeleted = 0"; // Chỉ lấy những lịch chiếu chưa bị xóa
+
+        // Sử dụng try-with-resources để tự động đóng tài nguyên
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            // Lặp qua các kết quả trả về từ truy vấn
+            while (rs.next()) {
+                MovieShow show = new MovieShow();
+                show.setId(rs.getInt("id"));
+                show.setStartTime(rs.getTimestamp("startTime").toLocalDateTime());
+                show.setEndTime(rs.getTimestamp("endTime").toLocalDateTime());
+                show.setFilmId(rs.getInt("filmId"));
+                show.setRoomId(rs.getInt("roomId"));
+                show.setDeleted(rs.getBoolean("isDeleted"));
+
+                // Thêm đối tượng MovieShow vào danh sách
+                list.add(show);
+            }
+
+        } catch (SQLException e) {
+            // Ghi lại lỗi để dễ dàng theo dõi
+            System.err.println("Error fetching movie shows: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    public boolean deleteMovieShowById(int id) {
+        String sql = "UPDATE MovieShow SET IsDeleted = 1 WHERE Id = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi xóa lịch chiếu: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     // Lấy danh sách các buổi chiếu của phim theo FilmId và ngày
     public List<MovieShow> getShowByFilmIdAndDate(int filmId, LocalDate date) {
         List<MovieShow> movieShows = new ArrayList<>();
@@ -145,6 +193,30 @@ public class MovieShowDao {
         }
 
         return movieShows;
+    }
+    public void saveMovieShow(MovieShow movieShow) {
+        try (Connection conn = Database.getConnection()) {
+            String sql = "INSERT INTO MovieShow (startTime, endTime, filmId, roomId, isDeleted) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setTimestamp(1, Timestamp.valueOf(movieShow.getStartTime()));
+                stmt.setTimestamp(2, Timestamp.valueOf(movieShow.getEndTime()));
+                stmt.setInt(3, movieShow.getFilmId());
+                stmt.setInt(4, movieShow.getRoomId());
+                stmt.setBoolean(5, movieShow.isDeleted());
+
+                int affectedRows = stmt.executeUpdate();
+
+                if (affectedRows > 0) {
+                    try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                        if (generatedKeys.next()) {
+                            movieShow.setId(generatedKeys.getInt(1)); // Lấy ID vừa tạo
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 

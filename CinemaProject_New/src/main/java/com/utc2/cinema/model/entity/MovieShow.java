@@ -27,6 +27,13 @@ public class MovieShow {
         this.roomId = roomId;
         this.isDeleted = isDeleted;
     }
+    public MovieShow( LocalDateTime startTime, LocalDateTime endTime, int filmId, int roomId, boolean isDeleted) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.filmId = filmId;
+        this.roomId = roomId;
+        this.isDeleted = isDeleted;
+    }
     public MovieShow() {
         // Khởi tạo các giá trị mặc định cho các trường
         this.id = 0; // Hoặc có thể là -1 nếu bạn muốn chỉ định chưa có ID
