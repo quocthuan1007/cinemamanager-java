@@ -1,5 +1,6 @@
 package com.utc2.cinema.view;
 
+import com.utc2.cinema.controller.MainManagerController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,8 +19,11 @@ public class TestManager extends Application {
     public void start(Stage primaryStage) {
         try {
             // Tải tệp FXML
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/testmanager.fxml"));
             // Tải nội dung từ FXML và thiết lập giao diện
+            MainManagerController a = new MainManagerController();
+            loader.setController(a);
             AnchorPane root = loader.load();
 
             // Thiết lập cảnh (Scene)

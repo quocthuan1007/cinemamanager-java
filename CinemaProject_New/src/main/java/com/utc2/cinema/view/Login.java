@@ -1,6 +1,7 @@
 package com.utc2.cinema.view;
 
 import com.utc2.cinema.controller.LoginController;
+import com.utc2.cinema.controller.MainManagerController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

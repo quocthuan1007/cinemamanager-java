@@ -101,7 +101,7 @@ public class MainMenuController implements Initializable {
     private Pane scheduleForm;
 
     @FXML
-    private Pane infoForm;
+    private Pane infoContainer;
     @FXML
     private Label userMain;
     @FXML private Label filmNameLabel;
@@ -374,8 +374,8 @@ public class MainMenuController implements Initializable {
         return scheduleForm;
     }
 
-    public Pane getInfoForm() {
-        return infoForm;
+    public Pane getInfoContainer() {
+        return infoContainer;
     }
 
     public Label getUserMain() {
@@ -452,8 +452,8 @@ public class MainMenuController implements Initializable {
         buyTicketController = new BuyTicketController(this);
         buyTicketController.initialize();
 
-        historyController = new HistoryController(this);
-        historyController.initialize();
+//        historyController = new HistoryController(this);
+//        historyController.initialize();
 
     }
     ///  confirm-info

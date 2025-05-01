@@ -37,7 +37,7 @@
       <children>
          <Pane prefHeight="200.0" prefWidth="200.0" visible="false" />
          <Pane prefHeight="200.0" prefWidth="200.0" visible="false" />
-         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FF3333;">
+         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FF3333;" visible="false">
             <children>
                <Pane layoutX="652.0" layoutY="122.0" prefHeight="561.0" prefWidth="282.0" style="-fx-background-color: #FFFFFF;">
                   <children>
@@ -152,7 +152,7 @@
             </children>
          </Pane>
          <Pane prefHeight="200.0" prefWidth="200.0" visible="false" />
-         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FF3333;" visible="false">
+         <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FF3333;">
             <children>
                <TableView fx:id="tableUser" layoutX="11.0" layoutY="122.0" prefHeight="660.0" prefWidth="916.0">
                  <columns>
