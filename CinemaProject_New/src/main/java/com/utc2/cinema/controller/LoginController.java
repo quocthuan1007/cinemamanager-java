@@ -1,6 +1,7 @@
 package com.utc2.cinema.controller;
 
 import com.utc2.cinema.model.entity.Account;
+import com.utc2.cinema.model.entity.CustomAlert;
 import com.utc2.cinema.model.entity.UserSession;
 import com.utc2.cinema.service.AccountService;
 import com.utc2.cinema.utils.PasswordUtils;
@@ -64,30 +65,36 @@ public class LoginController {
     }
 
     @FXML
-    public void onClickLoginButton(ActionEvent event) {
-        if(userName.getText() == "" || passWord.getText() == "")
-            messLogin.setText("Vui lòng điền đầy đủ thông tin");
-        else{
-            if(PasswordUtils.checkPassword(passWord.getText(),AccountService.getPassword(userName.getText()))) {
-                Account findAccount = AccountService.findAccount(userName.getText());
-                if (findAccount != null) {
-                    messLogin.setText("Đăng nhập thành công");
-                    UserSession.createUserSession(findAccount.getId(), findAccount.getEmail(), findAccount.getPassword(), findAccount.getAccountStatus(), findAccount.getRoleId());
-                    userName.setText("");
-                    passWord.setText("");
-                    Stage loginWin = (Stage) userName.getScene().getWindow();
-                    loginWin.close();
-                    if (UserSession.getInstance().getRoleId() == 1)
-                        showManagerMenu();
-                    else if (UserSession.getInstance().getRoleId() == 3) {
-                        showMainMenu();
+    public void onClickLoginButton(ActionEvent event)
+    {
+        try {
+            if (userName.getText() == "" || passWord.getText() == "")
+                messLogin.setText("Vui lòng điền đầy đủ thông tin");
+            else {
+                if (PasswordUtils.checkPassword(passWord.getText(), AccountService.getPassword(userName.getText()))) {
+                    Account findAccount = AccountService.findAccount(userName.getText());
+                    if (findAccount != null) {
+                        UserSession.createUserSession(findAccount.getId(), findAccount.getEmail(), findAccount.getPassword(), findAccount.getAccountStatus(), findAccount.getRoleId());
+                        userName.setText("");
+                        passWord.setText("");
+                        CustomAlert.showInfo("", "Thành công", "Đăng nhập thành công");
+                        Stage loginWin = (Stage) userName.getScene().getWindow();
+                        loginWin.close();
+                        if (UserSession.getInstance().getRoleId() == 1)
+                            showManagerMenu();
+                        else if (UserSession.getInstance().getRoleId() == 3) {
+                            showMainMenu();
+                        }
                     }
+                } else {
+                    CustomAlert.showError("", "Có lỗi xảy ra", "Không tìm thấy tài khoản!");
+                    passWord.setText("");
                 }
             }
-            else {
-                messLogin.setText("Không tìm thấy tài khoản!");
-                passWord.setText("");
-            }
+        }
+        catch (Exception e)
+        {
+            CustomAlert.showError("", "Có lỗi xảy ra", "Không thể đăng nhập!");
         }
     }
     @FXML

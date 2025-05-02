@@ -290,6 +290,7 @@ public class MainManagerController implements Initializable {
         foodPane.setVisible(false);
         thongKePane.setVisible(false);
         movieManPane.setVisible(false);
+        roomPane.setVisible(false);
     }
     private ObservableList<UserAccount> userAccounts = FXCollections.observableArrayList();
 

@@ -396,18 +396,12 @@
              <Pane fx:id="introForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="intro-content">
 
                  <!-- Bảng hiển thị lịch sử hóa đơn -->
-                 <TableView fx:id="invoiceTable" layoutX="115.0" layoutY="72.0" prefHeight="369.0" prefWidth="929.0" styleClass="custom-table">
+                 <TableView fx:id="invoiceTable" layoutX="444.0" layoutY="79.0" prefHeight="491.0" prefWidth="343.0" styleClass="custom-table">
                      <columns>
-                         <TableColumn fx:id="colNgay" prefWidth="150" text="Ngày" />
-                         <TableColumn fx:id="colSuatChieu" prefWidth="157.33334350585938" text="Suất Chiếu" />
-                         <TableColumn fx:id="colPhim" prefWidth="276.6667175292969" text="Phim" />
-                         <TableColumn fx:id="colPhong" prefWidth="105.99993896484375" text="Phòng Chiếu" />
-                         <TableColumn fx:id="colSoGhe" prefWidth="99.33331298828125" text="Số Ghế" />
-                         <TableColumn fx:id="colGiaTri" prefWidth="141.33319091796875" text="Giá Trị" />
+                         <TableColumn fx:id="colNgay" prefWidth="187.19998168945312" text="Ngày" />
+                         <TableColumn fx:id="colTrangThai" prefWidth="155.199951171875" text="Trạng thái" />
                      </columns>
                  </TableView>
-                 <!-- Nếu bạn muốn giữ nguyên VBox (đang rỗng) -->
-                 <VBox layoutX="115.0" layoutY="183.0" prefHeight="374.0" prefWidth="929.0" spacing="10.0" />
 
                  <Pane layoutX="440.0" layoutY="-19.0" prefHeight="65.0" prefWidth="279.0">
                   <children>

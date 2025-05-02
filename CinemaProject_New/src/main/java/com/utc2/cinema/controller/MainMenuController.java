@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -144,44 +145,24 @@ public class MainMenuController implements Initializable {
     @FXML private TableColumn<FoodOrder, Integer> quantityColumn;
     @FXML private TableColumn<FoodOrder, Float> totalColumn;
 
-    @FXML private TableView<Invoice> invoiceTable;
-    @FXML private TableColumn<Invoice, String> colNgay;
-    @FXML private TableColumn<Invoice, String> colSuatChieu;
-    @FXML private TableColumn<Invoice, String> colPhim;
-    @FXML private TableColumn<Invoice, String> colPhong;
-    @FXML private TableColumn<Invoice, String> colSoGhe;
-    @FXML private TableColumn<Invoice, String> colGiaTri;
+    @FXML private TableView<Bill> invoiceTable;
+    @FXML private TableColumn<Bill, String> colNgay;
+    @FXML private TableColumn<Bill, String> colTrangThai;
 
     @FXML private TextField dateRangeField;
     @FXML private Label greetingLabel;
 
     // Getter methods
-    public TableView<Invoice> getInvoiceTable() {
+    public TableView<Bill> getInvoiceTable() {
         return invoiceTable;
     }
 
-    public TableColumn<Invoice, String> getColNgay() {
+    public TableColumn<Bill, String> getColNgay() {
         return colNgay;
     }
 
-    public TableColumn<Invoice, String> getColSuatChieu() {
-        return colSuatChieu;
-    }
-
-    public TableColumn<Invoice, String> getColPhim() {
-        return colPhim;
-    }
-
-    public TableColumn<Invoice, String> getColPhong() {
-        return colPhong;
-    }
-
-    public TableColumn<Invoice, String> getColSoGhe() {
-        return colSoGhe;
-    }
-
-    public TableColumn<Invoice, String> getColGiaTri() {
-        return colGiaTri;
+    public TableColumn<Bill, String> getColTrangThai() {
+        return colTrangThai;
     }
 
     public TextField getDateRangeField() {
@@ -453,7 +434,7 @@ public class MainMenuController implements Initializable {
         buyTicketController.initialize();
 
         historyController = new HistoryController(this);
-        historyController.initialize();
+        historyController.init();
 
     }
     ///  confirm-info
