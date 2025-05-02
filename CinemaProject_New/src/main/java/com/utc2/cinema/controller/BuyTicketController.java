@@ -167,7 +167,7 @@ public class BuyTicketController {
             // Lấy thông tin người dùng từ UserService
             User Info = UserService.getUser(UserSession.getInstance().getUserId());
             if (Info == null) {
-                System.out.println("User information not found.");
+                CustomAlert.showError("","Có lỗi xảy ra!", "Vui lòng cập nhật thông tin cá nhân!!");
                 return; // Nếu không tìm thấy thông tin người dùng, dừng hàm
             }
 

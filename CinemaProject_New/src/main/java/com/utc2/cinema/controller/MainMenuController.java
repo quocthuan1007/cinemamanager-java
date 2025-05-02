@@ -453,7 +453,6 @@ public class MainMenuController implements Initializable {
         buyTicketController.initialize();
 
         historyController = new HistoryController(this);
-        historyController.initialize();
 
     }
     ///  confirm-info
@@ -518,7 +517,9 @@ public class MainMenuController implements Initializable {
             scheduleForm.setVisible(true);
         } else if (event.getSource() == buyBtn) {
             buyForm.setVisible(true);
-        } else if (event.getSource() == introBtn) {
+        } else if (event.getSource() == introBtn)
+        {
+            historyController.initialize();
             introForm.setVisible(true);
         } else if (event.getSource() == showfilmdetailBtn) {
             showfilmdetail.setVisible(true);
