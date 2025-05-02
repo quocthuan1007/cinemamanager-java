@@ -92,6 +92,8 @@ public class BuyTicketController {
 
     public void initialize() {
         showAllFilms();
+
+
         loadFoodList();  // Đảm bảo rằng foodList đã được tải từ cơ sở dữ liệu
         // Khởi tạo TableView
         initializeTable();
@@ -165,11 +167,11 @@ public class BuyTicketController {
             // Lấy thông tin người dùng từ UserService
             User Info = UserService.getUser(UserSession.getInstance().getUserId());
             if (Info == null) {
-                CustomAlert.showError("","Có lỗi xảy ra", "Vui lòng cập nhật thông tin của bạn để thanh toán!!");
+                System.out.println("User information not found.");
                 return; // Nếu không tìm thấy thông tin người dùng, dừng hàm
             }
 
-            int userId = UserSession.getInstance().getUserId();
+            int userId = Info.getId();
             String billStatus = "PAID";
             Date datePurchased = new Date(System.currentTimeMillis());
 
@@ -181,8 +183,7 @@ public class BuyTicketController {
                 int billId = bill.getId();
 
                 // Xử lý các ghế đã chọn
-                for (String seatPosition : selectedSeats)
-                {
+                for (String seatPosition : selectedSeats) {
                     Seats seat = SeatDao.getSeatByPositionAndRoom(seatPosition, selectedMovieShow.getRoomId());
                     if (seat == null) continue;
 
@@ -209,9 +210,8 @@ public class BuyTicketController {
                         FoodOrderDao.insertFoodOrder(foodOrder);
                     }
                 }
-                MainMenuController b = new MainMenuController();
-                HistoryController a = new HistoryController(b);
-                a.getBillData().add(bill);
+
+                // Hiển thị giao diện thanh toán thành công
                 paySuccessPane.setVisible(true);
                 billPane.setVisible(false);
 

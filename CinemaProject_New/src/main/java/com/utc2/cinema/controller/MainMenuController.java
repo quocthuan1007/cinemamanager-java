@@ -31,7 +31,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -145,24 +144,44 @@ public class MainMenuController implements Initializable {
     @FXML private TableColumn<FoodOrder, Integer> quantityColumn;
     @FXML private TableColumn<FoodOrder, Float> totalColumn;
 
-    @FXML private TableView<Bill> invoiceTable;
-    @FXML private TableColumn<Bill, String> colNgay;
-    @FXML private TableColumn<Bill, String> colTrangThai;
+    @FXML private TableView<Invoice> invoiceTable;
+    @FXML private TableColumn<Invoice, String> colNgay;
+    @FXML private TableColumn<Invoice, String> colSuatChieu;
+    @FXML private TableColumn<Invoice, String> colPhim;
+    @FXML private TableColumn<Invoice, String> colPhong;
+    @FXML private TableColumn<Invoice, String> colSoGhe;
+    @FXML private TableColumn<Invoice, String> colGiaTri;
 
     @FXML private TextField dateRangeField;
     @FXML private Label greetingLabel;
 
     // Getter methods
-    public TableView<Bill> getInvoiceTable() {
+    public TableView<Invoice> getInvoiceTable() {
         return invoiceTable;
     }
 
-    public TableColumn<Bill, String> getColNgay() {
+    public TableColumn<Invoice, String> getColNgay() {
         return colNgay;
     }
 
-    public TableColumn<Bill, String> getColTrangThai() {
-        return colTrangThai;
+    public TableColumn<Invoice, String> getColSuatChieu() {
+        return colSuatChieu;
+    }
+
+    public TableColumn<Invoice, String> getColPhim() {
+        return colPhim;
+    }
+
+    public TableColumn<Invoice, String> getColPhong() {
+        return colPhong;
+    }
+
+    public TableColumn<Invoice, String> getColSoGhe() {
+        return colSoGhe;
+    }
+
+    public TableColumn<Invoice, String> getColGiaTri() {
+        return colGiaTri;
     }
 
     public TextField getDateRangeField() {
@@ -426,7 +445,7 @@ public class MainMenuController implements Initializable {
 
         scheduleDisplayController = new ScheduleDisplayController(this);
         scheduleDisplayController.setupSchedule();
-        
+
         filmDisplayController = new FilmDisplayController(this);
         filmDisplayController.setupFilms();
 
@@ -434,7 +453,7 @@ public class MainMenuController implements Initializable {
         buyTicketController.initialize();
 
         historyController = new HistoryController(this);
-        historyController.init();
+        historyController.initialize();
 
     }
     ///  confirm-info
