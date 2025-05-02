@@ -519,6 +519,7 @@ public class MainMenuController implements Initializable {
         } else if (event.getSource() == buyBtn) {
             buyForm.setVisible(true);
         } else if (event.getSource() == introBtn) {
+            historyController.initialize();
             introForm.setVisible(true);
         } else if (event.getSource() == showfilmdetailBtn) {
             showfilmdetail.setVisible(true);

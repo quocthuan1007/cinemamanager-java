@@ -64,8 +64,8 @@ public class HistoryController {
     @FXML
     void initialize() {
         billDao = new BillDao();
-        User Info = UserService.getUser(UserSession.getInstance().getUserId());
-        int userID = Info.getId();
+
+        int userID = UserSession.getInstance().getUserId();
         // Tự động hiển thị tất cả hóa đơn khi giao diện được khởi tạo
         List<Invoice> invoices = billDao.getBillsByUserAndDateRange(userID); // Lấy tất cả hóa đơn
         populateInvoiceTable(invoices);

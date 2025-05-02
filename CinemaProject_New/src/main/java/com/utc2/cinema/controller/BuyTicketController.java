@@ -214,6 +214,7 @@ public class BuyTicketController {
                 // Hiển thị giao diện thanh toán thành công
                 paySuccessPane.setVisible(true);
                 billPane.setVisible(false);
+
             } else {
                 System.out.println("Thanh toán không thành công!");
             }
