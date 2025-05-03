@@ -70,30 +70,39 @@ public class FoodDao {
         return food; // Trả về đối tượng Food nếu tìm thấy, hoặc null nếu không tìm thấy.
     }
 
-    public boolean insertFood(Food food) {
+    public static Food insertFood(Food food) {
         String query = "INSERT INTO Food (name, description, cost) VALUES (?, ?, ?)";
 
         try (Connection conn = Database.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+             PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, food.getName());
             pstmt.setString(2, food.getDescription());
             pstmt.setFloat(3, food.getCost());
-            int result = pstmt.executeUpdate(); // Đọc số lượng bản ghi ảnh hưởng
+
+            int result = pstmt.executeUpdate();
 
             if (result > 0) {
-                System.out.println("Món ăn đã được thêm thành công.");
-                return true;  // Thành công
+                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int generatedId = generatedKeys.getInt(1);
+                        food.setId(generatedId);  // Cập nhật ID
+                        System.out.println("Thêm món ăn thành công với ID: " + generatedId);
+                        return food; // Trả về đối tượng Food đã có ID
+                    }
+                }
             } else {
                 System.out.println("Không có bản ghi nào được thêm.");
-                return false; // Không có gì được thêm
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Lỗi khi thêm món ăn.");
-            return false;  // Nếu có lỗi xảy ra, trả về false
         }
+
+        return null; // Trả về null nếu thất bại
     }
+
 
 
     // Cập nhật thông tin món ăn
@@ -132,10 +141,10 @@ public class FoodDao {
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setInt(1, foodId);
-            pstmt.executeUpdate();
+            int a = pstmt.executeUpdate();
 
             System.out.println("Món ăn đã được xóa thành công.");
-            return true;
+            return a > 0;
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Lỗi khi xóa món ăn.");

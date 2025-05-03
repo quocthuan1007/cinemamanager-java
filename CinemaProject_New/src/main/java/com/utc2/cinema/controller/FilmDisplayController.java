@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
@@ -54,14 +55,13 @@ public class FilmDisplayController
     }
     //
     private VBox createFilmBox(Film film) {
-        String posterPath = "/Image/" + film.getPosterUrl() + ".png";
-        InputStream is = getClass().getResourceAsStream(posterPath);
-        if (is == null) {
+        String posterPath = "src/main/resources/Image/" + film.getPosterUrl() + ".png"; // hoặc đường dẫn tương đối khác
+        File file = new File(posterPath);
+        if (!file.exists()) {
             System.out.println("Không tìm thấy ảnh: " + posterPath);
             return null;
         }
-
-        Image image = new Image(is);
+        Image image = new Image(file.toURI().toString());
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(160);
         imageView.setFitHeight(190);

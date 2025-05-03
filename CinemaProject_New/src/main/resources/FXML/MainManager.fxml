@@ -92,7 +92,7 @@
                      <Font size="20.0" />
                   </font>
                </Button>
-               <Button fx:id="editFoodBtn" layoutX="667.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickEditFood" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;" text="Xem/Sửa">
+               <Button fx:id="editFoodBtn" layoutX="667.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickEditFood" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;" styleClass="button-manager" text="Xem/Sửa">
                   <font>
                      <Font size="20.0" />
                   </font>
@@ -385,17 +385,17 @@
                      <Font size="30.0" />
                   </font>
                </Label>
-               <Button fx:id="viewBtn" layoutX="711.0" layoutY="67.0" mnemonicParsing="false" onAction="#onClickView" styleClass="button-manager" text="xem">
+               <Button fx:id="viewBtn" layoutX="711.0" layoutY="67.0" mnemonicParsing="false" onAction="#onClickView" styleClass="button-manager" text="Xem">
                   <font>
                      <Font size="20.0" />
                   </font>
                </Button>
-               <Button fx:id="editBtn" layoutX="787.0" layoutY="67.0" mnemonicParsing="false" onAction="#onClickEdit" styleClass="button-manager" text="sửa">
+               <Button fx:id="editBtn" layoutX="787.0" layoutY="67.0" mnemonicParsing="false" onAction="#onClickEdit" styleClass="button-manager" text="Sửa">
                   <font>
                      <Font size="20.0" />
                   </font>
                </Button>
-               <Button fx:id="deleteBtn" layoutX="856.0" layoutY="67.0" mnemonicParsing="false" onAction="#onClickDelete" styleClass="button-manager" text="xoá">
+               <Button fx:id="deleteBtn" layoutX="856.0" layoutY="67.0" mnemonicParsing="false" onAction="#onClickDelete" styleClass="button-manager" text="Xoá">
                   <font>
                      <Font size="20.0" />
                   </font>

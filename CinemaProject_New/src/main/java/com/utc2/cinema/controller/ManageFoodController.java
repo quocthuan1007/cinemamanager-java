@@ -127,11 +127,11 @@ public class ManageFoodController {
 
                 Food food = new Food(0, name, description, cost);
 
-                boolean success = FoodService.insertFood(food);
-                if (success) {
+                Food foodSQL = FoodService.insertFood(food);
+                if (foodSQL != null) {
                     System.out.println("Thêm món ăn thành công!");
                     clearFoodForm();
-                    listFood.add(food);
+                    listFood.add(foodSQL);
                 } else {
                     CustomAlert.showError("","Có lỗi xảy ra",  "Thêm món ăn thất bại.");
                 }

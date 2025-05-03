@@ -1,8 +1,7 @@
 /* Giao diện alert thông thường */
 .alert {
     -fx-background-color: white;
-    -fx-background-radius: 10px;
-    -fx-border-radius: 10px;
+
     -fx-padding: 20px;
     -fx-border-color: #90CAF9;
     -fx-border-width: 1.5px;
@@ -12,8 +11,7 @@
 
 .alert-error {
     -fx-background-color: white;
-    -fx-background-radius: 10px;
-    -fx-border-radius: 10px;
+
     -fx-padding: 20px;
     -fx-border-color: #EF5350; /* màu đỏ cảnh báo */
     -fx-border-width: 1.5px;
@@ -56,8 +54,6 @@
 
 .alert-confirm {
     -fx-background-color: white;
-    -fx-background-radius: 10px;
-    -fx-border-radius: 10px;
     -fx-padding: 20px;
     -fx-border-color: #FFD54F; /* vàng nhẹ */
     -fx-border-width: 1.5px;

@@ -163,11 +163,7 @@ public class ManageUserController {
         info.append("Địa chỉ: ").append(user.getAddress()).append("\n");
         info.append("Email: ").append(account.getEmail());
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Thông tin người dùng");
-        alert.setHeaderText("Chi tiết người dùng");
-        alert.setContentText(info.toString());
-        alert.showAndWait();
+        CustomAlert.showInfo("Thông tin người dùng","Chi tiết người dùng",info.toString());
     }
     public void setupGenderComboBox() {
         if (genderConfirm.getItems().isEmpty()) {

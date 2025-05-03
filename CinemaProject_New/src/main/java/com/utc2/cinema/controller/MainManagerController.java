@@ -200,7 +200,7 @@ public class MainManagerController implements Initializable {
         roomController.initialize();
 
         hideAllPanes();
-        thongKePane.setVisible(true);
+        foodPane.setVisible(true);
 
         onInitialize();
     }

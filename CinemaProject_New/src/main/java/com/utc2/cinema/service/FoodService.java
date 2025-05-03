@@ -10,7 +10,7 @@ public class FoodService {
     {
         return FoodDao.getAllFoods();
     }
-    public static boolean insertFood(Food food)
+    public static Food insertFood(Food food)
     {
         FoodDao a = new FoodDao();
         return a.insertFood(food);

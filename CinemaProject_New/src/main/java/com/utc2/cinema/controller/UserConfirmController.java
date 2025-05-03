@@ -1,8 +1,10 @@
 package com.utc2.cinema.controller;
 
+import com.utc2.cinema.model.entity.CustomAlert;
 import com.utc2.cinema.model.entity.User;
 import com.utc2.cinema.model.entity.UserSession;
 import com.utc2.cinema.service.UserService;
+import com.utc2.cinema.utils.ValidationUtils;
 import com.utc2.cinema.view.Login;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
@@ -160,14 +162,36 @@ public class UserConfirmController {
             String address = addressConfirm.getText();
             String phone = numberConfirm.getText();
 
-            if (name.isEmpty() || genderText == null || birthValue == null || address.isEmpty() || phone.isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Thiếu thông tin");
-                alert.setHeaderText(null);
-                alert.setContentText("Vui lòng điền đầy đủ tất cả các thông tin trước khi lưu.");
-                alert.showAndWait();
+            if (name == null || name.trim().isEmpty()) {
+                CustomAlert.showError("", "Lỗi nhập liệu", "Tên không được để trống hoặc chỉ chứa khoảng trắng.");
                 return;
             }
+
+            if (genderText == null) {
+                CustomAlert.showError("", "Lỗi nhập liệu", "Vui lòng chọn giới tính.");
+                return;
+            }
+
+            if (birthValue == null) {
+                CustomAlert.showError("", "Lỗi nhập liệu", "Vui lòng chọn ngày sinh.");
+                return;
+            }
+
+            if (birthValue.isAfter(LocalDate.now()) || birthValue.isBefore(LocalDate.of(1900, 1, 1))) {
+                CustomAlert.showError("", "Lỗi nhập liệu", "Ngày sinh không hợp lệ. Vui lòng chọn trong khoảng từ năm 1900 đến hiện tại.");
+                return;
+            }
+
+            if (address == null || address.trim().isEmpty()) {
+                CustomAlert.showError("", "Lỗi nhập liệu", "Địa chỉ không được để trống.");
+                return;
+            }
+
+            if (!ValidationUtils.isValidPhone(phone)) {
+                CustomAlert.showError("", "Lỗi nhập liệu", "Số điện thoại không hợp lệ. Phải bắt đầu bằng số 0 và gồm 10 chữ số.");
+                return;
+            }
+
 
             int gender = genderText.equals("Nam") ? 1 : 0;
             java.util.Date birth = java.sql.Date.valueOf(birthValue);
@@ -181,22 +205,14 @@ public class UserConfirmController {
                 UserService.insertUser(user);
             }
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText(null);
-            alert.setContentText("Thông tin đã được lưu thành công!");
-            alert.showAndWait();
+            CustomAlert.showInfo("","Hoàn tất", "Thông tin đã được lưu.");
 
             clearInfoInput();
             loadUserInfo();
 
         } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Lỗi");
-            alert.setHeaderText(null);
-            alert.setContentText("Lưu thông tin thất bại. Vui lòng kiểm tra lại dữ liệu.");
-            alert.showAndWait();
+            CustomAlert.showError("","Có lỗi xảy ra!", "Lưu thất bại!");
         }
     }
 }

@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -72,15 +73,14 @@ public class ScheduleDisplayController
 
             // Lấy thông tin phim từ filmId
             Film film = filmDao.getFilmById(filmId);
-            String posterPath = "/Image/" + film.getPosterUrl() + ".png"; // Kiểm tra đúng đường dẫn ảnh
-            InputStream is = getClass().getResourceAsStream(posterPath);
-
-            if (is == null) {
+            String posterPath = "src/main/resources/Image/" + film.getPosterUrl() + ".png"; // hoặc đường dẫn tương đối khác
+            File file = new File(posterPath);
+            if (!file.exists()) {
                 System.out.println("Không tìm thấy ảnh: " + posterPath);
-                continue; // Tiếp tục với phim khác nếu không tìm thấy ảnh
+                return;
             }
+            Image image = new Image(file.toURI().toString());
 
-            Image image = new Image(is);
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(160);
             imageView.setFitHeight(190);

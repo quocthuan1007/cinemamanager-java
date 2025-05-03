@@ -3,10 +3,7 @@ package com.utc2.cinema.dao;
 import com.utc2.cinema.config.Database;
 import com.utc2.cinema.model.entity.Film;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -141,11 +138,12 @@ public class FilmDao {
 
         return films;
     }
-    public static boolean insertFilm(Film film) {
+    public static Film insertFilm(Film film) {
         String sql = "INSERT INTO film (name, country, length, director, actor, ageLimit, filmStatus, trailer, content, adPosterUrl, posterUrl, releaseDate) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         try (Connection conn = Database.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, film.getName());
             stmt.setString(2, film.getCountry());
@@ -159,27 +157,42 @@ public class FilmDao {
             stmt.setString(10, film.getAdPosterUrl());
             stmt.setString(11, film.getPosterUrl());
 
-            // Dùng Timestamp thay vì Date
             if (film.getReleaseDate() != null) {
                 stmt.setTimestamp(12, new java.sql.Timestamp(film.getReleaseDate().getTime()));
             } else {
                 stmt.setTimestamp(12, null);
             }
 
-            return stmt.executeUpdate() > 0;
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int generatedId = generatedKeys.getInt(1);
+                        film.setId(generatedId);  // Cập nhật ID vào đối tượng
+                        System.out.println("Thêm phim thành công với ID: " + generatedId);
+                        return film;
+                    }
+                }
+            } else {
+                System.out.println("Không có bản ghi nào được thêm.");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            System.out.println("Lỗi khi thêm phim.");
         }
+
+        return null; // Thêm thất bại
     }
+
     public static boolean deleteFilm(int filmId) {
         String sql = "DELETE FROM Film WHERE Id = ?";
         try (Connection conn = Database.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, filmId);
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
+            int a = stmt.executeUpdate();
+            return a>0;
 
         } catch (SQLException e) {
             e.printStackTrace();

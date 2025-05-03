@@ -222,11 +222,11 @@ public class ManageFilmController {
                 Film film = new Film(0, name, country, length, director, actor, ageLimit,
                         status, trailer, content, adPosterPath, posterPath, releaseDate);
 
-                boolean success = FilmDao.insertFilm(film);
-                if (success) {
+                Film success = FilmDao.insertFilm(film);
+                if (success != null) {
                     CustomAlert.showInfo("Thành công", "Thêm phim", "Bạn vừa thêm phim thành công!");
                     clearFilmForm();
-                    filmList.add(film);
+                    filmList.add(success);
                 } else {
                     CustomAlert.showError("Lỗi hệ thống","Có lỗi xảy ra", "Thêm phim thất bại.");
                 }
@@ -245,8 +245,6 @@ public class ManageFilmController {
             System.out.println("Vui lòng chọn một phim để xóa.");
             return;
         }
-
-        // Xác nhận xóa
         boolean check = CustomAlert.showConfirmation("","Vui lòng xác nhận.","Bạn có chắc muốn xoá phim: "+ selectedFilm.getName() +" không?");
         if (check == true) {
             boolean deleted = FilmService.deleteFilm(selectedFilm.getId());
@@ -410,7 +408,7 @@ public class ManageFilmController {
 
                 String fileNameWithoutExtension = selectedFile.getName().substring(0, selectedFile.getName().lastIndexOf('.'));
                 // Thêm đường dẫn mới (bỏ đuôi file)
-                posterPath = copyImageToFolder(selectedFile, "poster/" + fileNameWithoutExtension);
+                posterPath = copyImageToFolder(selectedFile, "poster");
                 posterBtn.setText("Đã chọn");
             } catch (IOException e) {
                 e.printStackTrace();
