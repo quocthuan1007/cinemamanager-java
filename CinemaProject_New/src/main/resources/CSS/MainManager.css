@@ -155,3 +155,21 @@
 .HBox {
     -fx-padding: 10px 0;
 }
+.button-manager
+{
+    -fx-background-color: #007bff;
+    -fx-text-fill:white;
+    -fx-font-weight:bold;
+}
+.button-manager:hover
+{
+    -fx-background-color: #007bff;
+    -fx-text-fill:white;
+    -fx-font-weight:bold;
+    -fx-font-size:20;
+}
+
+.button-manager:focused {
+    -fx-font-size:20;
+    -fx-background-color: #FF9933;
+}

@@ -247,24 +247,18 @@ public class ManageFilmController {
         }
 
         // Xác nhận xóa
-        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmAlert.setTitle("Xác nhận xóa");
-        confirmAlert.setHeaderText(null);
-        confirmAlert.setContentText("Bạn có chắc chắn muốn xóa phim '" + selectedFilm.getName() + "' không?");
-
-        confirmAlert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                boolean deleted = FilmService.deleteFilm(selectedFilm.getId());
-                if (deleted) {
-                    filmList.remove(selectedFilm);
-                    System.out.println("Đã xóa phim thành công.");
-                } else {
-                    System.out.println("Xóa phim thất bại.");
-                }
-                clearFilmForm();
-                if(filmForm.isVisible()) filmForm.setVisible(false);
+        boolean check = CustomAlert.showConfirmation("","Vui lòng xác nhận.","Bạn có chắc muốn xoá phim: "+ selectedFilm.getName() +" không?");
+        if (check == true) {
+            boolean deleted = FilmService.deleteFilm(selectedFilm.getId());
+            if (deleted) {
+                filmList.remove(selectedFilm);
+                System.out.println("Đã xóa phim thành công.");
+            } else {
+                System.out.println("Xóa phim thất bại.");
             }
-        });
+            clearFilmForm();
+            if(filmForm.isVisible()) filmForm.setVisible(false);
+        }
     }
 
     public void onClickEditFilm(ActionEvent event) {

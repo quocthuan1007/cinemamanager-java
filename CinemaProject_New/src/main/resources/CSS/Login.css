@@ -4,7 +4,6 @@
 }
 .field
 {
-    -fx-background-radius: 10;
     -fx-pref-width: 250px;
     -fx-pref-height: 35px;
 }

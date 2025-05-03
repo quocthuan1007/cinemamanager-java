@@ -120,12 +120,15 @@ public class ManageUserController {
     public void onClickDelete(ActionEvent event) {
         UserAccount select = tableUser.getSelectionModel().getSelectedItem();
         if (select != null) {
-            UserService.deleteUserByAccountId(select.getAccountId());
-            // Sau đó mới xóa account
-            if (AccountService.deleteAccount(select.getAccount()) != 0) {
-                userAccounts.remove(select); // Cập nhật UI
+            boolean check = CustomAlert.showConfirmation("","Xoá người dùng","Bạn có chắc chắn muốn xoá User : "+ select.getName());
+            if(check == true) {
+                UserService.deleteUserByAccountId(select.getAccountId());
+                if (AccountService.deleteAccount(select.getAccount()) != 0) {
+                    userAccounts.remove(select);
+                }
             }
         }
+        else CustomAlert.showError("","Có lỗi xảy ra!", "Vui lòng chọn 1 user để xoá!");
     }
 
 

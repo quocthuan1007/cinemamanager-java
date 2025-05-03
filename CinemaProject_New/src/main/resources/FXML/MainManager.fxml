@@ -44,12 +44,12 @@
     <!-- Phần nội dung thay đổi -->
     <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
-         <Pane fx:id="thongKePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" />
-         <Pane fx:id="foodPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;">
+         <Pane fx:id="thongKePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" visible="false" />
+         <Pane fx:id="foodPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" visible="false">
             <children>
-               <Pane fx:id="foodForm" layoutX="651.0" layoutY="122.0" prefHeight="315.0" prefWidth="282.0" style="-fx-background-color: white;" visible="false">
+               <Pane fx:id="foodForm" layoutX="651.0" layoutY="122.0" prefHeight="315.0" prefWidth="282.0" style="-fx-background-color: #EEEEEE;" visible="false">
                   <children>
-                     <Button fx:id="addOrSaveFood" layoutX="104.0" layoutY="253.0" mnemonicParsing="false" onAction="#onClickAddFood" prefHeight="43.0" prefWidth="75.0" text="thêm">
+                     <Button fx:id="addOrSaveFood" layoutX="104.0" layoutY="253.0" mnemonicParsing="false" onAction="#onClickAddFood" prefHeight="43.0" prefWidth="83.0" styleClass="button-manager" text="thêm">
                         <font>
                            <Font size="20.0" />
                         </font>
@@ -82,34 +82,34 @@
                      <TableColumn fx:id="costCol" prefWidth="129.5999755859375" text="Giá" />
                   </columns>
                </TableView>
-               <Label layoutX="14.0" layoutY="14.0" text="Quản lý đồ ăn" textFill="WHITE">
+               <Label layoutX="11.0" layoutY="14.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Quản lý đồ ăn" textFill="WHITE">
                   <font>
                      <Font size="30.0" />
                   </font>
                </Label>
-               <Button fx:id="addFoodBtn" layoutX="785.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickAddFood" text="Thêm">
+               <Button fx:id="addFoodBtn" layoutX="785.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickAddFood" style="-fx-background-color: #007bff; -fx-text-fill: white;" styleClass="button-manager" text="Thêm">
                   <font>
                      <Font size="20.0" />
                   </font>
                </Button>
-               <Button fx:id="editFoodBtn" layoutX="667.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickEditFood" text="Xem/Sửa">
+               <Button fx:id="editFoodBtn" layoutX="667.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickEditFood" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;" text="Xem/Sửa">
                   <font>
                      <Font size="20.0" />
                   </font>
                </Button>
-               <Button fx:id="deleteFoodBtn" layoutX="872.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickDeleteFood" text="Xoá">
+               <Button fx:id="deleteFoodBtn" layoutX="872.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickDeleteFood" styleClass="button-manager" text="Xoá">
                   <font>
                      <Font size="20.0" />
                   </font>
                </Button>
-               <TextField fx:id="searchFood" layoutX="419.0" layoutY="68.0" onAction="#onSearchFood" prefHeight="43.0" prefWidth="240.0" />
+               <TextField fx:id="searchFood" layoutX="419.0" layoutY="68.0" onAction="#onSearchFood" prefHeight="37.0" prefWidth="240.0" />
             </children>
          </Pane>
-         <Pane fx:id="movieManPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FF3333;" visible="false">
+         <Pane fx:id="movieManPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" visible="false">
             <children>
-               <Pane fx:id="filmForm" layoutX="651.0" layoutY="122.0" prefHeight="660.0" prefWidth="282.0" style="-fx-background-color: #FFFFFF;" visible="false">
+               <Pane fx:id="filmForm" layoutX="651.0" layoutY="122.0" prefHeight="660.0" prefWidth="282.0" style="-fx-background-color: #EEEEEE;" visible="false">
                   <children>
-                     <Button fx:id="addOrSaveBtn" layoutX="105.0" layoutY="603.0" mnemonicParsing="false" onAction="#onClickAddFilm" prefHeight="43.0" prefWidth="75.0" text="thêm">
+                     <Button fx:id="addOrSaveBtn" layoutX="105.0" layoutY="611.0" mnemonicParsing="false" onAction="#onClickAddFilm" prefHeight="35.0" prefWidth="100.0" styleClass="button-manager" text="thêm">
                         <font>
                            <Font size="20.0" />
                         </font>
@@ -199,35 +199,35 @@
                      <TableColumn fx:id="statusFilmCol" prefWidth="145.60003662109375" text="Trạng thái" />
                   </columns>
                </TableView>
-               <Label layoutX="14.0" layoutY="14.0" text="Quản lý phim" textFill="WHITE">
+               <Label layoutX="14.0" layoutY="14.0" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Quản lý phim" textFill="WHITE">
                   <font>
                      <Font size="30.0" />
                   </font>
                </Label>
-               <Button fx:id="addFilmBtn" layoutX="785.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickAddFilm" text="Thêm">
+               <Button fx:id="addFilmBtn" layoutX="785.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickAddFilm" styleClass="button-manager" text="Thêm">
                   <font>
                      <Font size="20.0" />
                   </font>
                </Button>
-               <Button fx:id="editFilmBtn" layoutX="667.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickEditFilm" text="Xem/Sửa">
+               <Button fx:id="editFilmBtn" layoutX="667.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickEditFilm" styleClass="button-manager" text="Xem/Sửa">
                   <font>
                      <Font size="20.0" />
                   </font>
                </Button>
-               <Button fx:id="deleteFilmBtn" layoutX="872.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickDeleteFilm" text="Xoá">
+               <Button fx:id="deleteFilmBtn" layoutX="872.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickDeleteFilm" styleClass="button-manager" text="Xoá">
                   <font>
                      <Font size="20.0" />
                   </font>
                </Button>
-               <TextField fx:id="searchFilm" layoutX="419.0" layoutY="68.0" onAction="#onSearchFilm" prefHeight="43.0" prefWidth="240.0" />
+               <TextField fx:id="searchFilm" layoutX="419.0" layoutY="68.0" onAction="#onSearchFilm" prefHeight="39.0" prefWidth="240.0" />
             </children>
          </Pane>
          <Pane fx:id="schedulePane" prefHeight="200.0" prefWidth="200.0" visible="false">
             <Pane layoutX="-1.0" layoutY="-1.0" prefHeight="800.0" prefWidth="940.0" stylesheets="@../CSS/MainManager.css">
                <!-- Tiêu đề -->
-               <Label layoutX="70.0" layoutY="28.0" prefHeight="73.0" prefWidth="180.0" style="-fx-font-size: 20px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Quản lý lịch chiếu">
+               <Label layoutX="14.0" layoutY="6.0" prefHeight="35.0" prefWidth="180.0" style="-fx-font-size: 20px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Quản lý lịch chiếu">
                   <font>
-                     <Font size="14.0" />
+                     <Font size="20.0" />
                   </font></Label>
 
                <!-- Nút thêm lịch chiếu -->
@@ -293,7 +293,7 @@
 
                <!-- Tiêu đề và nút chức năng -->
                <HBox alignment="CENTER_LEFT" spacing="20">
-                  <Label fx:id="titleLabel" style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Quản lý phòng chiếu" />
+                  <Label fx:id="titleLabel" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Quản lý phòng chiếu" />
                </HBox>
 
                <!-- Form nhập thông tin -->
@@ -380,27 +380,27 @@
                      <TableColumn fx:id="addUser" prefWidth="202.13330078125" text="Địa chỉ" />
                  </columns>
                </TableView>
-               <Label layoutX="14.0" layoutY="14.0" text="Quản lý người dùng" textFill="#1b1a1a">
+               <Label layoutX="11.0" layoutY="14.0" style="-fx-text-fill: #2c3e50; -fx-font-size: 20; -fx-font-weight: bold;" text="Quản lý người dùng" textFill="#1b1a1a">
                   <font>
                      <Font size="30.0" />
                   </font>
                </Label>
-               <Button fx:id="viewBtn" layoutX="699.0" layoutY="66.0" mnemonicParsing="false" onAction="#onClickView" text="xem">
+               <Button fx:id="viewBtn" layoutX="711.0" layoutY="67.0" mnemonicParsing="false" onAction="#onClickView" styleClass="button-manager" text="xem">
                   <font>
                      <Font size="20.0" />
                   </font>
                </Button>
-               <Button fx:id="editBtn" layoutX="782.0" layoutY="66.0" mnemonicParsing="false" onAction="#onClickEdit" text="sửa">
+               <Button fx:id="editBtn" layoutX="787.0" layoutY="67.0" mnemonicParsing="false" onAction="#onClickEdit" styleClass="button-manager" text="sửa">
                   <font>
                      <Font size="20.0" />
                   </font>
                </Button>
-               <Button fx:id="deleteBtn" layoutX="856.0" layoutY="65.0" mnemonicParsing="false" onAction="#onClickDelete" text="xoá">
+               <Button fx:id="deleteBtn" layoutX="856.0" layoutY="67.0" mnemonicParsing="false" onAction="#onClickDelete" styleClass="button-manager" text="xoá">
                   <font>
                      <Font size="20.0" />
                   </font>
                </Button>
-               <Pane fx:id="infoForm" layoutX="299.0" layoutY="129.0" prefHeight="491.0" prefWidth="343.0" style="-fx-background-color: red;" stylesheets="@../CSS/MainMenu.css" visible="false">
+               <Pane fx:id="infoForm" layoutX="299.0" layoutY="129.0" prefHeight="491.0" prefWidth="343.0" style="-fx-background-color: #EEEEEE;" stylesheets="@../CSS/MainMenu.css" visible="false">
                   <children>
                      <Button fx:id="saveConfirm" layoutX="146.0" layoutY="460.0" mnemonicParsing="false" onAction="#onPlayerSaveInfoConfirm" styleClass="button1" text="Save" />
                      <Button fx:id="closeConfirm" layoutX="292.0" layoutY="-3.0" minWidth="40.0" mnemonicParsing="false" onAction="#onPlayerCloseInfoConfirm" prefHeight="34.0" prefWidth="40.0" styleClass="button1" text="X" />
@@ -436,7 +436,7 @@
                      <DatePicker fx:id="birthConfirm" layoutX="64.0" layoutY="235.0" styleClass="text-field-info" />
                   </children>
                </Pane>
-               <TextField fx:id="searchEmailField" layoutX="436.0" layoutY="67.0" onAction="#onSearchByEmail" prefHeight="43.0" prefWidth="240.0" />
+               <TextField fx:id="searchEmailField" layoutX="461.0" layoutY="67.0" onAction="#onSearchByEmail" prefHeight="37.0" prefWidth="240.0" />
             </children>
          </Pane>
       </children>

@@ -28,7 +28,7 @@
       </Label>
       <PasswordField fx:id="passWord" layoutX="329.0" layoutY="200.0" onMouseClicked="#onMouseClickedPassword" styleClass="field" />
       <TextField fx:id="userName" layoutX="329.0" layoutY="155.0" onMouseClicked="#onMouseClickEmail" styleClass="field" />
-      <Button fx:id="loginButton" layoutX="403.0" layoutY="263.0" mnemonicParsing="false" onAction="#onClickLoginButton" styleClass="login-button" text="Button" />
+      <Button fx:id="loginButton" layoutX="403.0" layoutY="263.0" mnemonicParsing="false" onAction="#onClickLoginButton" styleClass="login-button" text="Login" />
       <Label fx:id="registerButton" layoutX="418.0" layoutY="315.0" onMouseClicked="#onClickRegisterButton" styleClass="register-button" text="Register" />
       <Label fx:id="messLogin" layoutX="334.0" layoutY="235.0" prefHeight="30.0" prefWidth="256.0" textFill="RED">
          <font>
