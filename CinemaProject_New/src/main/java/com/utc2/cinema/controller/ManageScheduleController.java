@@ -17,7 +17,9 @@ import javafx.scene.layout.Pane;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ManageScheduleController  {
 
@@ -89,26 +91,40 @@ public class ManageScheduleController  {
         });
     }
 
-    private void setupTableColumns() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM");
 
-        colStart.setCellValueFactory(cell ->
-                Bindings.createStringBinding(() -> cell.getValue().getStartTime().format(formatter))
-        );
+private void setupTableColumns() {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM");
 
-        colEnd.setCellValueFactory(cell ->
-                Bindings.createStringBinding(() -> cell.getValue().getEndTime().format(formatter))
-        );
-
-        colFilm.setCellValueFactory(cell -> {
-            Film film = filmDao.getFilmById(cell.getValue().getFilmId());
-            return Bindings.createStringBinding(() -> film != null ? film.getName() : "Không rõ");
-        });
-
-        colRoom.setCellValueFactory(new PropertyValueFactory<>("roomId"));
-
-        addDeleteButtonToTable();
+    // Tạo một map chứa thông tin phim (nếu có nhiều phim, sẽ giúp giảm thiểu số lần gọi đến DB)
+    Map<Integer, Film> filmMap = new HashMap<>();
+    List<Film> films = filmDao.getAllFilms();
+    for (Film film : films) {
+        filmMap.put(film.getId(), film);
     }
+
+    // Cột thời gian bắt đầu
+    colStart.setCellValueFactory(cell ->
+            Bindings.createStringBinding(() -> cell.getValue().getStartTime().format(formatter))
+    );
+
+    // Cột thời gian kết thúc
+    colEnd.setCellValueFactory(cell ->
+            Bindings.createStringBinding(() -> cell.getValue().getEndTime().format(formatter))
+    );
+
+    // Cột phim
+    colFilm.setCellValueFactory(cell -> {
+        Film film = filmMap.get(cell.getValue().getFilmId());
+        return Bindings.createStringBinding(() -> film != null ? film.getName() : "Không rõ");
+    });
+
+    // Cột phòng
+    colRoom.setCellValueFactory(new PropertyValueFactory<>("roomId"));
+
+    // Thêm nút xóa vào bảng nếu cần thiết
+    addDeleteButtonToTable();
+}
+
 
     private void addDeleteButtonToTable() {
         colDelete.setCellFactory(col -> new TableCell<>() {
@@ -211,6 +227,12 @@ public class ManageScheduleController  {
             LocalDateTime startTime = LocalDateTime.parse(startTimeText, formatter);
             LocalDateTime endTime = LocalDateTime.parse(endTimeText, formatter);
 
+            // Kiểm tra thời gian bắt đầu có phải trong quá khứ không
+            if (startTime.isBefore(LocalDateTime.now())) {
+                showAlert("Lỗi thời gian", "Thời gian bắt đầu không thể là quá khứ.");
+                return;
+            }
+
             if (startTime.isAfter(endTime) || startTime.isEqual(endTime)) {
                 showAlert("Lỗi thời gian", "Thời gian bắt đầu phải trước thời gian kết thúc.");
                 return;
@@ -244,6 +266,7 @@ public class ManageScheduleController  {
             showAlert("Lỗi định dạng", "Vui lòng nhập đúng định dạng thời gian: HH:mm dd/MM/yyyy");
         }
     }
+
 
 
     @FXML

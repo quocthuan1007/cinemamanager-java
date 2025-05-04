@@ -254,8 +254,8 @@
                   </children>
                </Pane>
 
-               <Pane fx:id="RemoveSuccessPane" layoutX="376.0" layoutY="14.0" prefHeight="285.0" prefWidth="409.0" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-width: 2;" visible="false">
-                  <Label layoutX="77.0" layoutY="108.0" style="-fx-font-size: 24px; -fx-text-fill: green;" text="Xóa thành công!" />
+               <Pane fx:id="RemoveSuccessPane" layoutX="302.0" layoutY="33.0" prefHeight="285.0" prefWidth="409.0" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-width: 2;" visible="false">
+                  <Label layoutX="125.0" layoutY="74.0" style="-fx-font-size: 24px; -fx-text-fill: green;" text="Xóa thành công!" />
 
                   <Button layoutX="165.0" layoutY="185.0" onAction="#onBackMannagerSchedule" prefWidth="80.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="OK" />
                </Pane>
