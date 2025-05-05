@@ -9,10 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -30,6 +27,10 @@ public class LoginController {
     private Label registerButton;
     @FXML
     private TextField userName;
+    @FXML
+    private TextField passWordText;
+    @FXML
+    private CheckBox showPass;
 
     private void showMainMenu()
     {
@@ -68,15 +69,18 @@ public class LoginController {
     public void onClickLoginButton(ActionEvent event)
     {
         try {
-            if (userName.getText() == "" || passWord.getText() == "")
-                messLogin.setText("Vui lòng điền đầy đủ thông tin");
+            String passw = passWord.isVisible() ? passWord.getText() : passWordText.getText();
+            if (userName.getText() == "" || passw == "" )
+                messLogin.setText("Vui lòng điền đầy đủ!");
             else {
-                if (PasswordUtils.checkPassword(passWord.getText(), AccountService.getPassword(userName.getText()))) {
+                String pass = passWord.isVisible() ? passWord.getText() : passWordText.getText();
+                if (PasswordUtils.checkPassword(pass, AccountService.getPassword(userName.getText()))) {
                     Account findAccount = AccountService.findAccount(userName.getText());
                     if (findAccount != null) {
                         UserSession.createUserSession(findAccount.getId(), findAccount.getEmail(), findAccount.getPassword(), findAccount.getAccountStatus(), findAccount.getRoleId());
-                        userName.setText("");
-                        passWord.setText("");
+                        userName.clear();
+                        passWord.clear();
+                        passWordText.clear();
                         CustomAlert.showInfo("", "Thành công", "Đăng nhập thành công");
                         Stage loginWin = (Stage) userName.getScene().getWindow();
                         loginWin.close();
@@ -107,6 +111,21 @@ public class LoginController {
     void onMouseClickedPassword(MouseEvent   event) {
         if(messLogin.getText() != "")
             messLogin.setText("");
+    }
+    @FXML
+    void onClickShowPass(ActionEvent event) {
+        if(showPass.isSelected() == true)
+        {
+            passWord.setVisible(false);
+            passWordText.setVisible(true);
+            passWordText.setText(passWord.getText());
+        }
+        else
+        {
+            passWord.setVisible(true);
+            passWordText.setVisible(false);
+            passWord.setText(passWordText.getText());
+        }
     }
     @FXML
     public void onClickRegisterButton(MouseEvent event)
