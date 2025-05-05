@@ -104,12 +104,22 @@ public class MovieShowDao {
     public List<MovieShow> getShowsByDate(LocalDate date) {
         List<MovieShow> movieShows = new ArrayList<>();
         try {
-            // Sử dụng Database.getConnection() thay vì connection
-            String query = "SELECT * FROM MovieShow WHERE DATE(StartTime) = ? AND IsDeleted = 0"; // Có thể cần thêm điều kiện IsDeleted = 0 nếu bạn không muốn lấy những bản ghi đã bị xóa
+            String query = """
+            SELECT ms.* 
+            FROM MovieShow ms
+            JOIN Room r ON ms.RoomId = r.Id
+            WHERE ms.StartTime >= ? 
+              AND ms.StartTime < ? 
+              AND ms.IsDeleted = 0 
+              AND r.RoomStatus != 'Bảo trì'
+        """;
+
             try (Connection conn = Database.getConnection();
                  PreparedStatement stmt = conn.prepareStatement(query)) {
 
-                stmt.setDate(1, java.sql.Date.valueOf(date)); // Chuyển LocalDate sang java.sql.Date
+                stmt.setTimestamp(1, Timestamp.valueOf(date.atStartOfDay()));
+                stmt.setTimestamp(2, Timestamp.valueOf(date.plusDays(1).atStartOfDay()));
+
                 ResultSet rs = stmt.executeQuery();
 
                 while (rs.next()) {
@@ -127,6 +137,7 @@ public class MovieShowDao {
         }
         return movieShows;
     }
+
 
 
 
@@ -167,15 +178,23 @@ public class MovieShowDao {
     // Lấy danh sách các suất chiếu của phim từ ngày hôm nay trở đi
     public List<MovieShow> getMovieShowsFromTodayOnward(int filmId) {
         List<MovieShow> movieShows = new ArrayList<>();
-        LocalDate today = LocalDate.now(); // Lấy ngày hôm nay
+        LocalDateTime now = LocalDateTime.now(); // Lấy thời điểm hiện tại
 
-        String query = "SELECT * FROM MovieShow WHERE FilmId = ? AND DATE(StartTime) >= ? AND IsDeleted = 0"; // Điều kiện StartTime >= hôm nay
+        String query = """
+        SELECT ms.*
+        FROM MovieShow ms
+        JOIN Room r ON ms.RoomId = r.Id
+        WHERE ms.FilmId = ? 
+          AND ms.StartTime >= ? 
+          AND ms.IsDeleted = 0
+          AND r.RoomStatus != 'Bảo trì'
+    """;
 
         try (Connection conn = Database.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setInt(1, filmId);
-            pstmt.setDate(2, java.sql.Date.valueOf(today)); // Chuyển LocalDate sang java.sql.Date
+            pstmt.setTimestamp(2, Timestamp.valueOf(now)); // So sánh thời gian chính xác
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -194,6 +213,7 @@ public class MovieShowDao {
 
         return movieShows;
     }
+
     public void saveMovieShow(MovieShow movieShow) {
         try (Connection conn = Database.getConnection()) {
             String sql = "INSERT INTO MovieShow (startTime, endTime, filmId, roomId, isDeleted) VALUES (?, ?, ?, ?, ?)";

@@ -40,6 +40,8 @@ public class ManageScheduleController  {
     @FXML private ComboBox<Integer> roomComboBox;
     @FXML private TextField startTimeField;
     @FXML private TextField endTimeField;
+    @FXML
+    private TextField searchField;
 
     public ManageScheduleController(MainManagerController mainMenu) {
         this.scheduleTable = mainMenu.getScheduleTable();
@@ -58,6 +60,8 @@ public class ManageScheduleController  {
         this.roomComboBox = mainMenu.getRoomComboBox();
         this.startTimeField = mainMenu.getStartTimeField();
         this.endTimeField = mainMenu.getEndTimeField();
+
+        this.searchField = mainMenu.getSearchField();
     }
 
 
@@ -75,6 +79,9 @@ public class ManageScheduleController  {
         styleTableRows();
         loadFilmComboBox();
         loadRoomComboBox();
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            onSearchMovieShow();
+        });
     }
 
     private void loadMovieShows() {
@@ -280,7 +287,33 @@ private void setupTableColumns() {
         alert.setContentText(content);
         alert.showAndWait();
     }
+    @FXML
+    void onSearchMovieShow() {
+        String keyword = searchField.getText().trim().toLowerCase();
 
+        if (keyword.isEmpty()) {
+            // Nếu không nhập gì thì hiển thị toàn bộ danh sách
+            scheduleTable.setItems(movieShowList);
+            return;
+        }
+
+        // Tạo Map filmId -> Film để tra cứu tên phim
+        Map<Integer, Film> filmMap = new HashMap<>();
+        for (Film film : filmDao.getAllFilms()) {
+            filmMap.put(film.getId(), film);
+        }
+
+        // Lọc danh sách
+        ObservableList<MovieShow> filteredList = FXCollections.observableArrayList();
+        for (MovieShow show : movieShowList) {
+            Film film = filmMap.get(show.getFilmId());
+            if (film != null && film.getName().toLowerCase().contains(keyword)) {
+                filteredList.add(show);
+            }
+        }
+
+        scheduleTable.setItems(filteredList);
+    }
 
 
 

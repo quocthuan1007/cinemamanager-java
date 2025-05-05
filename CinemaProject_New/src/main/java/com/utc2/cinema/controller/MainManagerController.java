@@ -259,6 +259,7 @@ public class MainManagerController implements Initializable {
     void handleLichChieu(ActionEvent event) {
         System.out.println("Lịch chiếu");
         hideAllPanes();
+        scheduleController.initialize();
         schedulePane.setVisible(true);
     }
 
@@ -716,6 +717,9 @@ public class MainManagerController implements Initializable {
 
     @FXML
     private TextField endTimeField;
+    @FXML
+    private TextField searchField;
+
 
 // GETTERS
 
@@ -797,6 +801,9 @@ public class MainManagerController implements Initializable {
     @FXML
     void onAddShowClick(){
         scheduleController.onAddShowClick();
+    }
+    public TextField getSearchField() {
+        return searchField;
     }
     /// ////////////////////////////////////////Room-Manage////////////////////////////////////////////////////////
     /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -885,6 +892,10 @@ public class MainManagerController implements Initializable {
     @FXML
     void onConfirmDelete1(){
         roomController.onConfirmDelete();
+    }
+    @FXML
+    void onSearchMovieShow(){
+        scheduleController.onSearchMovieShow();
     }
 
 }
