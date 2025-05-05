@@ -168,8 +168,6 @@ public class MainManagerController implements Initializable {
     @FXML
     private Pane foodPane;
     @FXML
-    private Pane thongKePane;
-    @FXML
     private Pane movieManPane;
     @FXML
     private Pane roomPane;
@@ -181,6 +179,7 @@ public class MainManagerController implements Initializable {
     private ManageFoodController foodController;
     private ManageScheduleController scheduleController;
     private  ManageRoomController roomController;
+    private ManageStatisticalController statisticalController;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         userController = new ManageUserController(this);
@@ -198,6 +197,10 @@ public class MainManagerController implements Initializable {
 
         roomController =new ManageRoomController(this);
         roomController.initialize();
+
+        statisticalController = new ManageStatisticalController(this);
+        statisticalController.initialize();
+
 
         hideAllPanes();
         foodPane.setVisible(true);
@@ -886,5 +889,73 @@ public class MainManagerController implements Initializable {
     void onConfirmDelete1(){
         roomController.onConfirmDelete();
     }
+    /// ////////////////////////-thong-ke-///////////////////////////////////////////
+    /// ////////////////////////-thong-ke-///////////////////////////////////////////
 
+    @FXML
+    private Pane thongKePane;
+
+    public Pane getThongKePane() {
+        return thongKePane;
+    }
+    @FXML
+    private DatePicker batDauThongKe;
+
+    @FXML
+    private TableColumn<Statistical, String> dateThongKe;
+
+    @FXML
+    private TableColumn<Statistical, Float> foodThongKe;
+
+    @FXML
+    private DatePicker ketThucThongKe;
+
+    @FXML
+    private TableColumn<Statistical, Float> sumThongKe;
+
+    @FXML
+    private TableColumn<Statistical, Float> ticketThongKe;
+
+    @FXML
+    private Button timThongKe;
+    @FXML
+    private TableView<Statistical> tableThongKe;
+
+    public TableView<Statistical> getTableThongKe() {
+        return tableThongKe;
+    }
+
+    public Button getTimThongKe() {
+        return timThongKe;
+    }
+
+    public TableColumn<Statistical, Float> getTicketThongKe() {
+        return ticketThongKe;
+    }
+
+    public TableColumn<Statistical, Float> getSumThongKe() {
+        return sumThongKe;
+    }
+
+    public DatePicker getKetThucThongKe() {
+        return ketThucThongKe;
+    }
+
+    public TableColumn<Statistical, Float> getFoodThongKe() {
+        return foodThongKe;
+    }
+
+    public TableColumn<Statistical, String> getDateThongKe() {
+        return dateThongKe;
+    }
+
+    public DatePicker getBatDauThongKe() {
+        return batDauThongKe;
+    }
+
+
+    @FXML
+    void onSearchThongKe(ActionEvent e) {
+        statisticalController.onSearchThongKe(e);
+    }
 }
