@@ -153,12 +153,16 @@ public class MainMenuController implements Initializable {
     @FXML private TableColumn<Invoice, String> colSoGhe;
     @FXML private TableColumn<Invoice, String> colGiaTri;
 
+    @FXML private TextField searchField;
     @FXML private TextField dateRangeField;
     @FXML private Label greetingLabel;
 
     // Getter methods
     public TableView<Invoice> getInvoiceTable() {
         return invoiceTable;
+    }
+    public TextField getSearchField() {
+        return searchField;
     }
 
     public TableColumn<Invoice, String> getColNgay() {
@@ -496,7 +500,8 @@ public class MainMenuController implements Initializable {
     }
     @FXML
     void  handleBookTicket(){filmDisplayController.handleBookTicket();}
-
+    @FXML
+    void onSearchFilmByName(){filmDisplayController.onSearchFilmByName();}
 
     private void setupMainForm() {
         mainMenuForm.setVisible(true);
