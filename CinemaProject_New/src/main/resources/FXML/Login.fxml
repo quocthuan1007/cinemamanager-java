@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
@@ -35,5 +36,7 @@
             <Font size="16.0" />
          </font>
       </Label>
+      <CheckBox fx:id="showPass" layoutX="532.0" layoutY="242.0" mnemonicParsing="false" onAction="#onClickShowPass" text="Hiện" />
+      <TextField fx:id="passWordText" layoutX="329.0" layoutY="200.0" onMouseClicked="#onMouseClickEmail" styleClass="field" visible="false" />
    </children>
 </Pane>

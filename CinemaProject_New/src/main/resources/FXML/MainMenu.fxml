@@ -129,11 +129,7 @@
                                 </Label>
 
                                 <!-- Nút Đặt Vé màu đỏ -->
-                                <Button fx:id="bookTicketButton"
-                                        prefWidth="200.0"
-                                        styleClass="redButton"
-                                        text="Đặt Vé"
-                                        onAction="#handleBookTicket"/>
+                                <Button fx:id="bookTicketButton" onAction="#handleBookTicket" prefWidth="200.0" styleClass="redButton" text="Đặt Vé" />
 
                             </VBox>
                             <!-- Nội dung phim (content) bên dưới sử dụng Label -->
@@ -405,10 +401,10 @@
                         <columns>
                             <TableColumn fx:id="colNgay" prefWidth="150" text="Ngày" />
                             <TableColumn fx:id="colSuatChieu" prefWidth="157.33334350585938" text="Suất Chiếu" />
-                            <TableColumn fx:id="colPhim" prefWidth="276.6667175292969" text="Phim" />
-                            <TableColumn fx:id="colPhong" prefWidth="105.99993896484375" text="Phòng Chiếu" />
-                            <TableColumn fx:id="colSoGhe" prefWidth="99.33331298828125" text="Số Ghế" />
-                            <TableColumn fx:id="colGiaTri" prefWidth="141.33319091796875" text="Giá Trị" />
+                            <TableColumn fx:id="colPhim" prefWidth="142.39993286132812" text="Phim" />
+                            <TableColumn fx:id="colPhong" prefWidth="154.4000244140625" text="Phòng Chiếu" />
+                            <TableColumn fx:id="colSoGhe" minWidth="0.0" prefWidth="145.5999755859375" text="Số Ghế" />
+                            <TableColumn fx:id="colGiaTri" minWidth="0.0" prefWidth="177.800048828125" text="Giá Trị" />
                         </columns>
                     </TableView>
                     <!-- Nếu bạn muốn giữ nguyên VBox (đang rỗng) -->

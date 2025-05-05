@@ -37,6 +37,7 @@
         <Button maxWidth="180" onAction="#handleQuanLyPhim" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Quản lý phim" />
         <Button maxWidth="180" onAction="#handleLichChieu" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Quản lý lịch chiếu" />
         <Button maxWidth="180" onAction="#handleNguoiDung" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Quản lý người dùng" />
+      <Button maxWidth="180" onAction="#handleThongKe" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Thống kê" />
         <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 20 0 0 0;" text="Đăng nhập: Admin" />
       <Button maxWidth="180" onAction="#handleDangXuat" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Đăng xuất" />
     </VBox>
@@ -44,7 +45,7 @@
     <!-- Phần nội dung thay đổi -->
     <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
-         <Pane fx:id="thongKePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" visible="false" />
+         <Pane fx:id="thongKePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" />
          <Pane fx:id="foodPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" visible="false">
             <children>
                <Pane fx:id="foodForm" layoutX="651.0" layoutY="122.0" prefHeight="315.0" prefWidth="282.0" style="-fx-background-color: #EEEEEE;" visible="false">
