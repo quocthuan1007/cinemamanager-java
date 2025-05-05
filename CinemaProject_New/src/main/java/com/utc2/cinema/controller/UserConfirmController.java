@@ -193,7 +193,7 @@ public class UserConfirmController {
             }
 
 
-            int gender = genderText.equals("Nam") ? 1 : 0;
+            int gender = genderText.equals("Nam") ? 0 : 1;
             java.util.Date birth = java.sql.Date.valueOf(birthValue);
 
             int accountId = UserSession.getInstance().getUserId();

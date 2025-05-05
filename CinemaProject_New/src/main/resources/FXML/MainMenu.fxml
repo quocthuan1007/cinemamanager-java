@@ -400,10 +400,10 @@
                         <columns>
                             <TableColumn fx:id="colNgay" prefWidth="150" text="Ngày" />
                             <TableColumn fx:id="colSuatChieu" prefWidth="157.33334350585938" text="Suất Chiếu" />
-                            <TableColumn fx:id="colPhim" prefWidth="276.6667175292969" text="Phim" />
-                            <TableColumn fx:id="colPhong" prefWidth="105.99993896484375" text="Phòng Chiếu" />
-                            <TableColumn fx:id="colSoGhe" prefWidth="99.33331298828125" text="Số Ghế" />
-                            <TableColumn fx:id="colGiaTri" prefWidth="141.33319091796875" text="Giá Trị" />
+                            <TableColumn fx:id="colPhim" prefWidth="342.3999938964844" text="Phim" />
+                            <TableColumn fx:id="colPhong" prefWidth="283.99993896484375" text="Phòng Chiếu" />
+                            <TableColumn fx:id="colSoGhe" minWidth="0.0" prefWidth="0.0" text="Số Ghế" />
+                            <TableColumn fx:id="colGiaTri" minWidth="0.0" prefWidth="0.0" text="Giá Trị" />
                         </columns>
                     </TableView>
                     <!-- Nếu bạn muốn giữ nguyên VBox (đang rỗng) -->
