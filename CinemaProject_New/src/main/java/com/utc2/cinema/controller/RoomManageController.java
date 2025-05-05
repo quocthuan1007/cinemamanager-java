@@ -62,8 +62,7 @@ public class RoomManageController implements Initializable {
         roomStatusComboBox.setItems(FXCollections.observableArrayList("Bình thường", "Bảo trì"));
         roomStatusComboBox.getSelectionModel().selectFirst();
 
-        // Lấy danh sách các phòng chiếu và cập nhật ComboBox
-        updateRoomNameComboBox();
+
 
         roomNameComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
@@ -178,21 +177,32 @@ public class RoomManageController implements Initializable {
         String status = roomStatusComboBox.getValue();
 
         if (currentRoom == null) {
-            // Thêm mới phòng chiếu
             Room newRoom = new Room(name, rows, columns, status);
-            roomDao.addRoom(newRoom); // Gọi DAO để lưu phòng chiếu
+            roomDao.addRoom(newRoom);
         } else {
-            // Cập nhật phòng chiếu
+            boolean isSeatLayoutChanged = (rows != currentRoom.getNumRows() || columns != currentRoom.getNumCols());
+            // Kiểm tra xem có ghế đã được đặt chưa
+            // Kiểm tra nếu thay đổi sơ đồ ghế và có vé đặt
+            if (isSeatLayoutChanged && roomDao.hasFutureReservations(currentRoom.getId())) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Cảnh báo");
+                alert.setHeaderText("Không thể cập nhật sơ đồ ghế");
+                alert.setContentText("Phòng này đã có ghế được đặt trong tương lai. Không thể thay đổi số hàng hoặc số cột.");
+                alert.showAndWait();
+                return;
+            }
+
             currentRoom.setName(name);
             currentRoom.setNumRows(rows);
             currentRoom.setNumCols(columns);
             currentRoom.setRoomStatus(status);
-            roomDao.updateRoom(currentRoom); // Gọi DAO để cập nhật phòng chiếu
+            roomDao.updateRoom(currentRoom);
         }
 
-        updateRoomNameComboBox(); // Cập nhật lại danh sách phòng chiếu
-        clearFields(); // Xóa các trường nhập liệu
+        updateRoomNameComboBox();
+        clearFields();
     }
+
 
 
     // Phương thức xóa phòng chiếu

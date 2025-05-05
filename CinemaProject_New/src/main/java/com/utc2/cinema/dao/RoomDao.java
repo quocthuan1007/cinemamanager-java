@@ -5,6 +5,7 @@ import com.utc2.cinema.model.entity.Room;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -168,17 +169,31 @@ public class RoomDao {
     public void updateRoom(Room room) {
         try {
             Connection conn = Database.getConnection();
-            String sql = "UPDATE Room SET RowNumber = ?, ColNumber = ?, RoomStatus = ? WHERE Name = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, room.getNumRows());
-            stmt.setInt(2, room.getNumCols());
-            stmt.setString(3, room.getRoomStatus());
-            stmt.setString(4, room.getName());
-            stmt.executeUpdate();
+
+            // Kiểm tra nếu có ghế đã đặt
+            if (hasFutureReservations(room.getId())) {
+                // Chỉ cho phép cập nhật trạng thái phòng
+                String sql = "UPDATE Room SET RoomStatus = ? WHERE Name = ?";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.setString(1, room.getRoomStatus());
+                stmt.setString(2, room.getName());
+                stmt.executeUpdate();
+            } else {
+                // Nếu chưa có ghế đặt, cho phép cập nhật toàn bộ thông tin
+                String sql = "UPDATE Room SET RowNumber = ?, ColNumber = ?, RoomStatus = ? WHERE Name = ?";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.setInt(1, room.getNumRows());
+                stmt.setInt(2, room.getNumCols());
+                stmt.setString(3, room.getRoomStatus());
+                stmt.setString(4, room.getName());
+                stmt.executeUpdate();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public void deleteRoom(String name) {
         try {
             Connection conn = Database.getConnection();
@@ -191,16 +206,45 @@ public class RoomDao {
         }
     }
     public static void clearSeatsForRoom(int roomId) {
-        String sql = "DELETE FROM Seats WHERE roomId = ?";
+        if (hasFutureReservations(roomId)) {
+            // Không xóa ghế nếu có suất chiếu trong tương lai
+
+            return;
+        }
+
+        String deleteQuery = "DELETE FROM Seats WHERE roomId = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(deleteQuery)) {
+            stmt.setInt(1, roomId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi xóa ghế: " + e.getMessage());
+        }
+    }
+    public static boolean hasFutureReservations(int roomId) {
+        String sql = """
+        SELECT COUNT(*) FROM Reservation r
+        JOIN MovieShow ms ON r.ShowId = ms.Id
+        WHERE ms.RoomId = ? AND ms.StartTime > NOW()
+    """;
 
         try (Connection conn = Database.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, roomId);
-            stmt.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Hoặc log lỗi
         }
+        return false;
     }
+
+
+
 
 
 }
