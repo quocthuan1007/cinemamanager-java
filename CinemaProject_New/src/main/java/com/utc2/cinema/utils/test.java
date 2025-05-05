@@ -1,4 +1,4 @@
-package com.utc2.cinema.view;
+package com.utc2.cinema.utils;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

@@ -136,54 +136,69 @@ public class BillDao {
         }
         return false;
     }
-    public List<Invoice> getBillsByUserAndDateRange(int userId) {
+    public List<Invoice> getInvoicesByUserAndDateRange(int userId) {
         List<Invoice> invoices = new ArrayList<>();
         Connection conn = null;
         PreparedStatement st = null;
         ResultSet rs = null;
+
         try {
-            conn = Database.getConnection();
-            String query = "SELECT b.DatePurchased, ms.StartTime AS SuatChieu, f.Name AS Phim, r.Name AS PhongChieu, " +
+            conn = Database.getConnection(); // Giả sử bạn đã có phương thức getConnection() trong lớp Database
+            String query = "SELECT " +
+                    "b.DatePurchased, " +
+                    "ms.StartTime AS SuatChieu, " +
+                    "f.Name AS Phim, " +
+                    "r.Name AS PhongChieu, " +
                     "COUNT(s.Id) AS SoGhe, " +
                     "SUM(rsv.Cost) AS GiaTriGhe, " +
-                    "SUM(COALESCE(fo.Count * fd.Cost, 0)) AS GiaTriDoAn, " +
-                    "(SUM(rsv.Cost) + SUM(COALESCE(fo.Count * fd.Cost, 0))) AS GiaTri " +
-                    "FROM Bill b " +
+                    "COALESCE((" +
+                    "   SELECT SUM(fo.Count * fd.Cost) " +
+                    "   FROM Food_Order fo " +
+                    "   JOIN Food fd ON fo.FoodId = fd.Id " +
+                    "   WHERE fo.BillId = b.Id), 0) AS GiaTriDoAn, " +
+                    "SUM(rsv.Cost) + COALESCE((" +
+                    "   SELECT SUM(fo.Count * fd.Cost) " +
+                    "   FROM Food_Order fo " +
+                    "   JOIN Food fd ON fo.FoodId = fd.Id " +
+                    "   WHERE fo.BillId = b.Id), 0) AS GiaTri " +
+                    "FROM " +
+                    "Bill b " +
                     "JOIN Reservation rsv ON b.Id = rsv.BillId " +
                     "JOIN MovieShow ms ON rsv.ShowId = ms.Id " +
                     "JOIN Film f ON ms.FilmId = f.Id " +
                     "JOIN Room r ON ms.RoomId = r.Id " +
                     "JOIN Seats s ON rsv.SeatId = s.Id " +
-                    "LEFT JOIN Food_Order fo ON b.Id = fo.BillId " +
-                    "LEFT JOIN Food fd ON fo.FoodId = fd.Id " +
-                    "WHERE b.UserId = ?  " +
-                    "GROUP BY b.DatePurchased, ms.StartTime, f.Name, r.Name";
+                    "WHERE b.UserId = ? " +
+                    "GROUP BY b.DatePurchased, ms.StartTime, f.Name, r.Name, b.Id";
 
             st = conn.prepareStatement(query);
-            st.setInt(1, userId);
+            st.setInt(1, userId); // Gán giá trị userId vào câu lệnh SQL
             rs = st.executeQuery();
 
+            // Duyệt qua kết quả trả về từ truy vấn và tạo đối tượng Invoice
             while (rs.next()) {
+                // Tạo đối tượng Invoice từ dữ liệu trong ResultSet
                 Invoice invoice = new Invoice(
-                        rs.getDate("DatePurchased").toLocalDate(),
-                        rs.getString("SuatChieu"),
-                        rs.getString("Phim"),
-                        rs.getString("PhongChieu"),
-                        rs.getInt("SoGhe"),
-                        rs.getDouble("GiaTriGhe"),
-                        rs.getDouble("GiaTriDoAn"),
-                        rs.getDouble("GiaTri")
+                        rs.getDate("DatePurchased").toLocalDate(),  // Chuyển đổi Date thành LocalDate
+                        rs.getString("SuatChieu"),                   // Thời gian chiếu phim
+                        rs.getString("Phim"),                        // Tên phim
+                        rs.getString("PhongChieu"),                  // Tên phòng chiếu
+                        rs.getInt("SoGhe"),                          // Số ghế
+                        rs.getDouble("GiaTriGhe"),                   // Giá trị ghế
+                        rs.getDouble("GiaTriDoAn"),                  // Giá trị đồ ăn
+                        rs.getDouble("GiaTri")                       // Tổng giá trị
                 );
-                invoices.add(invoice);
+                invoices.add(invoice); // Thêm invoice vào danh sách
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            Database.closeConnection(conn);
+            // Đóng kết nối và giải phóng tài nguyên
+            Database.closeConnection(conn); // Giả sử bạn đã có phương thức closeConnection trong lớp Database
             if (st != null) try { st.close(); } catch (SQLException e) { e.printStackTrace(); }
             if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
-        return invoices;
+        return invoices; // Trả về danh sách hóa đơn
     }
 
 

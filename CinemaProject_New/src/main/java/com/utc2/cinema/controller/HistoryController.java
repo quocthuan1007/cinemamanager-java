@@ -61,7 +61,7 @@ public class HistoryController {
         if (Info != null) {
             int userID = Info.getId();
             // Tự động hiển thị tất cả hóa đơn khi giao diện được khởi tạo
-            List<Invoice> invoices = billDao.getBillsByUserAndDateRange(userID); // Lấy tất cả hóa đơn
+            List<Invoice> invoices = billDao.getInvoicesByUserAndDateRange(userID); // Lấy tất cả hóa đơn
 
             // Sử dụng SimpleStringProperty để chuyển đổi String thành ObservableValue<String>
             colNgay.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDatePurchased().toString()));
