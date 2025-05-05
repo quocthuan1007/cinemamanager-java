@@ -129,7 +129,12 @@
                                 </Label>
 
                                 <!-- Nút Đặt Vé màu đỏ -->
-                                <Button prefWidth="200.0" styleClass="redButton" text="Đặt Vé" />
+                                <Button fx:id="bookTicketButton"
+                                        prefWidth="200.0"
+                                        styleClass="redButton"
+                                        text="Đặt Vé"
+                                        onAction="#handleBookTicket"/>
+
                             </VBox>
                             <!-- Nội dung phim (content) bên dưới sử dụng Label -->
                             <Label text="Nội dung:" />

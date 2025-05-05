@@ -20,6 +20,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
 import java.io.InputStream;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -53,6 +54,7 @@ public class BuyTicketController {
     private TableColumn<FoodOrder, Integer> quantityColumn;
     private TableColumn<FoodOrder, Float> totalColumn;
 
+
     private Set<String> selectedSeats = new HashSet<>();
     private double seatTotalPrice = 0;
     private final MovieShowDao movieShowDao = new MovieShowDao();
@@ -64,6 +66,9 @@ public class BuyTicketController {
     private List<Food> foodList = new ArrayList<>();
 
     public BuyTicketController(MainMenuController mainMenu) {
+        this.mainMenu = mainMenu;
+
+        // gán các thành phần UI từ mainMenu như bạn đã làm...
 
         this.filmNameLabel1 = mainMenu.getFilmNameLabel1(); // Giả sử bạn đã tạo getter trong MainMenuController
         this.showTimeLabel = mainMenu.getShowTimeLabel();
@@ -89,6 +94,7 @@ public class BuyTicketController {
         this.quantityColumn = mainMenu.getQuantityColumn();
         this.totalColumn = mainMenu.getTotalColumn();
     }
+    @FXML FilmDisplayController filmDisplayController;
 
     public void initialize() {
         showAllFilms();
@@ -100,6 +106,7 @@ public class BuyTicketController {
         // Hiển thị các món ăn đã tải lên bảng
         displayFoodOrders();
         // Ẩn các Pane ban đầu
+
         billPane.setVisible(false);
         seatSelectionPane.setVisible(false);
     }
@@ -131,9 +138,13 @@ public class BuyTicketController {
     public void onPay() {
         if (selectedFilm != null) {
             String filmName = selectedFilm.getName();  // Lấy tên phim
-            String showTime = selectedMovieShow.getStartTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
-                    " | " + selectedMovieShow.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
-                    " - " + selectedMovieShow.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"));// Cập nhật thông tin thời gian chiếu
+            String showTime = "  " +
+                    selectedMovieShow.getStartTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
+                    " | " +
+                    selectedMovieShow.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")) +
+                    " - " +
+                    selectedMovieShow.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+// Cập nhật thông tin thời gian chiếu
             String room = "Phòng " + selectedMovieShow.getRoomId();  // Cập nhật thông tin phòng
             String seat = String.join(", ", selectedSeats);   // Cập nhật thông tin ghế
             String combo = foodOrderList.stream()
@@ -143,7 +154,8 @@ public class BuyTicketController {
             // Nối các tên món ăn và số lượng với dấu ", "
             // Cập nhật combo
             double totalPrice = total;  // Tổng tiền
-
+            NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            totalLabel.setText(formatter.format(totalPrice));
             // Cập nhật thông tin hóa đơn vào các Label
             filmNameLabel1.setText(filmName);
             showTimeLabel.setText(showTime);
@@ -169,6 +181,12 @@ public class BuyTicketController {
             if (Info == null) {
                 CustomAlert.showError("","Có lỗi xảy ra!", "Vui lòng cập nhật thông tin cá nhân!!");
                 return; // Nếu không tìm thấy thông tin người dùng, dừng hàm
+            }
+
+            // ✅ KIỂM TRA GHẾ ĐƯỢC CHỌN
+            if (selectedSeats == null || selectedSeats.isEmpty()) {
+                CustomAlert.showError("Thiếu ghế", "Bạn chưa chọn ghế!", "Vui lòng chọn ít nhất một ghế để tiếp tục.");
+                return;
             }
 
             int userId = Info.getId();
@@ -281,7 +299,7 @@ public class BuyTicketController {
         }
     }
 
-    private void showMovieShowOfFilm(int filmId) {
+    void showMovieShowOfFilm(int filmId) {
         selectedFilm = filmDao.getFilmById(filmId);
 
         scheduleContainerOfFilm.getChildren().clear();

@@ -114,6 +114,7 @@ public class MainMenuController implements Initializable {
     @FXML private Label filmContentLabel;
     @FXML private ImageView filmPosterImageView;
     @FXML private WebView webView; // WebView để hiển thị trailer
+    @FXML private Film selectedFilm;
     @FXML
     private FlowPane dateFlowPane;
     @FXML
@@ -429,6 +430,12 @@ public class MainMenuController implements Initializable {
     public VBox getScheduleContainer() {
         return scheduleContainer;
     }
+    public Film getSelectedFilm() {
+        return selectedFilm;
+    }
+    public BuyTicketController getBuyTicketController() {
+        return buyTicketController;
+    }
     /// //////////////////////Main_code///////////////////////// ///
     private FilmDisplayController filmDisplayController;
     private ScheduleDisplayController scheduleDisplayController;
@@ -487,7 +494,8 @@ public class MainMenuController implements Initializable {
     void onAppcetPay() {
         buyTicketController.onAppcetPay();
     }
-
+    @FXML
+    void  handleBookTicket(){filmDisplayController.handleBookTicket();}
 
 
     private void setupMainForm() {
@@ -525,4 +533,5 @@ public class MainMenuController implements Initializable {
             showfilmdetail.setVisible(true);
         }
     }
+
 }

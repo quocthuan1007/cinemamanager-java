@@ -2,6 +2,7 @@ package com.utc2.cinema.controller;
 
 import com.utc2.cinema.model.entity.Film;
 import com.utc2.cinema.service.FilmService;
+import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -21,13 +22,15 @@ import java.util.List;
 
 public class FilmDisplayController
 {
-    private MainMenuController mainMenu = new MainMenuController();
+
     private final FilmService filmService = new FilmService();
+
     public void setupFilms() {
         List<Film> films = filmService.getAllFilms();
         showFilms(films);
     }
-    private Pane ShowFilmDetail;
+    @FXML private Pane ShowFilmDetail;
+    @FXML private Pane buyForm;
     private FlowPane moviePosters;
     private FlowPane moviePosters1;
     private Label filmNameLabel;
@@ -39,7 +42,11 @@ public class FilmDisplayController
     private Label filmContentLabel;
     private ImageView filmPosterImageView;
     private WebView webView;
+    private Film selectedFilm;
+    @FXML private BuyTicketController buyTicketController;
     public FilmDisplayController(MainMenuController mainMenu) {
+        this.buyTicketController = mainMenu.getBuyTicketController();
+        this.buyForm = mainMenu.getBuyForm();
         this.ShowFilmDetail = mainMenu.getShowfilmdetail();
         this.moviePosters = mainMenu.getMoviePosters();
         this.moviePosters1 = mainMenu.getMoviePosters1();
@@ -51,8 +58,11 @@ public class FilmDisplayController
         this.filmAgeLimitLabel = mainMenu.getFilmAgeLimitLabel();
         this.filmContentLabel = mainMenu.getFilmContentLabel();
         this.filmPosterImageView = mainMenu.getFilmPosterImageView();
+        this.selectedFilm= mainMenu.getSelectedFilm();
         this.webView = mainMenu.getWebView();
+
     }
+
     //
     private VBox createFilmBox(Film film) {
         String posterPath = "src/main/resources/Image/" + film.getPosterUrl() + ".png"; // hoặc đường dẫn tương đối khác
@@ -75,6 +85,7 @@ public class FilmDisplayController
         Button bookButton = new Button("🎟️ Đặt vé");
         bookButton.setStyle("-fx-background-color: #0078D7; -fx-text-fill: white;");
         bookButton.setOnAction(event -> {
+            selectedFilm = film;
             System.out.println("Hiển thị thông tin chi tiết cho phim: " + film.getName());
             setFilmDetails(film);
 
@@ -150,5 +161,20 @@ public class FilmDisplayController
 
         WebEngine webEngine = webView.getEngine();
         webEngine.loadContent(embedHTML);
+    }
+
+
+    void handleBookTicket() {
+        // Xử lý đặt vé ở đây
+        if (selectedFilm != null) {
+            // Nếu film đã được chọn, thực hiện hành động
+            ShowFilmDetail.setVisible(false);
+            buyForm.setVisible(true);
+//            buyTicketController.showMovieShowOfFilm(selectedFilm.getId());
+             // Sử dụng ID của film
+        } else {
+            // Nếu không có phim được chọn, có thể hiển thị thông báo hoặc xử lý gì đó
+            System.out.println("Không có phim nào được chọn!");
+        }
     }
 }
