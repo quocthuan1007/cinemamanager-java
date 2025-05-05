@@ -3,8 +3,10 @@ package com.utc2.cinema.controller;
 import com.utc2.cinema.model.entity.Film;
 import com.utc2.cinema.service.FilmService;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -55,9 +57,9 @@ public class FilmDisplayController
     @FXML
     private Pane introForm;
 
-    @FXML private BuyTicketController buyTicketController;
+    private BuyTicketController buyTicketController;
     public FilmDisplayController(MainMenuController mainMenu) {
-        this.buyTicketController = mainMenu.getBuyTicketController();
+        buyTicketController = mainMenu.getBuyTicketController();
         this.buyForm = mainMenu.getBuyForm();
         this.ShowFilmDetail = mainMenu.getShowfilmdetail();
         this.moviePosters = mainMenu.getMoviePosters();
@@ -186,8 +188,6 @@ public class FilmDisplayController
             // Nếu film đã được chọn, thực hiện hành động
             ShowFilmDetail.setVisible(false);
             buyForm.setVisible(true);
-//            buyTicketController.showMovieShowOfFilm(selectedFilm.getId());
-             // Sử dụng ID của film
         } else {
             // Nếu không có phim được chọn, có thể hiển thị thông báo hoặc xử lý gì đó
             System.out.println("Không có phim nào được chọn!");

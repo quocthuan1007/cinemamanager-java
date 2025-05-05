@@ -19,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
+import java.io.File;
 import java.io.InputStream;
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -247,15 +248,13 @@ public class BuyTicketController {
         filmsContainer.getChildren().clear();
 
         for (Film film : allFilms) {
-            String posterPath = "/Image/" + film.getPosterUrl() + ".png";
-            InputStream is = getClass().getResourceAsStream(posterPath);
-
-            if (is == null) {
+            String posterPath = "src/main/resources/Image/" + film.getPosterUrl() + ".png"; // hoặc đường dẫn tương đối khác
+            File file = new File(posterPath);
+            if (!file.exists()) {
                 System.out.println("Không tìm thấy ảnh: " + posterPath);
-                continue;
+                return;
             }
-
-            Image image = new Image(is);
+            Image image = new Image(file.toURI().toString());
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(60);
             imageView.setFitHeight(80);
@@ -300,7 +299,7 @@ public class BuyTicketController {
         }
     }
 
-    void showMovieShowOfFilm(int filmId) {
+    public void showMovieShowOfFilm(int filmId) {
         selectedFilm = filmDao.getFilmById(filmId);
 
         scheduleContainerOfFilm.getChildren().clear();
