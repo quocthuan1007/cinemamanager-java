@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -43,6 +44,17 @@ public class FilmDisplayController
     private ImageView filmPosterImageView;
     private WebView webView;
     private Film selectedFilm;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private Pane movieForm;
+    @FXML Pane mainMenuForm;
+    @FXML Pane showfilmdetail;
+    @FXML
+    private Pane scheduleForm;
+    @FXML
+    private Pane introForm;
+
     @FXML private BuyTicketController buyTicketController;
     public FilmDisplayController(MainMenuController mainMenu) {
         this.buyTicketController = mainMenu.getBuyTicketController();
@@ -60,7 +72,11 @@ public class FilmDisplayController
         this.filmPosterImageView = mainMenu.getFilmPosterImageView();
         this.selectedFilm= mainMenu.getSelectedFilm();
         this.webView = mainMenu.getWebView();
-
+        this.introForm=mainMenu.getIntroForm();
+        this.mainMenuForm=mainMenu.getMainMenuForm();
+        this.scheduleForm=mainMenu.getScheduleForm();
+        this.movieForm=mainMenu.getMovieForm();
+        this.searchField=mainMenu.getSearchField();
     }
 
     //
@@ -177,4 +193,41 @@ public class FilmDisplayController
             System.out.println("Không có phim nào được chọn!");
         }
     }
+    void hideForm(){
+        movieForm.setVisible(false);
+        ShowFilmDetail.setVisible(false);
+        scheduleForm.setVisible(false);
+        mainMenuForm.setVisible(false);
+        introForm.setVisible(false);
+        buyForm.setVisible(false);
+    }
+    @FXML
+    void onSearchFilmByName() {
+        String keyword = searchField.getText().trim().toLowerCase();
+
+        // Ẩn tất cả các pane không liên quan
+        hideForm();
+
+        // Hiện pane chứa danh sách film
+        movieForm.setVisible(true);
+
+        // Nếu ô tìm kiếm rỗng thì hiển thị tất cả film
+        if (keyword.isEmpty()) {
+            moviePosters.getChildren().clear();
+            moviePosters1.getChildren().clear();
+            setupFilms();
+            return;
+        }
+
+        // Lọc danh sách phim
+        List<Film> filtered = filmService.getAllFilms().stream()
+                .filter(f -> f.getName().toLowerCase().contains(keyword))
+                .toList();
+
+        // Hiển thị phim đã lọc
+        moviePosters.getChildren().clear();
+        moviePosters1.getChildren().clear();
+        showFilms(filtered);
+    }
+
 }

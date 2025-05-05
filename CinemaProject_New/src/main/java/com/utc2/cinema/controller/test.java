@@ -1,309 +1,301 @@
 package com.utc2.cinema.controller;
 
+import com.utc2.cinema.dao.FilmDao;
+import com.utc2.cinema.dao.MovieShowDao;
 import com.utc2.cinema.dao.RoomDao;
-import com.utc2.cinema.dao.SeatDao;
+import com.utc2.cinema.model.entity.Film;
+import com.utc2.cinema.model.entity.MovieShow;
 import com.utc2.cinema.model.entity.Room;
-import com.utc2.cinema.model.entity.Seats;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 
-import java.net.URL;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class test implements Initializable {
+public class test  {
 
+    @FXML private TableView<MovieShow> scheduleTable;
+    @FXML private TableColumn<MovieShow, String> colStart;
+    @FXML private TableColumn<MovieShow, String> colEnd;
+    @FXML private TableColumn<MovieShow, String> colFilm;
+    @FXML private TableColumn<MovieShow, Integer> colRoom;
+    @FXML private TableColumn<MovieShow, Void> colDelete;
+
+
+    @FXML private Pane confirmDeletePane;
+    @FXML private Pane removePane;
+    @FXML private Pane RemoveSuccessPane;
+    @FXML private Pane addMovieShowPane;
+
+    @FXML private ComboBox<Film> filmComboBox;
+    @FXML private ComboBox<Integer> roomComboBox;
+    @FXML private TextField startTimeField;
+    @FXML private TextField endTimeField;
     @FXML
-    private TextField roomNameField;
+    private TextField searchField;
 
-    @FXML
-    private TextField rowCountField;
 
-    @FXML
-    private TextField columnCountField;
 
-    @FXML
-    private ComboBox<String> roomStatusComboBox;
 
-    @FXML
-    private GridPane seatGrid;
-
-    @FXML
-    private Button addRoomBtn;
-
-    @FXML
-    private Button deleteRoomBtn;
-
-    @FXML
-    private Button saveButton;
-
-    @FXML
-    private Button cancelButton;
-
-    @FXML
-    private ComboBox<String> roomNameComboBox;
-
-    @FXML
-    private Pane deleteConfirmationPane;
-
+    private final MovieShowDao movieShowDao = new MovieShowDao();
+    private final FilmDao filmDao = new FilmDao();
     private final RoomDao roomDao = new RoomDao();
-    private final SeatDao seatDao = new SeatDao();
-    private Room currentRoom;
+    private final ObservableList<MovieShow> movieShowList = FXCollections.observableArrayList();
+
+    private MovieShow selectedMovieShow; // Lưu tạm lịch chiếu cần xóa
+
+    @FXML
+    public void initialize() {
+        loadMovieShows();
+        setupTableColumns();
+        styleTableRows();
+        loadFilmComboBox();
+        loadRoomComboBox();
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            onSearchMovieShow();
+        });
+    }
+
+    private void loadMovieShows() {
+        List<MovieShow> shows = movieShowDao.getAllMovieShows();
+        movieShowList.setAll(shows);
+        scheduleTable.setItems(movieShowList);
+    }
+
+    private void styleTableRows() {
+        scheduleTable.setRowFactory(tv -> {
+            TableRow<MovieShow> row = new TableRow<>();
+            row.setStyle("-fx-background-color: white; -fx-text-fill: black;");
+            return row;
+        });
+    }
 
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        roomStatusComboBox.setItems(FXCollections.observableArrayList("Bình thường", "Bảo trì"));
-        roomStatusComboBox.getSelectionModel().selectFirst();
+    private void setupTableColumns() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM");
 
-        updateRoomNameComboBox();
+        // Tạo một map chứa thông tin phim (nếu có nhiều phim, sẽ giúp giảm thiểu số lần gọi đến DB)
+        Map<Integer, Film> filmMap = new HashMap<>();
+        List<Film> films = filmDao.getAllFilms();
+        for (Film film : films) {
+            filmMap.put(film.getId(), film);
+        }
 
-        roomNameComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                Room selectedRoom = roomDao.getRoomByName(newVal);
-                if (selectedRoom != null) {
-                    currentRoom = selectedRoom;
-                    roomNameField.setText(selectedRoom.getName());
-                    rowCountField.setText(String.valueOf(selectedRoom.getNumRows()));
-                    columnCountField.setText(String.valueOf(selectedRoom.getNumCols()));
-                    roomStatusComboBox.setValue(selectedRoom.getRoomStatus());
-                    openSeatSelection(selectedRoom);
+        // Cột thời gian bắt đầu
+        colStart.setCellValueFactory(cell ->
+                Bindings.createStringBinding(() -> cell.getValue().getStartTime().format(formatter))
+        );
+
+        // Cột thời gian kết thúc
+        colEnd.setCellValueFactory(cell ->
+                Bindings.createStringBinding(() -> cell.getValue().getEndTime().format(formatter))
+        );
+
+        // Cột phim
+        colFilm.setCellValueFactory(cell -> {
+            Film film = filmMap.get(cell.getValue().getFilmId());
+            return Bindings.createStringBinding(() -> film != null ? film.getName() : "Không rõ");
+        });
+
+        // Cột phòng
+        colRoom.setCellValueFactory(new PropertyValueFactory<>("roomId"));
+
+        // Thêm nút xóa vào bảng nếu cần thiết
+        addDeleteButtonToTable();
+    }
+
+
+    private void addDeleteButtonToTable() {
+        colDelete.setCellFactory(col -> new TableCell<>() {
+            private final Button deleteBtn = new Button("Xóa");
+
+            {
+                deleteBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+                deleteBtn.setOnAction(event -> {
+                    selectedMovieShow = getTableView().getItems().get(getIndex());
+                    confirmDeletePane.setVisible(true);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(deleteBtn);
                 }
             }
         });
-
-        saveButton.setOnAction(event -> saveRoom());
-        cancelButton.setOnAction(event -> cancelEdit());
-        deleteRoomBtn.setOnAction(event -> showDeleteConfirmation());
     }
 
-    private void updateRoomNameComboBox() {
-        List<String> roomNames = roomDao.getAllRoomNames();
-        roomNameComboBox.setItems(FXCollections.observableArrayList(roomNames));
+    @FXML
+    void onCancelDelete() {
+        confirmDeletePane.setVisible(false);
+    }
 
-        if (!roomNames.isEmpty()) {
-            roomNameComboBox.getSelectionModel().selectFirst();
-            String selectedName = roomNameComboBox.getSelectionModel().getSelectedItem();
-            currentRoom = roomDao.getRoomByName(selectedName);
-            if (currentRoom != null) {
-                openSeatSelection(currentRoom);
+    @FXML
+    void onConfirmDelete() {
+        if (selectedMovieShow != null) {
+            movieShowDao.deleteMovieShowById(selectedMovieShow.getId()); // Xóa trong DB
+            movieShowList.remove(selectedMovieShow); // Xóa mục trong bảng
+            selectedMovieShow = null;
+            confirmDeletePane.setVisible(false);
+            RemoveSuccessPane.setVisible(true); // Hiển thị thông báo thành công
+        }
+    }
+
+    @FXML
+    void onBackMannagerSchedule() {
+        if (removePane != null) {
+            removePane.setVisible(false);
+        }
+        confirmDeletePane.setVisible(false);
+        RemoveSuccessPane.setVisible(false);
+    }
+
+    private void loadFilmComboBox() {
+        List<Film> films = filmDao.getAllFilms(); // Danh sách Film
+        filmComboBox.setItems(FXCollections.observableArrayList(films)); // Đưa vào ComboBox
+
+        // Tùy chỉnh hiển thị chỉ tên phim
+        filmComboBox.setCellFactory(lv -> new ListCell<Film>() {
+            @Override
+            protected void updateItem(Film film, boolean empty) {
+                super.updateItem(film, empty);
+                setText(empty || film == null ? null : film.getName());
             }
-        } else {
-            currentRoom = null;
-            clearFields();
-            seatGrid.getChildren().clear(); // Xóa sơ đồ ghế nếu không còn phòng
-        }
-    }
-
-
-    public void openSeatSelection(Room room) {
-        int rows = room.getNumRows();
-        int columns = room.getNumCols();
-
-        currentRoom = room;
-        roomNameField.setText(room.getName());
-        rowCountField.setText(String.valueOf(rows));
-        columnCountField.setText(String.valueOf(columns));
-        roomStatusComboBox.setValue(room.getRoomStatus());
-
-        seatGrid.getChildren().clear();
-        seatGrid.setPadding(new Insets(30));
-        seatGrid.setHgap(10);
-        seatGrid.setVgap(10);
-        seatGrid.setAlignment(Pos.CENTER);
-
-        Image seatNormal = new Image(getClass().getResourceAsStream("/Image/ghe thuong.png"));
-        Image seatVip = new Image(getClass().getResourceAsStream("/Image/ghe vip.png"));
-
-        int centerColumn = columns / 2;
-
-        // Tạo các nhãn cho các cột
-        for (int j = 0; j < columns; j++) {
-            Label columnLabel = new Label(String.valueOf(j + 1));
-            columnLabel.setPrefSize(60, 60);
-            columnLabel.setAlignment(Pos.CENTER);
-            columnLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-            seatGrid.add(columnLabel, j + 1, 0);
-        }
-        roomDao.clearSeatsForRoom(room.getId());
-        // Cập nhật ghế cho phòng hiện tại (xóa ghế cũ và tạo lại ghế mới)
-        updateSeatsForRoom(room, rows, columns, centerColumn);
-
-        // Tạo các nhãn cho các hàng và ghế
-        for (int i = 0; i < rows; i++) {
-            char rowLetter = (char) ('A' + i);
-            Label rowLabel = new Label(String.valueOf(rowLetter));
-            rowLabel.setPrefSize(60, 60);
-            rowLabel.setAlignment(Pos.CENTER);
-            rowLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-            seatGrid.add(rowLabel, 0, i + 1);
-
-            for (int j = 0; j < columns; j++) {
-                String seatName = rowLetter + String.valueOf(j + 1);
-                Button btn = new Button();
-                btn.setPrefSize(60, 60);
-                btn.setCursor(Cursor.HAND);
-
-                boolean isVip = (columns % 2 == 0 && (j == centerColumn - 1 || j == centerColumn)) ||
-                        (columns % 2 != 0 && j == centerColumn);
-
-                ImageView iv = new ImageView(isVip ? seatVip : seatNormal);
-                iv.setFitWidth(50);
-                iv.setFitHeight(50);
-                iv.setPreserveRatio(true);
-                btn.setGraphic(iv);
-
-                btn.setStyle(isVip
-                        ? "-fx-background-color: gold; -fx-border-color: black; -fx-border-radius: 5px;"
-                        : "-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 5px;");
-
-                Tooltip tip = new Tooltip("Ghế " + seatName + (isVip ? " (VIP)" : ""));
-                Tooltip.install(btn, tip);
-
-                seatGrid.add(btn, j + 1, i + 1);
+        });
+        filmComboBox.setButtonCell(new ListCell<Film>() {
+            @Override
+            protected void updateItem(Film film, boolean empty) {
+                super.updateItem(film, empty);
+                setText(empty || film == null ? null : film.getName());
             }
-        }
-    }
-
-    private void updateSeatsForRoom(Room room, int rows, int columns, int centerColumn) {
-        // Lấy danh sách ghế cũ trong phòng này
-        List<Seats> existingSeats = seatDao.getSeatsByRoom(room.getId());
-
-        List<Seats> newSeats = new ArrayList<>();
-        Set<String> existingPositions = new HashSet<>();
-
-        // Lưu các vị trí ghế đã tồn tại
-        for (Seats seat : existingSeats) {
-            existingPositions.add(seat.getPosition());
-        }
-
-        // Tạo ghế mới và kiểm tra sự thay đổi
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                String position = (char) ('A' + i) + String.valueOf(j + 1);
-                boolean isVip = (columns % 2 == 0 && (j == centerColumn - 1 || j == centerColumn)) ||
-                        (columns % 2 != 0 && j == centerColumn);
-
-                int seatTypeId = isVip ? 2 : 1; // Giả sử 1 là ghế thường, 2 là ghế VIP
-
-                // Nếu ghế chưa tồn tại, tạo mới
-                if (!existingPositions.contains(position)) {
-                    Seats seat = new Seats(position, room.getId(), seatTypeId);
-                    newSeats.add(seat);
-                }
-            }
-        }
-
-        // Chèn tất cả ghế mới vào cơ sở dữ liệu trong một lần duy nhất
-        if (!newSeats.isEmpty()) {
-            seatDao.addSeatsBatch(newSeats); // Cập nhật hàm thêm ghế theo lô
-        }
+        });
     }
 
 
-    private void saveRoom() {
-        String name = roomNameField.getText();
-        String rowText = rowCountField.getText();
-        String colText = columnCountField.getText();
-        String status = roomStatusComboBox.getValue();
+    private void loadRoomComboBox() {
+        // Lấy danh sách các phòng từ RoomDao
+        List<Room> rooms = roomDao.getAllRooms(); // Danh sách phòng
 
-        if (name.isEmpty() || rowText.isEmpty() || colText.isEmpty()) {
-            showAlert("Vui lòng nhập đầy đủ thông tin.");
-            return;
+        // Chuyển đổi danh sách phòng thành danh sách ID phòng
+        List<Integer> roomIds = new ArrayList<>();
+        for (Room room : rooms) {
+            roomIds.add(room.getId()); // Lấy ID của từng phòng và thêm vào danh sách
         }
 
-        int rows;
-        int columns;
+        // Đưa danh sách ID phòng vào ComboBox
+        roomComboBox.setItems(FXCollections.observableArrayList(roomIds));
+    }
+
+
+    @FXML
+    void onAddShowClick() {
+        addMovieShowPane.setVisible(true);
+    }
+
+    @FXML
+    void onSaveMovieShow() {
         try {
-            rows = Integer.parseInt(rowText);
-            columns = Integer.parseInt(colText);
-        } catch (NumberFormatException e) {
-            showAlert("Số hàng và số cột phải là số nguyên.");
-            return;
-        }
+            String startTimeText = startTimeField.getText();
+            String endTimeText = endTimeField.getText();
 
-        if (rows <= 0 || columns <= 0) {
-            showAlert("Số hàng và số cột phải lớn hơn 0.");
-            return;
-        }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
+            LocalDateTime startTime = LocalDateTime.parse(startTimeText, formatter);
+            LocalDateTime endTime = LocalDateTime.parse(endTimeText, formatter);
 
-        if (currentRoom == null) {
-            if (roomDao.getRoomByName(name) != null) {
-                showAlert("Tên phòng đã tồn tại. Vui lòng chọn tên khác.");
+            // Kiểm tra thời gian bắt đầu có phải trong quá khứ không
+            if (startTime.isBefore(LocalDateTime.now())) {
+                showAlert("Lỗi thời gian", "Thời gian bắt đầu không thể là quá khứ.");
                 return;
             }
 
-            Room newRoom = new Room(name, rows, columns, status);
-            roomDao.addRoom(newRoom);
-        } else {
-            currentRoom.setName(name);
-            currentRoom.setNumRows(rows);
-            currentRoom.setNumCols(columns);
-            currentRoom.setRoomStatus(status);
-            roomDao.updateRoom(currentRoom);
+            if (startTime.isAfter(endTime) || startTime.isEqual(endTime)) {
+                showAlert("Lỗi thời gian", "Thời gian bắt đầu phải trước thời gian kết thúc.");
+                return;
+            }
+
+            Film selectedFilm = filmComboBox.getSelectionModel().getSelectedItem();
+            Integer selectedRoom = roomComboBox.getSelectionModel().getSelectedItem();
+
+            if (selectedFilm == null || selectedRoom == null) {
+                showAlert("Thiếu thông tin", "Vui lòng chọn phim và phòng chiếu.");
+                return;
+            }
+
+            // Kiểm tra trùng lịch
+            List<MovieShow> shows = movieShowDao.getAllMovieShows();
+            for (MovieShow existingShow : shows) {
+                if (existingShow.getRoomId() == selectedRoom &&
+                        startTime.isBefore(existingShow.getEndTime()) &&
+                        endTime.isAfter(existingShow.getStartTime())) {
+                    showAlert("Trùng lịch", "Lịch chiếu trùng với một lịch đã có trong cùng phòng.");
+                    return;
+                }
+            }
+
+            MovieShow movieShow = new MovieShow(startTime, endTime, selectedFilm.getId(), selectedRoom, false);
+            movieShowDao.saveMovieShow(movieShow);
+            movieShowList.add(movieShow);
+            addMovieShowPane.setVisible(false);
+
+        } catch (Exception e) {
+            showAlert("Lỗi định dạng", "Vui lòng nhập đúng định dạng thời gian: HH:mm dd/MM/yyyy");
         }
-
-        updateRoomNameComboBox();
-        clearFields();
-        currentRoom = null;
     }
 
-    private void showDeleteConfirmation() {
-        deleteConfirmationPane.setVisible(true);
-    }
+
 
     @FXML
-    private void onConfirmDelete() {
-        if (currentRoom != null) {
-            roomDao.deleteRoom(currentRoom.getName());
-            currentRoom = null; // Reset sau khi xóa
-            updateRoomNameComboBox();
-            clearFields();
-            seatGrid.getChildren().clear();
-        }
-        deleteConfirmationPane.setVisible(false);
+    void onCancelAddMovieShow() {
+        addMovieShowPane.setVisible(false); // Hủy thêm lịch chiếu
     }
-
-
-    @FXML
-    private void onCancelDelete() {
-        deleteConfirmationPane.setVisible(false);
-    }
-
-    private void clearFields() {
-        roomNameField.clear();
-        rowCountField.clear();
-        columnCountField.clear();
-        roomStatusComboBox.getSelectionModel().selectFirst();
-    }
-
-    private void addRoom() {
-        currentRoom = null;
-        clearFields();
-        roomNameField.setDisable(false);
-        rowCountField.setDisable(false);
-        columnCountField.setDisable(false);
-        roomStatusComboBox.setDisable(false);
-    }
-
-    private void cancelEdit() {
-        clearFields();
-        currentRoom = null;
-    }
-
-    private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Cảnh báo");
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(message);
+        alert.setContentText(content);
         alert.showAndWait();
     }
+    @FXML
+    private void onSearchMovieShow() {
+        String keyword = searchField.getText().trim().toLowerCase();
+
+        if (keyword.isEmpty()) {
+            // Nếu không nhập gì thì hiển thị toàn bộ danh sách
+            scheduleTable.setItems(movieShowList);
+            return;
+        }
+
+        // Tạo Map filmId -> Film để tra cứu tên phim
+        Map<Integer, Film> filmMap = new HashMap<>();
+        for (Film film : filmDao.getAllFilms()) {
+            filmMap.put(film.getId(), film);
+        }
+
+        // Lọc danh sách
+        ObservableList<MovieShow> filteredList = FXCollections.observableArrayList();
+        for (MovieShow show : movieShowList) {
+            Film film = filmMap.get(show.getFilmId());
+            if (film != null && film.getName().toLowerCase().contains(keyword)) {
+                filteredList.add(show);
+            }
+        }
+
+        scheduleTable.setItems(filteredList);
+    }
+
+
+
 }

@@ -55,6 +55,7 @@ public class BuyTicketController {
     private TableColumn<FoodOrder, Float> totalColumn;
 
 
+
     private Set<String> selectedSeats = new HashSet<>();
     private double seatTotalPrice = 0;
     private final MovieShowDao movieShowDao = new MovieShowDao();
