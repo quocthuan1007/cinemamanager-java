@@ -151,8 +151,13 @@ public class FilmDisplayController
         filmContentLabel.setText(film.getContent());
 
         // Cập nhật ảnh poster của phim
-        String posterPath = "/Image/" + film.getPosterUrl() + ".png"; // Ví dụ: "inception"
-        Image image = new Image(getClass().getResourceAsStream(posterPath));
+        String posterPath = "src/main/resources/Image/" + film.getPosterUrl() + ".png"; // Ví dụ: "inception"
+        File file = new File(posterPath);
+        if (!file.exists()) {
+            System.out.println("Không tìm thấy ảnh: " + posterPath);
+            return;
+        }
+        Image image = new Image(file.toURI().toString());
         filmPosterImageView.setImage(image);
 
         // Hiển thị trailer

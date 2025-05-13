@@ -1,6 +1,6 @@
 .left-menu
 {
-    -fx-background-color: #AA0000;
+    -fx-background-color: linear-gradient(to bottom right, #EE1289, #8B0A50);
 }
 .field
 {
@@ -12,8 +12,8 @@
 }
 .login-button
 {
-    -fx-background-color: #AA0000;
-    -fx-pref-width: 100px;
+    -fx-background-color: linear-gradient(to bottom right, #EE1289, #8B0A50);
+    -fx-pref-width: 250px;
     -fx-pref-height: 45px;
     -fx-font-size: 20px;
     -fx-text-fill: white;
@@ -22,7 +22,7 @@
 .register-button
 {
     -fx-cursor: hand;
-    -fx-font-size: 20px;
+    -fx-font-size: 15px;
     -fx-text-fill: blue;
 }
 .combo-sex
