@@ -2,10 +2,11 @@ module CinemaProject {
     requires java.sql;
     requires javafx.controls;
     requires javafx.fxml;
-    requires javafx.graphics;
     requires javafx.web;
-    requires java.desktop;
     requires jbcrypt;
+    requires javafx.swing;
+    requires com.google.zxing;
+    requires com.google.zxing.javase;
 
     opens com.utc2.cinema.view to javafx.fxml;
     exports com.utc2.cinema.view;

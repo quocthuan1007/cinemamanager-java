@@ -20,6 +20,7 @@
       <version>8.0.33</version> <!-- Hoặc phiên bản ổn định mới nhất -->
     </dependency>
 
+
     <dependency>
       <groupId>org.mindrot</groupId>
       <artifactId>jbcrypt</artifactId>
@@ -114,6 +115,19 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <version>${junit.version}</version>
       <scope>test</scope>
+    </dependency>
+    <!-- ZXing core -->
+    <dependency>
+      <groupId>com.google.zxing</groupId>
+      <artifactId>core</artifactId>
+      <version>3.5.3</version>
+    </dependency>
+
+    <!-- ZXing JavaSE (để tạo ảnh QR) -->
+    <dependency>
+      <groupId>com.google.zxing</groupId>
+      <artifactId>javase</artifactId>
+      <version>3.5.3</version>
     </dependency>
 
   </dependencies>
