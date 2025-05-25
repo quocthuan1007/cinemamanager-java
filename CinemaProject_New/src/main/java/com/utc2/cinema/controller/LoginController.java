@@ -22,8 +22,6 @@ public class LoginController {
     @FXML
     private Button loginButton;
     @FXML
-    private Label messLogin;
-    @FXML
     private PasswordField passWord;
     @FXML
     private Label toRegisterButton;
@@ -34,8 +32,7 @@ public class LoginController {
     @FXML
     private CheckBox showPass;
 
-    private void showMainMenu()
-    {
+    private void showMainMenu() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("/FXML/MainMenu.fxml"));
             Pane root = fxmlLoader.load();
@@ -49,8 +46,8 @@ public class LoginController {
             e.printStackTrace();
         }
     }
-    private void showManagerMenu()
-    {
+
+    private void showManagerMenu() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("/FXML/MainManager.fxml"));
             MainManagerController a = new MainManagerController();
@@ -68,12 +65,11 @@ public class LoginController {
     }
 
     @FXML
-    public void onClickLoginButton(ActionEvent event)
-    {
+    public void onClickLoginButton(ActionEvent event) {
         try {
             String passw = passWord.isVisible() ? passWord.getText() : passWordText.getText();
-            if (userName.getText() == "" || passw == "" )
-                messLogin.setText("Vui lòng điền đầy đủ!");
+            if (userName.getText() == "" || passw == "")
+                CustomAlert.showError("", "Có lỗi", "Vui lòng điền đầy đủ");
             else {
                 String pass = passWord.isVisible() ? passWord.getText() : passWordText.getText();
                 if (PasswordUtils.checkPassword(pass, AccountService.getPassword(userName.getText()))) {
@@ -97,22 +93,31 @@ public class LoginController {
                     passWord.setText("");
                 }
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             CustomAlert.showError("", "Có lỗi xảy ra", "Không thể đăng nhập!");
         }
     }
+
+    @FXML
+    void onCloseLogin(MouseEvent e) {
+        Stage stage = (Stage) userName.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    void onMinLogin(MouseEvent e) {
+        Stage stage = (Stage) userName.getScene().getWindow();
+        stage.setIconified(true);
+    }
+
     @FXML
     void onMouseClickEmail(MouseEvent   event) {
-        if(messLogin.getText() != "")
-            messLogin.setText("");
+
     }
 
     @FXML
     void onMouseClickedPassword(MouseEvent   event) {
-        if(messLogin.getText() != "")
-            messLogin.setText("");
+
     }
     @FXML
     void onClickShowPassLogin(ActionEvent event) {

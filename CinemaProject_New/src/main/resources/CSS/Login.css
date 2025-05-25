@@ -1,6 +1,6 @@
-.left-menu
+.background-menu
 {
-    -fx-background-color: linear-gradient(to bottom right, #EE1289, #8B0A50);
+    -fx-background-color: #1B2830;
 }
 .field
 {
@@ -9,10 +9,10 @@
 }
 .login-button
 {
-    -fx-background-color: linear-gradient(to bottom right, #EE1289, #8B0A50);
+    -fx-background-color: #61C17E;
     -fx-pref-width: 250px;
-    -fx-pref-height: 45px;
-    -fx-font-size: 20px;
+    -fx-pref-height: 35px;
+    -fx-font-size: 15px;
     -fx-text-fill: white;
     -fx-cursor: hand;
 }
@@ -20,9 +20,12 @@
 {
     -fx-cursor: hand;
     -fx-font-size: 15px;
-    -fx-text-fill: blue;
+    -fx-text-fill: white;
 }
-
+.check-box .box
+{
+    -fx-background-color:white;
+}
 
 
 

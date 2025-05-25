@@ -6,150 +6,137 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DisplacementMap?>
-<?import javafx.scene.effect.FloatMap?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.RadialGradient?>
-<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane fx:id="loginPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #FFFFFF; -fx-border-width: 2px;" stylesheets="@../CSS/Login.css">
+      <Pane fx:id="loginPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="562.0" prefWidth="954.0" styleClass="background-menu" stylesheets="@../CSS/Login.css">
          <children>
-            <VBox alignment="CENTER" prefHeight="400.0" prefWidth="300.0" styleClass="left-menu">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../Image/logo.png" />
-                     </image>
-                  </ImageView>
-               </children>
-               <effect>
-                  <DisplacementMap>
-                     <mapData>
-                        <FloatMap />
-                     </mapData>
-                  </DisplacementMap>
-               </effect>
-            </VBox>
-            <Label layoutX="340.0" layoutY="76.0" prefHeight="59.0" prefWidth="227.0" text="CINEMA LOGIN">
-               <font>
-                  <Font size="33.0" />
-               </font>
-               <textFill>
-                  <RadialGradient centerX="0.4823009018349437" centerY="0.4886363564115582" radius="1.0">
-                     <stops>
-                        <Stop>
-                           <color>
-                              <Color red="0.8392156958580017" green="0.8823529481887817" blue="0.3490196168422699" />
-                           </color>
-                        </Stop>
-                        <Stop offset="1.0">
-                           <color>
-                              <Color red="1.0" green="0.8274509906768799" />
-                           </color>
-                        </Stop>
-                     </stops>
-                  </RadialGradient>
-               </textFill>
-            </Label>
-            <PasswordField fx:id="passWord" layoutX="329.0" layoutY="200.0" onMouseClicked="#onMouseClickedPassword" styleClass="field" />
-            <TextField fx:id="userName" layoutX="329.0" layoutY="155.0" onMouseClicked="#onMouseClickEmail" styleClass="field" />
-            <Button fx:id="loginButton" layoutX="329.0" layoutY="265.0" mnemonicParsing="false" onAction="#onClickLoginButton" prefHeight="17.0" prefWidth="141.0" styleClass="login-button" text="Login" />
-            <Label fx:id="toRegisterButton" layoutX="384.0" layoutY="316.0" onMouseClicked="#onClickToRegister" styleClass="register-button" text="I don't have account!" />
-            <Label fx:id="messLogin" layoutX="334.0" layoutY="235.0" prefHeight="30.0" prefWidth="256.0" textFill="RED">
+            <PasswordField fx:id="passWord" layoutX="351.0" layoutY="314.0" onMouseClicked="#onMouseClickedPassword" styleClass="field" />
+            <TextField fx:id="userName" layoutX="351.0" layoutY="260.0" onMouseClicked="#onMouseClickEmail" styleClass="field" />
+            <Button fx:id="loginButton" layoutX="352.0" layoutY="381.0" mnemonicParsing="false" onAction="#onClickLoginButton" prefHeight="17.0" prefWidth="141.0" styleClass="login-button" text="Login" />
+            <Label fx:id="toRegisterButton" layoutX="349.0" layoutY="435.0" onMouseClicked="#onClickToRegister" styleClass="register-button" text="I don't have account!" />
+            <CheckBox fx:id="showPass" layoutX="551.0" layoutY="355.0" mnemonicParsing="false" onAction="#onClickShowPassLogin" text="👁" textFill="WHITE" />
+            <TextField fx:id="passWordText" layoutX="351.0" layoutY="314.0" onMouseClicked="#onMouseClickEmail" styleClass="field" visible="false" />
+            <ImageView fitHeight="307.0" fitWidth="633.0" layoutX="-203.0" layoutY="258.0" pickOnBounds="true" preserveRatio="true" rotate="10.0" style="-fx-background-radius: 10px;">
+               <image>
+                  <Image url="@../Image/h2.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="307.0" fitWidth="633.0" layoutX="673.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true" rotate="10.0">
+               <image>
+                  <Image url="@../Image/h1.png" />
+               </image>
+            </ImageView>
+            <Label alignment="TOP_LEFT" contentDisplay="CENTER" layoutX="351.0" layoutY="225.0" prefHeight="35.0" prefWidth="250.0" text="Login" textFill="WHITE">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <CheckBox fx:id="showPass" layoutX="532.0" layoutY="242.0" mnemonicParsing="false" onAction="#onClickShowPassLogin" text="show" textFill="#69152e" />
-            <TextField fx:id="passWordText" layoutX="329.0" layoutY="200.0" onMouseClicked="#onMouseClickEmail" styleClass="field" visible="false" />
-         </children>
-      </Pane>
-      <Pane fx:id="registerPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #FFFFFF;">
-         <children>
-            <VBox alignment="CENTER" prefHeight="400.0" prefWidth="300.0" styleClass="left-menu">
-               <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../Image/logo.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </VBox>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="326.0" layoutY="14.0" prefHeight="59.0" prefWidth="250.0" text="CINEMA REGISTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="379.0" layoutY="150.0" prefHeight="59.0" prefWidth="250.0" text="CINEMA" textFill="WHITE">
                <font>
                   <Font size="24.0" />
                </font>
-               <textFill>
-                  <RadialGradient centerX="0.5" centerY="0.46969696247216425" radius="0.5">
-                     <stops>
-                        <Stop>
-                           <color>
-                              <Color red="0.8392156958580017" green="0.8823529481887817" blue="0.3490196168422699" />
-                           </color>
-                        </Stop>
-                        <Stop offset="1.0">
-                           <color>
-                              <Color red="1.0" green="0.8274509906768799" />
-                           </color>
-                        </Stop>
-                     </stops>
-                  </RadialGradient>
-               </textFill>
             </Label>
-            <TextField fx:id="emailRegister" layoutX="326.0" layoutY="100.0" onMouseClicked="#onMouseClickedEmail" styleClass="field" />
-            <Button fx:id="registerButton" layoutX="326.0" layoutY="297.0" mnemonicParsing="false" onAction="#onClickRegisterButton" styleClass="login-button" text="Register" />
-            <Label fx:id="backButton" layoutX="408.0" layoutY="349.0" onMouseClicked="#onClickBackButton" styleClass="register-button" text="Back to login">
+            <ImageView fitHeight="150.0" fitWidth="152.0" layoutX="326.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Image/BTH-removebg-preview.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="44.0" fitWidth="43.0" layoutX="37.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Image/inter.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="44.0" fitWidth="43.0" layoutX="97.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Image/dis.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <Pane fx:id="registerPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="562.0" prefWidth="954.0" styleClass="left-menu" visible="false">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="379.0" layoutY="150.0" prefHeight="59.0" prefWidth="250.0" text="CINEMA" textFill="WHITE">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <TextField fx:id="emailRegister" layoutX="351.0" layoutY="260.0" onMouseClicked="#onMouseClickedEmail" styleClass="field-register" />
+            <Button fx:id="registerButton" layoutX="351.0" layoutY="438.0" mnemonicParsing="false" onAction="#onClickRegisterButton" styleClass="register-button" text="Register" />
+            <Label fx:id="backButton" layoutX="351.0" layoutY="492.0" onMouseClicked="#onClickBackButton" styleClass="back-login-button" text="Go back to login?">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <Label alignment="TOP_LEFT" contentDisplay="RIGHT" layoutX="327.0" layoutY="73.0" prefHeight="17.0" prefWidth="92.0" text="Email">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label alignment="TOP_LEFT" contentDisplay="RIGHT" layoutX="327.0" layoutY="135.0" prefHeight="17.0" prefWidth="92.0" text="Password">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label alignment="TOP_LEFT" contentDisplay="RIGHT" layoutX="327.0" layoutY="200.0" prefHeight="27.0" prefWidth="168.0" text="Confirm Password">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <StackPane layoutX="326.0" layoutY="162.0" prefHeight="35.0" prefWidth="250.0">
+            <StackPane layoutX="351.0" layoutY="316.0" prefHeight="35.0" prefWidth="250.0">
                <children>
                   <TextField fx:id="passwordPf" onMouseClicked="#OnClickPassPf" styleClass="field" />
-                  <PasswordField fx:id="passwordTf" onMouseClicked="#OnClickPassTf" styleClass="field" />
+                  <PasswordField fx:id="passwordTf" onMouseClicked="#OnClickPassTf" styleClass="field-register" />
                </children>
             </StackPane>
-            <StackPane layoutX="326.0" layoutY="227.0" prefHeight="35.0" prefWidth="250.0">
+            <StackPane layoutX="351.0" layoutY="372.0" prefHeight="35.0" prefWidth="250.0">
                <children>
                   <TextField fx:id="passConfirmPf" onMouseClicked="#OnClickPassConfirmPf" styleClass="field" />
-                  <PasswordField fx:id="passConfirmTf" onMouseClicked="#OnClickPassConfirmTf" styleClass="field" />
+                  <PasswordField fx:id="passConfirmTf" onMouseClicked="#OnClickPassConfirmTf" styleClass="field-register" />
                </children>
             </StackPane>
-            <CheckBox fx:id="showPassCF" layoutX="512.0" layoutY="269.0" mnemonicParsing="false" onAction="#onClickShowPass" prefHeight="17.0" prefWidth="74.0" text="show" />
-            <Label fx:id="labelError" layoutX="333.0" layoutY="268.0" textFill="#e45050">
+            <CheckBox fx:id="showPassCF" layoutX="551.0" layoutY="412.0" mnemonicParsing="false" onAction="#onClickShowPass" prefHeight="7.0" prefWidth="50.0" styleClass="show-register" text="👁" textFill="WHITE" />
+            <Label fx:id="labelError" layoutX="358.0" layoutY="428.0" textFill="#e45050">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
+            <Label alignment="TOP_LEFT" contentDisplay="CENTER" layoutX="351.0" layoutY="225.0" prefHeight="35.0" prefWidth="250.0" text="Register" textFill="WHITE">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="307.0" fitWidth="633.0" layoutX="-203.0" layoutY="258.0" pickOnBounds="true" preserveRatio="true" rotate="10.0" style="-fx-background-radius: 10px;">
+               <image>
+                  <Image url="@../Image/h2.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="307.0" fitWidth="633.0" layoutX="673.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true" rotate="10.0">
+               <image>
+                  <Image url="@../Image/h1.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="152.0" layoutX="326.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Image/BTH-removebg-preview.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="44.0" fitWidth="43.0" layoutX="37.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Image/inter.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="44.0" fitWidth="43.0" layoutX="97.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Image/dis.png" />
+               </image>
+            </ImageView>
          </children>
          <stylesheets>
             <URL value="@../CSS/Login.css" />
             <URL value="@../CSS/Register.css" />
          </stylesheets>
       </Pane>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="923.0" layoutY="14.0" onMouseClicked="#onCloseLogin" prefHeight="34.0" prefWidth="23.0" text="X" textAlignment="JUSTIFY" textFill="WHITE">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="899.0" layoutY="14.0" onMouseClicked="#onMinLogin" prefHeight="17.0" prefWidth="23.0" text="_" textAlignment="JUSTIFY" textFill="WHITE">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

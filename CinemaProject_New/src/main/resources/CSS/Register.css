@@ -1,29 +1,26 @@
 .left-menu
 {
-    -fx-background-color: linear-gradient(to bottom right, #EE1289, #8B0A50);
+    -fx-background-color:#1B2830;
 }
-.field
+.field-register
 {
--   -fx-border-color: #DDDDDD;
-    -fx-border-radius: 0px;
-    -fx-background-radius: 0px;
     -fx-pref-width: 250px;
     -fx-pref-height: 35px;
 }
-.login-button
+.register-button
 {
-    -fx-background-color: linear-gradient(to bottom right, #EE1289, #8B0A50);
+    -fx-background-color:#61C17E;
     -fx-pref-width: 250px;
-    -fx-pref-height: 45px;
-    -fx-font-size: 20px;
+    -fx-pref-height: 35px;
+    -fx-font-size: 15px;
     -fx-text-fill: white;
     -fx-cursor: hand;
 }
-.register-button
+.back-login-button
 {
     -fx-cursor: hand;
     -fx-font-size: 15px;
-    -fx-text-fill: blue;
+    -fx-text-fill: white;
 }
 .combo-sex
 {
@@ -32,12 +29,15 @@
     -fx-border-width: 2px;
 
 }
+.show-register .box
+{
+    -fx-background-color:white;
+}
 .date-register
 {
     -fx-text-fill:black;
     -fx-pref-height: 35px;
     -fx-border-color: #DDDDDD;
 }
-
 
 
