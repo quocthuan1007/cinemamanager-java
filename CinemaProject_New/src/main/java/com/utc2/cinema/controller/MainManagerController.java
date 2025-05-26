@@ -22,6 +22,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
@@ -221,7 +222,8 @@ public class MainManagerController implements Initializable {
     /// ////////////////////////////////////////////////
     @FXML
     Pane MainManagerPane;
-
+    private double xOffset;
+    private double yOffset;
     @FXML
     void handleDangXuat(ActionEvent event) {
         Stage MainManager = (Stage) MainManagerPane.getScene().getWindow();
@@ -233,7 +235,20 @@ public class MainManagerController implements Initializable {
             LoginController control = new LoginController();
             fxmlLoader.setController(control);
             Pane root = fxmlLoader.load();
-            Scene scene = new Scene(root, 600, 400);
+            Scene scene = new Scene(root, 954, 562);
+            scene.setOnMousePressed(ev -> {
+
+                xOffset = ev.getSceneX();
+                yOffset = ev.getSceneY();
+
+            });
+
+            scene.setOnMouseDragged(ev -> {
+                stage.setX(ev.getScreenX() - xOffset);
+                stage.setY(ev.getScreenY() - yOffset);
+
+            });
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.setTitle("Hello !");
             stage.setScene(scene);
             stage.setResizable(false);

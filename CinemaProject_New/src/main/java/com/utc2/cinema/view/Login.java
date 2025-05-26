@@ -29,7 +29,6 @@ public class Login extends Application {
 
             // Cho phép kéo cửa sổ
             root.setOnMousePressed(e -> {
-                // Chỉ bắt khi không nhấn vào control con (button, textfield...)
 
                     xOffset = e.getSceneX();
                     yOffset = e.getSceneY();

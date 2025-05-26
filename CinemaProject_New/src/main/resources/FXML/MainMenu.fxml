@@ -35,11 +35,7 @@
                         <Button fx:id="scheduleBtn" layoutX="278.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Lịch Chiếu" />
                         <Button fx:id="buyBtn" layoutX="372.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Mua Vé" />
                         <Button fx:id="introBtn" layoutX="448.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Lịch sử" />
-                        <TextField fx:id="searchField"
-                                   layoutX="560.0" layoutY="40.0"
-                                   prefHeight="25.0" prefWidth="240.0"
-                                   promptText="Nhập Tên Phim"
-                                   onKeyReleased="#onSearchFilmByName"/>
+                        <TextField fx:id="searchField" layoutX="560.0" layoutY="40.0" onKeyReleased="#onSearchFilmByName" prefHeight="25.0" prefWidth="240.0" promptText="Nhập Tên Phim" />
                         <ImageView fx:id="posterImage" fitHeight="94.0" fitWidth="109.0" layoutX="805.0" layoutY="13.0" preserveRatio="true">
                             <image>
                                 <Image url="@../Image/logo.png" />

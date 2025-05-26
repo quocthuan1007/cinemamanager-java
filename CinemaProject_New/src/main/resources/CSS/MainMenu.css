@@ -1,8 +1,8 @@
 .pane1{
-    -fx-background-color:#444;
+    -fx-background-color:#1B2830;
 }
 .button1 {
-    -fx-background-color: #444;
+    -fx-background-color: #1B2830;
     -fx-text-fill: white;
     -fx-font-size: 16px;
 }
@@ -73,6 +73,7 @@
 .userAccount
 {
     -fx-cursor:hand;
+    -fx-text-fill: white;
 }
 #scheduleForm {
     display: block; /* Đảm bảo phần tử hiển thị */

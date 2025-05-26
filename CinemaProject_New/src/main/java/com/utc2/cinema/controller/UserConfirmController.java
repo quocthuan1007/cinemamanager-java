@@ -15,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -62,6 +63,8 @@ public class UserConfirmController {
         addressConfirm.setText("");
         numberConfirm.setText("");
     }
+    private double xOffset = 0;
+    private double yOffset = 0;
     private void loadUserInfo()
     {
         User Info = UserService.getUser(UserSession.getInstance().getUserId());
@@ -131,7 +134,20 @@ public class UserConfirmController {
                 LoginController control = new LoginController();
                 fxmlLoader.setController(control);
                 Pane root = fxmlLoader.load();
-                Scene scene = new Scene(root, 600, 400);
+                stage.initStyle(StageStyle.UNDECORATED);
+                Scene scene = new Scene(root, 954, 562);
+                scene.setOnMousePressed(ev -> {
+
+                    xOffset = ev.getSceneX();
+                    yOffset = ev.getSceneY();
+
+                });
+
+                scene.setOnMouseDragged(ev -> {
+                    stage.setX(ev.getScreenX() - xOffset);
+                    stage.setY(ev.getScreenY() - yOffset);
+
+                });
                 stage.setTitle("Hello !");
                 stage.setScene(scene);
                 stage.setResizable(false);

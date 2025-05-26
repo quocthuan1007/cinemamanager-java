@@ -97,11 +97,11 @@ public class FilmDisplayController
         imageView.setSmooth(true);
 
         Label nameLabel = new Label(film.getName());
-        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black;");
         Label directorLabel = new Label("Đạo diễn: " + film.getDirector());
-
+        directorLabel.setStyle("-fx-text-fill: black;");
         Button bookButton = new Button("🎟️ Đặt vé");
-        bookButton.setStyle("-fx-background-color: #0078D7; -fx-text-fill: white;");
+        bookButton.setStyle("-fx-background-color: #61C17E; -fx-text-fill: white;");
         bookButton.setOnAction(event -> {
             selectedFilm = film;
             System.out.println("Hiển thị thông tin chi tiết cho phim: " + film.getName());
@@ -114,7 +114,7 @@ public class FilmDisplayController
         VBox filmBox = new VBox(8, imageView, nameLabel, directorLabel, bookButton);
         filmBox.setAlignment(Pos.CENTER);
         filmBox.setPadding(new Insets(10));
-        filmBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ccc; -fx-border-radius: 8; -fx-background-radius: 8;");
+        filmBox.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #61C17E; -fx-border-radius: 3; -fx-background-radius: 3;");
         filmBox.setPrefWidth(180);
         FlowPane.setMargin(filmBox, new Insets(10, 12, 10,12));
         return filmBox;
