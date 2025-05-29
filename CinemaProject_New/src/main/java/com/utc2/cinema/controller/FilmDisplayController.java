@@ -2,6 +2,7 @@ package com.utc2.cinema.controller;
 
 import com.utc2.cinema.model.entity.Film;
 import com.utc2.cinema.service.FilmService;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -13,11 +14,10 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.InputStream;
@@ -34,7 +34,8 @@ public class FilmDisplayController
     }
     @FXML private Pane ShowFilmDetail;
     @FXML private Pane buyForm;
-    private FlowPane moviePosters;
+    private ScrollPane mainShowFilm;
+    private HBox moviePosters;
     private FlowPane moviePosters1;
     private Label filmNameLabel;
     private Label filmDirectorLabel;
@@ -60,6 +61,7 @@ public class FilmDisplayController
     private BuyTicketController buyTicketController;
     public FilmDisplayController(MainMenuController mainMenu) {
         buyTicketController = mainMenu.getBuyTicketController();
+        this.mainShowFilm = mainMenu.getMainShowFilm();
         this.buyForm = mainMenu.getBuyForm();
         this.ShowFilmDetail = mainMenu.getShowfilmdetail();
         this.moviePosters = mainMenu.getMoviePosters();
@@ -80,8 +82,87 @@ public class FilmDisplayController
         this.movieForm=mainMenu.getMovieForm();
         this.searchField=mainMenu.getSearchField();
     }
+    private HBox createMainItem(Film film) {
+        String posterPath = "src/main/resources/Image/" + film.getPosterUrl() + ".png";
+        File file = new File(posterPath);
+        if (!file.exists()) {
+            System.out.println("Không tìm thấy ảnh: " + posterPath);
+            return null;
+        }
 
-    //
+        // Ảnh phim bên trái
+        Image image = new Image(file.toURI().toString());
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(120);
+        imageView.setFitHeight(170);
+        imageView.setPreserveRatio(false);
+        imageView.setSmooth(true);
+        imageView.setStyle("-fx-background-radius: 10 0 0 10;");
+
+        // Thông tin phim bên phải
+        Label nameLabel = new Label(film.getName());
+        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #222;");
+
+        Label directorLabel = new Label("Đạo diễn: " + film.getDirector());
+        directorLabel.setStyle("-fx-text-fill: #555; -fx-font-size: 13px;");
+
+        Button bookButton = new Button("Đặt vé");
+        bookButton.setStyle(
+                "-fx-background-color: #61C17E;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 5;"
+        );
+        bookButton.setOnAction(event -> {
+            selectedFilm = film;
+            setFilmDetails(film);
+            ShowFilmDetail.setVisible(true);
+        });
+
+        VBox infoBox = new VBox(8, nameLabel, directorLabel, bookButton);
+        infoBox.setAlignment(Pos.CENTER_LEFT);
+        infoBox.setPadding(new Insets(10));
+        infoBox.setPrefWidth(260); // phần thông tin rộng hơn để tổng vừa 400px
+
+        HBox filmBox = new HBox(imageView, infoBox);
+        filmBox.setSpacing(12);
+        filmBox.setPadding(new Insets(10));
+        filmBox.setPrefWidth(360);
+        filmBox.setMaxWidth(360);
+        filmBox.setMinWidth(360);
+
+
+        filmBox.setStyle(
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-radius: 10;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0.2, 0, 2);"
+        );
+        String[] arr = {"#8181AB", "#D6957B", "#907EC2","#566ED9","#B55959"};
+        int randomIndex = (int)(Math.random() * arr.length);
+        filmBox.setStyle("-fx-background-color: " + arr[randomIndex] + ";");
+
+        TranslateTransition hoverUp = new TranslateTransition(Duration.millis(200), filmBox);
+        hoverUp.setToY(-10);  // Dịch lên 10px so với vị trí gốc
+
+        TranslateTransition hoverDown = new TranslateTransition(Duration.millis(200), filmBox);
+        hoverDown.setToY(0);  // Trả về vị trí ban đầu (0)
+
+        filmBox.setOnMouseEntered(e -> {
+            hoverDown.stop();
+            hoverUp.playFromStart();
+        });
+
+        filmBox.setOnMouseExited(e -> {
+            hoverUp.stop();
+            hoverDown.playFromStart();
+        });
+
+
+
+        return filmBox;
+    }
+
+
     private VBox createFilmBox(Film film) {
         String posterPath = "src/main/resources/Image/" + film.getPosterUrl() + ".png"; // hoặc đường dẫn tương đối khác
         File file = new File(posterPath);
@@ -120,11 +201,12 @@ public class FilmDisplayController
         return filmBox;
     }
 
+
     private void showFilms(List<Film> films) {
         int count = 0;
         for (Film film : films) {
             try {
-                VBox filmBox1 = createFilmBox(film);
+                HBox filmBox1 = createMainItem(film);
                 VBox filmBox2 = createFilmBox(film);
 
                 if (filmBox2 != null) moviePosters1.getChildren().add(filmBox2);
@@ -133,6 +215,7 @@ public class FilmDisplayController
                     if (filmBox1 != null) moviePosters.getChildren().add(filmBox1);
                     count++;
                 }
+                moviePosters.setSpacing(20);
             } catch (Exception e) {
                 e.printStackTrace();
             }

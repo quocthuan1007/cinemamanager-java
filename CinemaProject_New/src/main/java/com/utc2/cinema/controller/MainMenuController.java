@@ -77,7 +77,7 @@ public class MainMenuController implements Initializable {
     @FXML
     private Button showfilmdetailBtn;
     @FXML
-    private FlowPane moviePosters;
+    private HBox moviePosters;
 
     @FXML
     private FlowPane moviePosters1;
@@ -156,8 +156,11 @@ public class MainMenuController implements Initializable {
     @FXML private TextField searchField;
     @FXML private TextField dateRangeField;
     @FXML private Label greetingLabel;
-
+    @FXML private ScrollPane mainShowFilm;
     // Getter methods
+    public ScrollPane getMainShowFilm() {
+        return mainShowFilm;
+    }
     public TableView<Invoice> getInvoiceTable() {
         return invoiceTable;
     }
@@ -347,7 +350,7 @@ public class MainMenuController implements Initializable {
         return showfilmdetailBtn;
     }
 
-    public FlowPane getMoviePosters() {
+    public HBox getMoviePosters() {
         return moviePosters;
     }
 
@@ -464,6 +467,9 @@ public class MainMenuController implements Initializable {
         buyTicketController.initialize();
 
         historyController = new HistoryController(this);
+
+        mainShowFilm.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);  // Tắt thanh cuộn dọc
+        mainShowFilm.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
     }
     ///  confirm-info

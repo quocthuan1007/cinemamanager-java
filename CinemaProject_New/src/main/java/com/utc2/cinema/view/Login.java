@@ -23,11 +23,8 @@ public class Login extends Application {
             LoginController control = new LoginController();
             fxmlLoader.setController(control);
             Pane content = fxmlLoader.load();
-
-            // Gộp content và các nút vào StackPane (nút nằm trên content)
             StackPane root = new StackPane(content);
 
-            // Cho phép kéo cửa sổ
             root.setOnMousePressed(e -> {
 
                     xOffset = e.getSceneX();
