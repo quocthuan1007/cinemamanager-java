@@ -22,7 +22,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane maxWidth="1.7976931348623157E308" prefHeight="800.0" prefWidth="1160.0" stylesheets="@../CSS/MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.MainMenuController">
+<AnchorPane maxHeight="740.0" maxWidth="1160.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1160.0" stylesheets="@../CSS/MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.MainMenuController">
 
     <children>
         <Pane>
@@ -35,12 +35,7 @@
                         <Button fx:id="scheduleBtn" layoutX="278.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Lịch Chiếu" />
                         <Button fx:id="buyBtn" layoutX="372.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Mua Vé" />
                         <Button fx:id="introBtn" layoutX="448.0" layoutY="35.0" onMouseClicked="#switchButton" styleClass="button1" text="Lịch sử" />
-                        <TextField fx:id="searchField" layoutX="560.0" layoutY="40.0" onKeyReleased="#onSearchFilmByName" prefHeight="25.0" prefWidth="240.0" promptText="Nhập Tên Phim" />
-                        <ImageView fx:id="posterImage" fitHeight="94.0" fitWidth="109.0" layoutX="805.0" layoutY="13.0" preserveRatio="true">
-                            <image>
-                                <Image url="@../Image/logo.png" />
-                            </image>
-                        </ImageView>
+                        <TextField fx:id="searchField" layoutX="560.0" layoutY="40.0" onKeyReleased="#onSearchFilmByName" prefHeight="26.0" prefWidth="316.0" promptText="Nhập Tên Phim" />
                         <HBox alignment="CENTER" layoutX="914.0" layoutY="30.0" prefHeight="46.0" prefWidth="210.0">
                             <children>
                                 <Label fx:id="userMain" onMouseClicked="#onPlayerClickInfoConfirm" styleClass="userAccount" text="quocthuan1133@gmail.com" textFill="WHITE">
@@ -55,24 +50,43 @@
 
             </children>
         </Pane>
-        <Pane layoutY="153.0" prefHeight="650.0" prefWidth="1232.0">
+        <Pane layoutY="153.0" prefHeight="692.0" prefWidth="1160.0">
             <children>
-                <Pane fx:id="mainMenuForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="main-content" visible="false">
+                <Pane fx:id="mainMenuForm" layoutY="-62.0" prefHeight="758.0" prefWidth="1160.0" styleClass="main-content">
                     <children>
-                        <ImageView fx:id="bannerImage" fitHeight="350.0" fitWidth="700.0" layoutX="230.0" preserveRatio="true">
-                            <image>
-                                <Image url="@../Image/poster/posterNhaGiaTien1.png" />
-                            </image>
+                  <Pane layoutX="59.0" layoutY="37.0" prefHeight="663.0" prefWidth="1038.0" styleClass="main-menu">
+                     <children>
+                        <ScrollPane fx:id="mainShowFilm" layoutX="20.0" layoutY="365.0" prefHeight="275.0" prefWidth="993.0">
+                           <content>
+                              <VBox alignment="BOTTOM_LEFT" prefHeight="246.0" prefWidth="100.0">
+                                 <children>
+                                    <HBox fx:id="moviePosters" alignment="BOTTOM_LEFT" prefHeight="238.0" prefWidth="100.0" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                        <ImageView fitHeight="337.0" fitWidth="705.0" layoutX="20.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Image/rounded-in-photoretrica.png" />
+                           </image>
                         </ImageView>
-                    </children>
-                    <children>
-                        <!-- FlowPane hiển thị phim chuyển qua đây -->
-                        <FlowPane fx:id="moviePosters" alignment="CENTER" hgap="30" layoutX="134.0" layoutY="350.0" orientation="HORIZONTAL" prefHeight="2.0" prefWidth="894.0" prefWrapLength="1160.0" vgap="30" />
+                        <ImageView fitHeight="227.0" fitWidth="240.0" layoutX="705.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Image/BTH-removebg-preview.png" />
+                           </image>
+                        </ImageView>
+                        <Label layoutX="776.0" layoutY="201.0" style="-fx-text-fill: white;" text="Cinema" textFill="WHITE">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
                     </children>
                 </Pane>
 
 
-                <Pane fx:id="movieForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1160.0" styleClass="movie-content">
+                <Pane fx:id="movieForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1160.0" styleClass="movie-content" visible="false">
                     <children>
 
                         <ScrollPane layoutX="160.0" layoutY="2.0" prefHeight="646.0" prefWidth="840.0">
@@ -82,7 +96,7 @@
                         </ScrollPane>
                     </children>
                 </Pane>
-                <Pane fx:id="showfilmdetail" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="showfilm-content" visible="false">
+                <Pane fx:id="showfilmdetail" layoutY="-37.0" prefHeight="650.0" prefWidth="1160.0" styleClass="showfilm-content" visible="false">
 
                     <VBox layoutX="100.0" layoutY="0" spacing="20">
                         <!-- HBox chứa ảnh và thông tin -->
@@ -164,7 +178,7 @@
                         </ScrollPane>
                     </children>
                 </Pane>
-                <Pane fx:id="buyForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="buy-content" visible="false">
+                <Pane fx:id="buyForm" prefHeight="692.0" prefWidth="1160.0" styleClass="buy-content" visible="false">
                     <AnchorPane prefHeight="706.0" prefWidth="1160.0">
                         <HBox alignment="CENTER" layoutX="0.0" prefHeight="693.0" prefWidth="1160.0" spacing="60" style="-fx-padding: 20;">
 
@@ -394,7 +408,7 @@
                     </Pane>
                 </Pane>
 
-                <Pane fx:id="introForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1232.0" styleClass="intro-content">
+                <Pane fx:id="introForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1160.0" styleClass="intro-content" visible="false">
 
                     <!-- Bảng hiển thị lịch sử hóa đơn -->
                     <TableView fx:id="invoiceTable" layoutX="115.0" layoutY="72.0" prefHeight="369.0" prefWidth="929.0" styleClass="custom-table">

@@ -8,7 +8,7 @@
 }
 
 .button1:hover {
-    -fx-background-color: orange; /* Màu cam */
+    -fx-background-color: #61C17E; /* Màu cam */
     -fx-text-fill: white; /* Đảm bảo màu chữ vẫn là trắng */
 }
 .redButton {
@@ -27,7 +27,7 @@
 
 .main-content
 {
-    -fx-background-color: white;
+    -fx-background-color: #1B2830;
 
 }
 .movie-content
@@ -137,4 +137,38 @@
     -fx-text-fill: black;
 }
 
+.main-menu
+{
+    -fx-background-color: linear-gradient(to top left,#1B2830, #474D67);
+    -fx-background-radius : 10px;
+}
+/////
+.scroll-pane {
+    -fx-background-color: transparent; /* Nền trong suốt */
+    -fx-background-insets: 0;
+    -fx-padding: 10px;
+    -fx-border-color:#1B2830;
+    -fx-border-width:2px;
+    -fx-border-radius:10px;
+}
 
+/* ScrollBar ngang và dọc */
+.scroll-pane .scroll-bar:horizontal,
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+/* Track của thanh cuộn */
+.scroll-pane .scroll-bar .track {
+    -fx-background-color: #f0f0f0;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+/* Hover thumb */
+.scroll-pane .scroll-bar .thumb:hover {
+    -fx-background-color: #555;
+}
+
+//////
