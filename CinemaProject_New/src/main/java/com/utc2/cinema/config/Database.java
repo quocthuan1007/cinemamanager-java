@@ -1,6 +1,7 @@
 package com.utc2.cinema.config;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
@@ -12,7 +13,11 @@ public class Database {
         try {
             Properties properties = new Properties();
 
-            FileInputStream input = new FileInputStream("src\\main\\resources\\database.properties");
+            InputStream input = Database.class.getClassLoader().getResourceAsStream("database.properties");
+            if (input == null) {
+                System.out.println("Không tìm thấy file database.properties trong resources!");
+                return null;
+            }
             properties.load(input);
 
             String url = properties.getProperty("db.url");
