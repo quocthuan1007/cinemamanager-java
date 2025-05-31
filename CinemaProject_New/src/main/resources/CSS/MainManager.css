@@ -157,7 +157,7 @@
 }
 .button-manager
 {
-    -fx-background-color: #007bff;
+    -fx-background-color: #61C17E;
     -fx-text-fill:white;
     -fx-font-weight:bold;
 }
@@ -173,3 +173,20 @@
     -fx-font-size:20;
     -fx-background-color: #FF9933;
 }
+
+.table-view {
+    -fx-padding: 10px;
+    -fx-border-color: black; /* viền màu đen */
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius :10;
+}
+
+
+
+
+.table-row-cell:selected {
+    -fx-background-color: #61C17E; /* nền xanh lá toàn dòng */
+    -fx-text-fill: #1B2830;        /* chữ màu đậm */
+}
+

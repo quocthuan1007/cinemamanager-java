@@ -26,7 +26,7 @@
 <AnchorPane fx:id="MainManagerPane" prefHeight="800.0" prefWidth="1160.0" stylesheets="@../CSS/MainManager.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
     <!-- Thanh menu bên trái -->
-    <VBox fx:id="sidebar" alignment="TOP_CENTER" prefWidth="220.0" spacing="15" style="-fx-background-color: #2c3e50;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <VBox fx:id="sidebar" alignment="TOP_CENTER" prefWidth="220.0" spacing="15" style="-fx-background-color: #1B2830;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
         <Label alignment="CENTER" style="-fx-text-fill: white; -fx-font-size: 26px; -fx-font-weight: bold;" text="BTH Cinema" />
 <!--        <Button maxWidth="180" onAction="#handleThongKe" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Thống kê">-->
 <!--         <font>-->
@@ -103,12 +103,12 @@
                      <Font size="30.0" />
                   </font>
                </Label>
-               <Button fx:id="addFoodBtn" layoutX="785.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickAddFood" style="-fx-background-color: #007bff; -fx-text-fill: white;" styleClass="button-manager" text="Thêm">
+               <Button fx:id="addFoodBtn" layoutX="785.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickAddFood" styleClass="button-manager" text="Thêm">
                   <font>
                      <Font size="20.0" />
                   </font>
                </Button>
-               <Button fx:id="editFoodBtn" layoutX="667.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickEditFood" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;" styleClass="button-manager" text="Xem/Sửa">
+               <Button fx:id="editFoodBtn" layoutX="667.0" layoutY="68.0" mnemonicParsing="false" onAction="#onClickEditFood" styleClass="button-manager" text="Xem/Sửa">
                   <font>
                      <Font size="20.0" />
                   </font>
@@ -238,7 +238,7 @@
                <TextField fx:id="searchFilm" layoutX="419.0" layoutY="68.0" onAction="#onSearchFilm" prefHeight="39.0" prefWidth="240.0" />
             </children>
          </Pane>
-         <Pane fx:id="schedulePane" prefHeight="200.0" prefWidth="200.0" >
+         <Pane fx:id="schedulePane" prefHeight="200.0" prefWidth="200.0" visible="false">
             <Pane layoutX="-1.0" layoutY="-1.0" prefHeight="800.0" prefWidth="940.0" stylesheets="@../CSS/MainManager.css">
                <!-- Tiêu đề -->
                <Label layoutX="14.0" layoutY="6.0" prefHeight="35.0" prefWidth="180.0" style="-fx-font-size: 20px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="Quản lý lịch chiếu">
@@ -251,7 +251,7 @@
                <!-- Thanh tìm kiếm -->
                <Label layoutX="70.0" layoutY="75.0" style="-fx-font-size: 14px;" text="Tìm kiếm:" />
                <TextField fx:id="searchField" layoutX="140.0" layoutY="70.0" prefWidth="300.0" promptText="Nhập tên phim, phòng..." />
-               <Button layoutX="460.0" layoutY="70.0" onAction="#onSearchMovieShow" text="Tìm" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;" />
+               <Button layoutX="460.0" layoutY="70.0" onAction="#onSearchMovieShow" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-weight: bold;" text="Tìm" />
 
                <!-- TableView đẹp -->
                <TableView fx:id="scheduleTable" layoutX="70.0" layoutY="115.0" prefHeight="500.0" prefWidth="801.0" style="-fx-border-color: #bdc3c7;">
