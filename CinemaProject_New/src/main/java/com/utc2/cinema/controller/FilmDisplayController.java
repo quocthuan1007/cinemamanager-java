@@ -269,13 +269,13 @@ public class FilmDisplayController
         webEngine.loadContent(embedHTML);
     }
 
-
     void handleBookTicket() {
         // Xử lý đặt vé ở đây
         if (selectedFilm != null) {
             // Nếu film đã được chọn, thực hiện hành động
             ShowFilmDetail.setVisible(false);
             buyForm.setVisible(true);
+            buyTicketController.showMovieShowOfFilm(selectedFilm.getId());
         } else {
             // Nếu không có phim được chọn, có thể hiển thị thông báo hoặc xử lý gì đó
             System.out.println("Không có phim nào được chọn!");

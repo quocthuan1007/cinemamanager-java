@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -28,10 +29,16 @@ public class ScheduleDisplayController
 {
     private VBox scheduleContainer;
     private FlowPane dateFlowPane;
+    private Pane scheduleForm;
+    private Pane buyForm;
+    private BuyTicketController buyTicketController;
     public ScheduleDisplayController(MainMenuController mainMenu)
     {
+        this.buyTicketController = mainMenu.getBuyTicketController();
         this.scheduleContainer = mainMenu.getScheduleContainer();
         this.dateFlowPane = mainMenu.getDateFlowPane();
+        this.scheduleForm = mainMenu.getScheduleForm();
+        this.buyForm = mainMenu.getBuyForm();
     }
     private final MovieShowDao movieShowDao = new MovieShowDao();
     private final FilmDao filmDao = new FilmDao();
@@ -128,6 +135,13 @@ public class ScheduleDisplayController
                                 "-fx-background-color: #cccccc; "
                 );
             });
+            movieBox.setOnMouseClicked(e ->
+            {
+                scheduleForm.setVisible(false);
+                buyForm.setVisible(true);
+                buyTicketController.showMovieShowOfFilm(filmId);
+            });
+
             movieBox.setOnMouseExited(e -> {
                 movieBox.setStyle(
                         "-fx-background-color: transparent; "  // Trở lại viền trong suốt khi không hover

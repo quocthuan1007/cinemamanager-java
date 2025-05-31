@@ -298,7 +298,6 @@ public class BuyTicketController {
             filmsContainer.getChildren().add(filmBox);
         }
     }
-
     public void showMovieShowOfFilm(int filmId) {
         selectedFilm = filmDao.getFilmById(filmId);
 

@@ -457,15 +457,15 @@ public class MainMenuController implements Initializable {
         userConfirmController.setupUser();
         userConfirmController.setupGenderComboBox();
 
-        scheduleDisplayController = new ScheduleDisplayController(this);
-        scheduleDisplayController.setupSchedule();
+        buyTicketController = new BuyTicketController(this);
+        buyTicketController.initialize();
 
         filmDisplayController = new FilmDisplayController(this);
         filmDisplayController.setupFilms();
 
-        buyTicketController = new BuyTicketController(this);
-        buyTicketController.initialize();
-
+        scheduleDisplayController = new ScheduleDisplayController(this);
+        scheduleDisplayController.setupSchedule();
+        
         historyController = new HistoryController(this);
 
         mainShowFilm.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);  // Tắt thanh cuộn dọc
