@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>KẾT QUẢ THANH TOÁN</title>
+</head>
+<body>
+<h2>Kết quả thanh toán</h2>
+
+<p>Mã giao dịch: <span th:text="${data['vnp_TxnRef']}">...</span></p>
+<p>Số tiền: <span th:text="${data['vnp_Amount']}">...</span></p>
+<p>Mô tả giao dịch: <span th:text="${data['vnp_OrderInfo']}">...</span></p>
+<p>Mã lỗi: <span th:text="${data['vnp_ResponseCode']}">...</span></p>
+<p>Ngân hàng: <span th:text="${data['vnp_BankCode']}">...</span></p>
+<p>Thời gian: <span th:text="${data['vnp_PayDate']}">...</span></p>
+
+<p>
+    Trạng thái:
+    <span th:if="${isValid}">
+            <span th:if="${data['vnp_TransactionStatus']} == '00'">Thành công</span>
+            <span th:if="${data['vnp_TransactionStatus']} != '00'">Không thành công</span>
+        </span>
+    <span th:if="${!isValid}">Sai chữ ký (Invalid signature)</span>
+</p>
+</body>
+</html>
