@@ -102,7 +102,7 @@
                         <!-- HBox chứa ảnh và thông tin -->
                         <HBox spacing="20">
                             <!-- Ảnh poster bên trái -->
-                            <ImageView fx:id="filmPosterImageView" fitHeight="300.0" fitWidth="200.0" preserveRatio="true" />
+                            <ImageView fx:id="filmPosterImageView" fitHeight="270.0" fitWidth="200.0" preserveRatio="true" />
 
                             <!-- Thông tin phim bên phải -->
                             <VBox prefWidth="300.0" spacing="10">
@@ -147,8 +147,11 @@
 
                             </VBox>
                             <!-- Nội dung phim (content) bên dưới sử dụng Label -->
-                            <Label text="Nội dung:" />
-                            <Label fx:id="filmContentLabel" layoutX="-400.0" prefWidth="300.0" style="-fx-font-size: 14px; -fx-font-family: 'Arial'; -fx-padding: 10px; -fx-background-color: #f0f0f0; -fx-border-radius: 5px; -fx-border-color: #ccc; -fx-border-width: 1px;" wrapText="true">
+                            <Label text="Nội dung:">
+                        <font>
+                           <Font size="14.0" />
+                        </font></Label>
+                            <Label fx:id="filmContentLabel" layoutX="-400.0" prefHeight="86.0" prefWidth="300.0" style="-fx-font-size: 14px; -fx-font-family: 'Arial'; -fx-padding: 10px; -fx-background-color: #3B4B5C; -fx-background-radius: 10; -fx-text-fill: white;" wrapText="true">
                                 <font>
                                     <Font size="14.0" />
                                 </font>
@@ -159,7 +162,7 @@
 
                         <!-- Trailer section -->
                         <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Trailer:" />
-                        <WebView fx:id="webView" prefHeight="300.0" prefWidth="300.0" />
+                        <WebView fx:id="webView" prefHeight="296.0" prefWidth="913.0" />
                     </VBox>
 
                 </Pane>
