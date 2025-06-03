@@ -292,8 +292,6 @@
 
 
 
-
-
                             <Label layoutY="-50.0" prefHeight="10.0" prefWidth="200.0" text="CHỌN THỨC ĂN/ĐỒ UỐNG" textAlignment="CENTER">
                                 <font>
                                     <Font size="16.0" />
@@ -410,25 +408,77 @@
 
                 <Pane fx:id="introForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1160.0" styleClass="intro-content" visible="false">
 
-                    <!-- Bảng hiển thị lịch sử hóa đơn -->
-                    <TableView fx:id="invoiceTable" layoutX="115.0" layoutY="72.0" prefHeight="369.0" prefWidth="929.0" styleClass="custom-table">
-                        <columns>
-                            <TableColumn fx:id="colNgay" prefWidth="150" text="Ngày" />
-                            <TableColumn fx:id="colSuatChieu" prefWidth="157.33334350585938" text="Suất Chiếu" />
-                            <TableColumn fx:id="colPhim" prefWidth="142.39993286132812" text="Phim" />
-                            <TableColumn fx:id="colPhong" prefWidth="154.4000244140625" text="Phòng Chiếu" />
-                            <TableColumn fx:id="colSoGhe" minWidth="0.0" prefWidth="145.5999755859375" text="Số Ghế" />
-                            <TableColumn fx:id="colGiaTri" minWidth="0.0" prefWidth="177.800048828125" text="Giá Trị" />
-                        </columns>
-                    </TableView>
-                    <!-- Nếu bạn muốn giữ nguyên VBox (đang rỗng) -->
-                    <VBox layoutX="115.0" layoutY="183.0" prefHeight="374.0" prefWidth="929.0" spacing="10.0" />
-
-                    <Pane layoutX="440.0" layoutY="-19.0" prefHeight="65.0" prefWidth="279.0">
+                    <Pane layoutX="-7.0" layoutY="-29.0" prefHeight="697.0" prefWidth="1171.0" styleClass="label-main">
                         <children>
-                            <!-- Dòng tiêu đề "Lịch sử mua hàng" -->
-                            <Label layoutX="61.0" layoutY="44.0" style="-fx-font-size: 24px; -fx-text-fill: #0077cc; -fx-font-weight: bold;" text="Lịch sử mua hàng" />
-                        </children></Pane>
+                            <!-- Dòng tiêu đề -->
+                            <Label layoutX="487.0" layoutY="35.0" style="-fx-font-size: 24px; -fx-text-fill: white; -fx-font-weight: bold;" text="Lịch sử mua hàng" />
+
+                            <!-- Bảng hiển thị hóa đơn -->
+                            <TableView fx:id="invoiceTable" layoutX="121.0" layoutY="79.0" prefHeight="379.0" prefWidth="929.0" styleClass="custom-table">
+                                <columns>
+                                    <TableColumn fx:id="colNgay" prefWidth="150.0" sortable="false" text="Ngày" />
+                                    <TableColumn fx:id="colSuatChieu" prefWidth="157.33" sortable="false" text="Suất Chiếu" />
+                                    <TableColumn fx:id="colPhim" prefWidth="296.0" sortable="false" text="Phim" />
+                                    <TableColumn fx:id="colPhong" prefWidth="100.0" sortable="false" text="Phòng Chiếu" />
+                                    <TableColumn fx:id="colSoGhe" prefWidth="86.0" sortable="false" text="Số Ghế" />
+                                    <TableColumn fx:id="colGiaTri" prefWidth="118.67" sortable="false" text="Giá Trị" />
+                                </columns>
+                            </TableView>
+
+                            <Button fx:id="submitRatingButton" layoutX="717.0" layoutY="466.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="134.0" styleClass="button-rating" text="Phản hồi" />
+
+                            <!-- Nút xem chi tiết -->
+                            <Button fx:id="viewBillButton" layoutX="906.0" layoutY="466.0" onAction="#handleViewBillAction" prefHeight="40.0" prefWidth="134.0" styleClass="button-onback" text="Xem chi tiết" />
+
+                            <!-- Pane hiển thị chi tiết hóa đơn -->
+                            <Pane fx:id="billPane2" layoutX="369.0" layoutY="41.0" prefHeight="393.0" prefWidth="433.0" styleClass="pane-bill" visible="false">
+                                <children>
+                                    <Label layoutX="65.0" layoutY="20.0" prefHeight="40.0" prefWidth="300.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-background-color: #61C17E; -fx-text-fill: white; -fx-alignment: center;" text="HÓA ĐƠN" />
+
+                                    <Label layoutX="40.0" layoutY="80.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Phim:" textFill="WHITE" />
+                                    <Label fx:id="filmNameLabel2" layoutX="131.0" layoutY="80.0" prefHeight="19.0" prefWidth="239.0" style="-fx-font-size: 16px;" textFill="#fffcfc" />
+
+                                    <Label layoutX="40.0" layoutY="110.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Suất chiếu:" textFill="WHITE" />
+                                    <Label fx:id="showTimeLabel2" layoutX="131.0" layoutY="110.0" prefHeight="19.0" prefWidth="239.0" style="-fx-font-size: 16px;" textFill="WHITE" />
+
+                                    <Label layoutX="40.0" layoutY="140.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Phòng:" textFill="#f8f8f8" />
+                                    <Label fx:id="roomLabel2" layoutX="131.0" layoutY="140.0" prefHeight="19.0" prefWidth="239.0" style="-fx-font-size: 16px;" textFill="WHITE" />
+
+                                    <Label layoutX="40.0" layoutY="170.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Ghế:" textFill="WHITE" />
+                                    <Label fx:id="seatLabel2" layoutX="131.0" layoutY="170.0" prefHeight="19.0" prefWidth="239.0" style="-fx-font-size: 16px;" textFill="WHITE" />
+
+                                    <Label layoutX="40.0" layoutY="200.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Combo:" textFill="#fffefe" />
+                                    <Label fx:id="comboLabel2" layoutX="131.0" layoutY="200.0" prefHeight="19.0" prefWidth="239.0" style="-fx-font-size: 16px;" textFill="#fffafa" />
+
+                                    <Label layoutX="40.0" layoutY="240.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Tổng tiền:" textFill="WHITE" />
+                                    <Label fx:id="totalLabel2" layoutX="152.0" layoutY="240.0" prefHeight="23.0" prefWidth="198.0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #e67e22;" textFill="WHITE" />
+
+                                    <!-- Nút Quay lại -->
+                                    <Button layoutX="163.0" layoutY="329.0" onAction="#onBack1" prefHeight="40.0" prefWidth="104.0" styleClass="button-onback" text="Quay lại" />
+                                </children>
+                            </Pane>
+
+                            <Pane fx:id="comment" layoutX="124.0" layoutY="516.0" prefHeight="177.0" prefWidth="929.0" styleClass="pane-bill">
+                                <children>
+                                    <Label layoutX="181.0" layoutY="34.0" style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;" text="Bình luận" />
+                                    <TextField fx:id="commentField" alignment="CENTER" layoutX="26.0" layoutY="70.0" prefHeight="79.0" prefWidth="398.0" promptText="Cho tôi đánh giá của bạn nhé!" style="-fx-background-color: #3B4B5C; -fx-text-fill: white;">
+                                        <font>
+                                            <Font size="14.0" />
+                                        </font>
+                                    </TextField>
+
+                                    <Label layoutX="696.0" layoutY="34.0" style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;" text="Đánh giá" />
+
+                                    <!-- Hàng sao đánh giá -->
+                                    <ImageView fx:id="star1" fitHeight="30.0" fitWidth="30.0" layoutX="649.0" layoutY="95.0" onMouseClicked="#handleStarClick1" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="star2" fitHeight="30.0" fitWidth="30.0" layoutX="683.0" layoutY="95.0" onMouseClicked="#handleStarClick2" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="star3" fitHeight="30.0" fitWidth="30.0" layoutX="717.0" layoutY="95.0" onMouseClicked="#handleStarClick3" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="star4" fitHeight="30.0" fitWidth="30.0" layoutX="751.0" layoutY="95.0" onMouseClicked="#handleStarClick4" pickOnBounds="true" preserveRatio="true" />
+                                    <ImageView fx:id="star5" fitHeight="30.0" fitWidth="30.0" layoutX="785.0" layoutY="95.0" onMouseClicked="#handleStarClick5" pickOnBounds="true" preserveRatio="true" />
+                                </children>
+                            </Pane>
+                        </children>
+                    </Pane>
                 </Pane>
             </children>
         </Pane>

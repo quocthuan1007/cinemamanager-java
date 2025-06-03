@@ -2,12 +2,16 @@ package com.utc2.cinema.dao;
 
 import com.utc2.cinema.config.Database;
 import com.utc2.cinema.model.entity.Bill;
+import com.utc2.cinema.model.entity.FilmRating;
 import com.utc2.cinema.model.entity.Invoice;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.utc2.cinema.dao.FoodDao.getFoodComboByBillId;
+import static com.utc2.cinema.dao.SeatDao.getSeatNamesByBillId;
 
 public class BillDao {
 
@@ -143,8 +147,9 @@ public class BillDao {
         ResultSet rs = null;
 
         try {
-            conn = Database.getConnection(); // Giả sử bạn đã có phương thức getConnection() trong lớp Database
+            conn = Database.getConnection();
             String query = "SELECT " +
+                    "b.Id AS BillId, " +
                     "b.DatePurchased, " +
                     "ms.StartTime AS SuatChieu, " +
                     "f.Name AS Phim, " +
@@ -160,7 +165,8 @@ public class BillDao {
                     "   SELECT SUM(fo.Count * fd.Cost) " +
                     "   FROM Food_Order fo " +
                     "   JOIN Food fd ON fo.FoodId = fd.Id " +
-                    "   WHERE fo.BillId = b.Id), 0) AS GiaTri " +
+                    "   WHERE fo.BillId = b.Id), 0) AS GiaTri, " +
+                    "ms.FilmId " + // ✅ thêm dòng này
                     "FROM " +
                     "Bill b " +
                     "JOIN Reservation rsv ON b.Id = rsv.BillId " +
@@ -169,37 +175,89 @@ public class BillDao {
                     "JOIN Room r ON ms.RoomId = r.Id " +
                     "JOIN Seats s ON rsv.SeatId = s.Id " +
                     "WHERE b.UserId = ? " +
-                    "GROUP BY b.DatePurchased, ms.StartTime, f.Name, r.Name, b.Id";
+                    "GROUP BY b.Id, b.DatePurchased, ms.StartTime, f.Name, r.Name, ms.FilmId"; // ✅ sửa dòng này
 
             st = conn.prepareStatement(query);
-            st.setInt(1, userId); // Gán giá trị userId vào câu lệnh SQL
+            st.setInt(1, userId);
             rs = st.executeQuery();
 
-            // Duyệt qua kết quả trả về từ truy vấn và tạo đối tượng Invoice
             while (rs.next()) {
-                // Tạo đối tượng Invoice từ dữ liệu trong ResultSet
+                int billId = rs.getInt("BillId");
+                int filmId = rs.getInt("FilmId");
+
+                List<String> seatList = getSeatNamesByBillId(billId);
+                String foodCombo = getFoodComboByBillId(billId);
+
                 Invoice invoice = new Invoice(
-                        rs.getDate("DatePurchased").toLocalDate(),  // Chuyển đổi Date thành LocalDate
-                        rs.getString("SuatChieu"),                   // Thời gian chiếu phim
-                        rs.getString("Phim"),                        // Tên phim
-                        rs.getString("PhongChieu"),                  // Tên phòng chiếu
-                        rs.getInt("SoGhe"),                          // Số ghế
-                        rs.getDouble("GiaTriGhe"),                   // Giá trị ghế
-                        rs.getDouble("GiaTriDoAn"),                  // Giá trị đồ ăn
-                        rs.getDouble("GiaTri")                       // Tổng giá trị
+                        rs.getDate("DatePurchased").toLocalDate(),
+                        rs.getString("SuatChieu"),
+                        rs.getString("Phim"),
+                        rs.getString("PhongChieu"),
+                        rs.getInt("SoGhe"),
+                        rs.getDouble("GiaTriGhe"),
+                        rs.getDouble("GiaTriDoAn"),
+                        rs.getDouble("GiaTri"),
+                        seatList,
+                        foodCombo,
+                        filmId
                 );
-                invoices.add(invoice); // Thêm invoice vào danh sách
+
+                invoices.add(invoice);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            // Đóng kết nối và giải phóng tài nguyên
-            Database.closeConnection(conn); // Giả sử bạn đã có phương thức closeConnection trong lớp Database
+            Database.closeConnection(conn);
             if (st != null) try { st.close(); } catch (SQLException e) { e.printStackTrace(); }
             if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
-        return invoices; // Trả về danh sách hóa đơn
+        return invoices;
     }
+
+    public boolean saveRating(int billId, int rating, String review) {
+        try {
+            // Lấy thông tin UserId và FilmId từ hóa đơn thông qua Reservation và MovieShow
+            String query = "SELECT b.UserId, ms.FilmId " +
+                    "FROM Bill b " +
+                    "JOIN Reservation r ON b.Id = r.BillId " +
+                    "JOIN MovieShow ms ON r.ShowId = ms.Id " +
+                    "WHERE b.Id = ? " +
+                    "LIMIT 1";  // tránh lấy quá nhiều bản ghi
+
+            Connection conn = Database.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, billId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int userId = rs.getInt("UserId");
+                int filmId = rs.getInt("FilmId");
+
+                FilmRating existing = FilmRatingDao.getRatingByUserAndFilm(userId, filmId);
+
+                FilmRating filmRating = new FilmRating();
+                filmRating.setUserId(userId);
+                filmRating.setFilmId(filmId);
+                filmRating.setRating(rating);
+                filmRating.setReview(review);
+
+                if (existing != null) {
+                    return FilmRatingDao.updateRating(filmRating);
+                } else {
+                    return FilmRatingDao.insertRating(filmRating);
+                }
+            }
+
+            Database.closeConnection(conn);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+
 
 
 

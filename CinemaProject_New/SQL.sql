@@ -140,6 +140,20 @@ CREATE TABLE Food_Order (
     FOREIGN KEY (BillId) REFERENCES Bill(Id) ON DELETE CASCADE
 );
 
+
+CREATE TABLE FilmRating (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    UserId INT NOT NULL,
+    FilmId INT NOT NULL,
+    Rating INT CHECK (Rating BETWEEN 1 AND 5),
+    Comment TEXT,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (UserId, FilmId),
+    FOREIGN KEY (UserId) REFERENCES User(Id) ON DELETE CASCADE,
+    FOREIGN KEY (FilmId) REFERENCES Film(Id) ON DELETE CASCADE
+
+);
+
 INSERT INTO Film (Name, Country, Length, Director, Actor, AgeLimit, FilmStatus, Content, Trailer, AdPosterUrl, PosterUrl, ReleaseDate)
 VALUES
 
@@ -229,68 +243,50 @@ VALUES
 -- Phim 1: Mario Bros (FilmId = 1)
 -- Phim 1: Mario Bros (FilmId = 1)
 -- Phim 1: Fast and Furious (FilmId = 1)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-29 16:00:00', '2025-04-29 17:30:00', 1, 2),
-('2025-04-28 19:00:00', '2025-04-28 20:30:00', 1, 1),
-('2025-04-29 10:00:00', '2025-04-29 11:30:00', 1, 1),
-('2025-04-29 13:00:00', '2025-04-29 14:30:00', 1, 2);
+-- Xoá dữ liệu cũ (nếu cần reset bảng MovieShow)
+-- Phim 1
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId) VALUES
+('2025-05-29 09:00:00', '2025-05-29 10:30:00', 1, 1),
+('2025-05-29 14:00:00', '2025-05-29 15:30:00', 1, 2),
+('2025-05-30 10:00:00', '2025-05-30 11:30:00', 1, 1),
+('2025-05-31 13:00:00', '2025-05-31 14:30:00', 1, 2);
 
--- Phim 2: Rocky (FilmId = 2)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-28 12:00:00', '2025-04-28 14:00:00', 2, 1),
-('2025-04-28 15:00:00', '2025-04-28 17:00:00', 2, 2),
-('2025-04-29 20:00:00', '2025-04-29 22:00:00', 2, 2),
-('2025-04-29 22:30:00', '2025-04-30 00:30:00', 2, 1),
-('2025-04-30 14:00:00', '2025-04-30 16:00:00', 2, 1);
+-- Phim 2
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId) VALUES
+('2025-05-29 16:00:00', '2025-05-29 18:00:00', 2, 1),
+('2025-05-30 18:30:00', '2025-05-30 20:30:00', 2, 2),
+('2025-05-30 21:00:00', '2025-05-30 23:00:00', 2, 1),
+('2025-05-31 15:00:00', '2025-05-31 17:00:00', 2, 1);
 
--- Phim 3: Ròm (FilmId = 3)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-28 14:00:00', '2025-04-28 15:30:00', 3, 1),
-('2025-04-28 16:00:00', '2025-04-28 17:30:00', 3, 2),
-('2025-04-29 18:00:00', '2025-04-29 19:30:00', 3, 2),
-('2025-04-29 20:00:00', '2025-04-29 21:30:00', 3, 1),
-('2025-04-30 16:00:00', '2025-04-30 17:30:00', 3, 1);
+-- Phim 3
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId) VALUES
+('2025-05-29 12:00:00', '2025-05-29 13:30:00', 3, 2),
+('2025-05-30 14:00:00', '2025-05-30 15:30:00', 3, 1),
+('2025-05-31 17:30:00', '2025-05-31 19:00:00', 3, 2);
 
--- Phim 4: The Lion King (FilmId = 4)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-28 18:00:00', '2025-04-28 20:00:00', 4, 1),
-('2025-04-28 20:30:00', '2025-04-28 22:30:00', 4, 2),
-('2025-04-29 12:00:00', '2025-04-29 14:00:00', 4, 2),
-('2025-04-29 16:00:00', '2025-04-29 18:00:00', 4, 1),
-('2025-04-30 20:00:00', '2025-04-30 22:00:00', 4, 1);
+-- Phim 4
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId) VALUES
+('2025-05-29 19:00:00', '2025-05-29 21:00:00', 4, 2),
+('2025-05-30 09:00:00', '2025-05-30 11:00:00', 4, 1),
+('2025-05-31 20:00:00', '2025-05-31 22:00:00', 4, 1);
 
--- Phim 5: Immaculatte (FilmId = 5)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-28 14:00:00', '2025-04-28 15:30:00', 5, 1),
-('2025-04-28 16:00:00', '2025-04-28 17:30:00', 5, 2),
-('2025-04-29 18:00:00', '2025-04-29 19:30:00', 5, 2),
-('2025-04-29 20:00:00', '2025-04-29 21:30:00', 5, 1),
-('2025-04-30 16:00:00', '2025-04-30 17:30:00', 5, 1);
+-- Phim 5
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId) VALUES
+('2025-05-29 21:30:00', '2025-05-29 23:00:00', 5, 1),
+('2025-05-30 16:00:00', '2025-05-30 17:30:00', 5, 2),
+('2025-05-31 10:00:00', '2025-05-31 11:30:00', 5, 1);
 
--- Phim 7: Ant-Man and the Wasp: Quantumania (FilmId = 7)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-28 20:00:00', '2025-04-28 22:00:00', 7, 1),
-('2025-04-28 22:30:00', '2025-04-29 00:30:00', 7, 2),
-('2025-04-29 14:00:00', '2025-04-29 16:00:00', 7, 2),
-('2025-04-29 16:30:00', '2025-04-29 18:30:00', 7, 1),
-('2025-04-30 18:00:00', '2025-04-30 20:00:00', 7, 1);
+-- Phim 7
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId) VALUES
+('2025-05-29 11:00:00', '2025-05-29 13:00:00', 7, 2),
+('2025-05-30 12:30:00', '2025-05-30 14:30:00', 7, 1),
+('2025-05-31 16:00:00', '2025-05-31 18:00:00', 7, 1);
 
--- Phim 8: Avengers: Infinity War (FilmId = 8)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-28 12:00:00', '2025-04-28 14:00:00', 8, 1),
-('2025-04-28 14:30:00', '2025-04-28 16:30:00', 8, 2),
-('2025-04-29 20:00:00', '2025-04-29 22:00:00', 8, 2),
-('2025-04-29 22:30:00', '2025-04-30 00:30:00', 8, 1),
-('2025-04-30 14:00:00', '2025-04-30 16:00:00', 8, 1);
-
-
+-- Phim 8
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId) VALUES
+('2025-05-29 18:00:00', '2025-05-29 20:00:00', 8, 1),
+('2025-05-30 20:30:00', '2025-05-30 22:30:00', 8, 2),
+('2025-05-31 11:30:00', '2025-05-31 13:30:00', 8, 1);
 INSERT INTO SeatType (Name, Cost)
 VALUES
 ('Thường', 70000),
@@ -359,7 +355,39 @@ VALUES
 --     Room r ON ms.RoomId = r.Id
 -- JOIN
 --     Film f ON ms.FilmId = f.Id;
-
+use cinema;
+SELECT
+    b.DatePurchased,
+    ms.StartTime AS SuatChieu,
+    f.Name AS Phim,
+    r.Name AS PhongChieu,
+    COUNT(s.Id) AS SoGhe,
+    SUM(rsv.Cost) AS GiaTriGhe,
+    COALESCE((
+        SELECT SUM(fo.Count * fd.Cost)
+        FROM Food_Order fo
+        JOIN Food fd ON fo.FoodId = fd.Id
+        WHERE fo.BillId = b.Id
+    ), 0) AS GiaTriDoAn,
+    SUM(rsv.Cost) + COALESCE((
+        SELECT SUM(fo.Count * fd.Cost)
+        FROM Food_Order fo
+        JOIN Food fd ON fo.FoodId = fd.Id
+        WHERE fo.BillId = b.Id
+    ), 0) AS GiaTri
+FROM Bill b
+JOIN Reservation rsv ON b.Id = rsv.BillId
+JOIN MovieShow ms ON rsv.ShowId = ms.Id
+JOIN Film f ON ms.FilmId = f.Id
+JOIN Room r ON ms.RoomId = r.Id
+JOIN Seats s ON rsv.SeatId = s.Id
+WHERE b.UserId = 4
+GROUP BY b.DatePurchased, ms.StartTime, f.Name, r.Name, b.Id;
+use cinema;
+INSERT INTO FilmRating (UserId, FilmId, Rating, Comment)
+VALUES
+(1, 1, 5, 'Phim rất hay! Diễn xuất tuyệt vời.'),
+(2, 1, 4, 'Nội dung ổn, nhưng đoạn kết hơi nhanh.');
 
 -- SELECT s.*
 -- FROM Reservation r

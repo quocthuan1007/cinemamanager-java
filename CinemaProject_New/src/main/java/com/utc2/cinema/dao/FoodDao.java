@@ -151,4 +151,27 @@ public class FoodDao {
             return false;
         }
     }
+    public static String getFoodComboByBillId(int billId) {
+        StringBuilder comboDesc = new StringBuilder();
+        String sql = "SELECT fd.Name, fo.Count FROM Food_Order fo JOIN Food fd ON fo.FoodId = fd.Id WHERE fo.BillId = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, billId);
+            ResultSet rs = stmt.executeQuery();
+
+            List<String> combos = new ArrayList<>();
+            while (rs.next()) {
+                String name = rs.getString("Name");
+                int count = rs.getInt("Count");
+                combos.add(name + " x" + count);
+            }
+            rs.close();
+
+            comboDesc.append(String.join(", ", combos));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return comboDesc.toString();
+    }
 }

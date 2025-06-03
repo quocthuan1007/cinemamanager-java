@@ -91,5 +91,23 @@ public class SeatDao {
 
         return seatsList;
     }
+    public static List<String> getSeatNamesByBillId(int billId) {
+        List<String> seatList = new ArrayList<>();
+        String sql = "SELECT s.position FROM Reservation rsv JOIN Seats s ON rsv.SeatId = s.id WHERE rsv.BillId = ?";
 
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, billId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                seatList.add(rs.getString("position"));
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return seatList;
+    }
 }

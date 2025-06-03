@@ -1,157 +1,103 @@
-/* Cấu hình chung cho các phần tử */
+.main-background {
+    -fx-background-color: linear-gradient(to top left, #1B2830, #474D67);
+}
+
 * {
     -fx-font-family: "Segoe UI", sans-serif;
-    -fx-base: #f4f4f4;
 }
 
-/* Tiêu đề */
-#titleLabel {
-    -fx-font-size: 24px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333333;
-    -fx-padding: 10px 0;
-}
-
-/* Nút bấm */
-.add-button, .delete-button {
-    -fx-background-color: #4CAF50;
+/* Label chính */
+.label-main {
+    -fx-background-color: linear-gradient(to top left,#1B2830, #474D67);;
+    -fx-background-radius: 10;
     -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-padding: 10px 20px;
-    -fx-border-radius: 5px;
-    -fx-cursor: hand;
+    -fx-padding: 8 12;
 }
 
-.add-button:hover, .delete-button:hover {
-    -fx-background-color: #45a049;
-}
-
-#saveButton, #cancelButton {
-    -fx-background-color: #007BFF;
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-padding: 10px 20px;
-    -fx-border-radius: 5px;
-    -fx-cursor: hand;
-}
-
-#saveButton:hover, #cancelButton:hover {
-    -fx-background-color: #0056b3;
-}
-
-/* GridPane */
-.GridPane {
-    -fx-padding: 20px;
-    -fx-hgap: 20px;
-    -fx-vgap: 10px;
-}
-
-.GridPane Label {
-    -fx-font-size: 14px;
-    -fx-text-fill: #333333;
-}
-
-.GridPane TextField {
-    -fx-font-size: 14px;
-    -fx-background-color: #ffffff;
-    -fx-border-color: #cccccc;
-    -fx-border-radius: 5px;
-    -fx-padding: 5px;
-}
-
-/* ComboBox */
-.ComboBox {
-    -fx-font-size: 14px;
-    -fx-background-color: #ffffff;
-    -fx-border-color: #cccccc;
-    -fx-border-radius: 5px;
-    -fx-padding: 5px;
-}
-
-.ComboBox .combo-box-cell {
-    -fx-font-size: 14px;
-}
-
-/* Nút bấm Lưu (màu xanh nước) */
-#saveButton {
-    -fx-background-color: #4CAF50;  /* Màu xanh nước */
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-padding: 10px 20px;
-    -fx-border-radius: 5px;
-    -fx-cursor: hand;
-}
-
-#saveButton:hover {
-    -fx-background-color: #45a049;  /* Màu xanh đậm khi hover */
-}
-
-/* Nút Hủy Bỏ (màu đỏ) */
-#cancelButton {
-    -fx-background-color: #FF5733;  /* Màu đỏ */
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-padding: 10px 20px;
-    -fx-border-radius: 5px;
-    -fx-cursor: hand;
-}
-
-#cancelButton:hover {
-    -fx-background-color: #c44e2d;  /* Màu đỏ đậm khi hover */
-}
-
-/* Nút Xóa Phòng Chiếu (màu đỏ) */
-#deleteRoomBtn {
-    -fx-background-color: #FF5733;  /* Màu đỏ */
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-padding: 10px 20px;
-    -fx-border-radius: 5px;
-    -fx-cursor: hand;
-}
-
-#deleteRoomBtn:hover {
-    -fx-background-color: #c44e2d;  /* Màu đỏ đậm khi hover */
-}
-
-/* Nút Thêm Phòng Chiếu (màu xanh) */
-#addRoomBtn {
-    -fx-background-color: #4CAF50;  /* Màu xanh */
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-padding: 10px 20px;
-    -fx-border-radius: 5px;
-    -fx-cursor: hand;
-}
-
-#addRoomBtn:hover {
-    -fx-background-color: #45a049;  /* Màu xanh đậm khi hover */
-}
-
-/* ScrollPane */
-#seatScrollPane {
+/* ===== CUSTOM TABLEVIEW ===== */
+.custom-table {
     -fx-background-color: transparent;
-    -fx-border-color: #ddd;
-    -fx-border-width: 1px;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 10;
 }
 
-/* Label màn hình */
-#screenLabel {
-    -fx-font-size: 18px;
+.custom-table .column-header-background {
+    -fx-background-color: #3B4B5C;
+    -fx-background-radius: 12 12 0 0;
+    -fx-border-color: transparent;
+}
+
+.custom-table .column-header {
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-border-color: gray;
-    -fx-border-width: 1px;
-    -fx-padding: 10px;
-    -fx-background-color: #f4f4f4;
-    -fx-text-fill: #333333;
-    -fx-alignment: center;
+    -fx-alignment: CENTER-LEFT;
+}
+.custom-table .column-header .label {
+    -fx-text-fill: white; /* màu trắng rõ ràng */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
 }
 
-/* Phần tử VBox */
-.VBox {
-    -fx-padding: 20px;
+.custom-table .table-row-cell {
+    -fx-background-color: #2C3E50;
+    -fx-cell-size: 40px; /* Chiều cao dòng ổn định */
 }
 
-.HBox {
-    -fx-padding: 10px 0;
+.custom-table .table-row-cell:filled:hover {
+    -fx-background-color: #3A506B;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.custom-table .table-row-cell:selected {
+    -fx-background-color: #5C677D;
+    -fx-text-fill: white;
+}
+
+.custom-table .table-cell {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-padding: 6 12;
+    -fx-alignment: CENTER-LEFT;
+    -fx-border-color: transparent;
+}
+
+/* Scroll bar tinh chỉnh */
+.custom-table .scroll-bar:vertical,
+.custom-table .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.custom-table .scroll-bar .thumb {
+    -fx-background-color: #5C677D;
+    -fx-background-radius: 5;
+}
+
+.custom-table .scroll-bar .track {
+    -fx-background-color: #2C3E50;
+}
+//HOA DON//
+.pane-bill{
+    -fx-background-color: linear-gradient(to top left, #1B2830, #474D67);
+    -fx-background-radius: 10;
+}
+.button-onback,
+.button-rating,
+.button-detail {
+    -fx-background-color: #3B4B5C;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-background-radius: 10;
+    -fx-font-weight: bold;
+}
+
+.button-onback:hover,
+.button-rating:hover,
+.button-detail:hover {
+    -fx-background-color: #61C17E;
+    -fx-text-fill: white;
 }

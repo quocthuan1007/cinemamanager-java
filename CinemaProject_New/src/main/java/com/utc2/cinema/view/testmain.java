@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class test1 extends Application {
+public class testmain extends Application {
 
     public static void main(String[] args) {
         launch(args);
@@ -18,12 +18,12 @@ public class test1 extends Application {
     public void start(Stage primaryStage) {
         try {
             // Tải tệp FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/history.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MainMenu.fxml"));
             // Tải nội dung từ FXML và thiết lập giao diện
             AnchorPane root = loader.load();
 
             // Thiết lập cảnh (Scene)
-            Scene scene = new Scene(root, 1200, 900);
+            Scene scene = new Scene(root, 1160, 800);
             primaryStage.setTitle("Cinema Manager");
             primaryStage.setScene(scene);
             primaryStage.show();
