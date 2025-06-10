@@ -1,6 +1,8 @@
 package com.utc2.cinema.controller;
 
 import com.google.gson.JsonObject;
+import com.utc2.cinema.model.entity.Vnpay;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,8 +16,7 @@ import javax.servlet.ServletException;
 
 public class vnpayQuery {
 
-    public static void checkDeal(String order_id, String trans_date) throws ServletException, IOException {
-        // Tạo các giá trị cần thiết
+    public static Vnpay checkDeal(String order_id, String trans_date) throws ServletException, IOException {
         String vnp_RequestId = Config.getRandomNumber(8);
         String vnp_Version = "2.1.0";
         String vnp_Command = "querydr";
@@ -23,7 +24,6 @@ public class vnpayQuery {
         String vnp_TxnRef = order_id;
         String vnp_OrderInfo = "Kiem tra ket qua GD OrderId:" + vnp_TxnRef;
 
-        // Định dạng lại ngày giao dịch từ "dd/MM/yyyy HH:mm:ss" sang "yyyyMMddHHmmss"
         String vnp_TransDate;
         try {
             SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -33,14 +33,11 @@ public class vnpayQuery {
             throw new ServletException("Định dạng trans_date không hợp lệ. Phải là dd/MM/yyyy HH:mm:ss", e);
         }
 
-        // Ngày tạo yêu cầu
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnp_CreateDate = formatter.format(cld.getTime());
-
         String vnp_IpAddr = "127.0.0.1";
 
-        // Tạo JSON object chứa các tham số
         JsonObject vnp_Params = new JsonObject();
         vnp_Params.addProperty("vnp_RequestId", vnp_RequestId);
         vnp_Params.addProperty("vnp_Version", vnp_Version);
@@ -52,7 +49,6 @@ public class vnpayQuery {
         vnp_Params.addProperty("vnp_CreateDate", vnp_CreateDate);
         vnp_Params.addProperty("vnp_IpAddr", vnp_IpAddr);
 
-        // Chuỗi dữ liệu để tạo chữ ký bảo mật
         String hash_Data = String.join("|",
                 vnp_RequestId,
                 vnp_Version,
@@ -65,40 +61,43 @@ public class vnpayQuery {
                 vnp_OrderInfo
         );
 
-        // Tạo secure hash
         String vnp_SecureHash = Config.hmacSHA512(Config.secretKey, hash_Data);
         vnp_Params.addProperty("vnp_SecureHash", vnp_SecureHash);
 
-        // Gửi yêu cầu POST đến VNPAY
         URL url = new URL(Config.vnp_ApiUrl);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
         con.setDoOutput(true);
 
-        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.writeBytes(vnp_Params.toString());
-        wr.flush();
-        wr.close();
+        try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
+            wr.writeBytes(vnp_Params.toString());
+            wr.flush();
+        }
 
         int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Post Data : " + vnp_Params);
-        System.out.println("Response Code : " + responseCode);
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String output;
         StringBuilder response = new StringBuilder();
-        while ((output = in.readLine()) != null) {
-            response.append(output);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            String output;
+            while ((output = in.readLine()) != null) {
+                response.append(output);
+            }
         }
-        in.close();
 
-        System.out.println("Response from VNPAY: " + response.toString());
+        // Trả về đối tượng Vnpay chứa mã phản hồi và dữ liệu trả về
+        return new Vnpay(responseCode, response.toString());
     }
 
+
     public static void main(String[] args) throws ServletException, IOException {
-        // Gọi hàm kiểm tra giao dịch
-        vnpayQuery.checkDeal("08980589", "02/06/2025 21:44:08");
+        try {
+            Vnpay result = checkDeal("32811367", "02/06/2025 19:39:18");
+            System.out.println("Mã phản hồi: " + result.getResponseCode());
+            System.out.println("Dữ liệu phản hồi: " + result.getResponseData());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

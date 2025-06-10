@@ -100,8 +100,8 @@ public class LoginController {
 
     @FXML
     void onCloseLogin(MouseEvent e) {
-        Stage stage = (Stage) userName.getScene().getWindow();
-        stage.close();
+        System.out.println("🔄 Shutting down...");
+        System.exit(0);
     }
 
     @FXML

@@ -1,5 +1,4 @@
 module CinemaProject {
-    requires java.sql;
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
@@ -7,12 +6,16 @@ module CinemaProject {
     requires javafx.swing;
     requires com.google.zxing;
     requires com.google.zxing.javase;
-    requires gson;
     requires javax.servlet.api;
     requires spring.boot;
     requires spring.boot.autoconfigure;
-    requires spring.web;
+
     requires spring.context;
+
+
+    requires gson;
+    requires java.sql;
+    requires spring.web;
 
     opens com.utc2.cinema.view to javafx.fxml;
     exports com.utc2.cinema.view;

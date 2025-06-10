@@ -94,7 +94,7 @@ public class ajaxServlet {
 
     public static void main(String[] args) {
         try {
-            String url = ajaxServlet.createURL(100000, "NCB", "vn");
+            String url = ajaxServlet.createURL(1500000, "NCB", "vn");
             System.out.println("URL thanh toán: " + url);
             java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
         } catch (Exception e) {
