@@ -356,7 +356,7 @@ public class MainMenuController implements Initializable {
         return movieForm;
     }
 
-    public Pane getShowfilmdetail() {
+    public Pane getShowfilmDetail() {
         return showfilmdetail;
     }
 
@@ -448,6 +448,21 @@ public class MainMenuController implements Initializable {
         return dateFlowPane;
     }
 
+    @FXML private Label averageRatingLabel;
+    @FXML private VBox ratingListContainer;
+    @FXML private ScrollPane ratingScrollPane;
+
+    public Label getAverageRatingLabel() {
+        return averageRatingLabel;
+    }
+
+    public VBox getRatingListContainer() {
+        return ratingListContainer;
+    }
+
+    public ScrollPane getRatingScrollPane() {
+        return ratingScrollPane;
+    }
 
 
     ///////history///////
@@ -662,7 +677,11 @@ public class MainMenuController implements Initializable {
     void handleStarClick4(){historyController.handleStarClick4();}
     @FXML
     void handleStarClick5(){historyController.handleStarClick5();}
-
+    ///film
+    @FXML
+    void handleBackToDetail(){filmDisplayController.handleBackToDetail();}
+    @FXML
+    void handleShowReviews(){filmDisplayController.handleShowReviews();}
 
     private void setupMainForm() {
         mainMenuForm.setVisible(true);

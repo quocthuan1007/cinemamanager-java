@@ -1,143 +1,360 @@
 package com.utc2.cinema.controller;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
+import com.utc2.cinema.dao.FilmRatingDao;
+import com.utc2.cinema.dao.UserDao;
+import com.utc2.cinema.model.entity.Film;
+import com.utc2.cinema.model.entity.FilmRating;
+import com.utc2.cinema.service.FilmService;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javafx.util.Duration;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.awt.image.BufferedImage;
-import javafx.embed.swing.SwingFXUtils;
+import java.io.File;
+import java.io.InputStream;
+import java.util.List;
 
-public class test {
+public class test
+{
 
-    @FXML private TextField orderIdField;
-    @FXML private TextField amountField;
-    @FXML private Button generateQRButton;
-    @FXML private ImageView qrImageView;
-    @FXML private Label paymentStatusLabel;
+    private final FilmService filmService = new FilmService();
 
-    // VNPay sandbox credentials
-    private final String vnp_TmnCode = "2QXUI4J4";
-    private final String vnp_HashSecret = "SECRETKEY123456789";
-    private final String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    private final String vnp_ReturnUrl = "https://sandbox.vnpayment.vn/paymentv2/ReturnUrl";
+    public void setupFilms() {
+        List<Film> films = filmService.getAllFilms();
+        showFilms(films);
+    }
+    @FXML private Pane ShowFilmDetail;
+    @FXML private Pane buyForm;
+    @FXML private ScrollPane mainShowFilm;
+    @FXML private HBox moviePosters;
+    @FXML private FlowPane moviePosters1;
+    @FXML private Label filmNameLabel;
+    @FXML private Label filmDirectorLabel;
+    @FXML private Label filmActorLabel ;
+    @FXML private Label filmReleaseDateLabel;
+    @FXML private Label filmLengthLabel;
+    @FXML private Label filmAgeLimitLabel;
+    @FXML private Label filmContentLabel;
+    @FXML private ImageView filmPosterImageView;
+    @FXML private WebView webView;
+    private Film selectedFilm;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private Pane movieForm;
+    @FXML Pane mainMenuForm;
+    @FXML Pane showfilmdetail;
+    @FXML
+    private Pane scheduleForm;
+    @FXML
+    private Pane introForm;
+    @FXML
+    private Label averageRatingLabel;
+    @FXML private VBox ratingListContainer;
+    @FXML private ScrollPane ratingScrollPane;
 
+    private BuyTicketController buyTicketController;
+
+    private HBox createMainItem(Film film) {
+        String posterPath = "src/main/resources/Image/" + film.getPosterUrl() + ".png";
+        File file = new File(posterPath);
+        if (!file.exists()) {
+            System.out.println("Không tìm thấy ảnh: " + posterPath);
+            return null;
+        }
+
+        // Ảnh phim bên trái
+        Image image = new Image(file.toURI().toString());
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(120);
+        imageView.setFitHeight(170);
+        imageView.setPreserveRatio(false);
+        imageView.setSmooth(true);
+        imageView.setStyle("-fx-background-radius: 10 0 0 10;");
+
+        // Thông tin phim bên phải
+        Label nameLabel = new Label(film.getName());
+        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #222;");
+
+        Label directorLabel = new Label("Đạo diễn: " + film.getDirector());
+        directorLabel.setStyle("-fx-text-fill: #555; -fx-font-size: 13px;");
+
+        Button bookButton = new Button("Đặt vé");
+        bookButton.setStyle(
+                "-fx-background-color: #61C17E;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-background-radius: 5;"
+        );
+        bookButton.setOnAction(event -> {
+            selectedFilm = film;
+            setFilmDetails(film);
+            ShowFilmDetail.setVisible(true);
+            movieForm.setVisible(false);
+        });
+
+        VBox infoBox = new VBox(8, nameLabel, directorLabel, bookButton);
+        infoBox.setAlignment(Pos.CENTER_LEFT);
+        infoBox.setPadding(new Insets(10));
+        infoBox.setPrefWidth(260); // phần thông tin rộng hơn để tổng vừa 400px
+
+        HBox filmBox = new HBox(imageView, infoBox);
+        filmBox.setSpacing(12);
+        filmBox.setPadding(new Insets(10));
+        filmBox.setPrefWidth(360);
+        filmBox.setMaxWidth(360);
+        filmBox.setMinWidth(360);
+
+
+        filmBox.setStyle(
+                "-fx-background-radius: 10;" +
+                        "-fx-border-radius: 10;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0.2, 0, 2);"
+        );
+        String[] arr = {"#8181AB", "#D6957B", "#907EC2","#566ED9","#B55959"};
+        int randomIndex = (int)(Math.random() * arr.length);
+        filmBox.setStyle("-fx-background-color: " + arr[randomIndex] + ";");
+
+        TranslateTransition hoverUp = new TranslateTransition(Duration.millis(200), filmBox);
+        hoverUp.setToY(-10);  // Dịch lên 10px so với vị trí gốc
+
+        TranslateTransition hoverDown = new TranslateTransition(Duration.millis(200), filmBox);
+        hoverDown.setToY(0);  // Trả về vị trí ban đầu (0)
+
+        filmBox.setOnMouseEntered(e -> {
+            hoverDown.stop();
+            hoverUp.playFromStart();
+        });
+
+        filmBox.setOnMouseExited(e -> {
+            hoverUp.stop();
+            hoverDown.playFromStart();
+        });
+
+
+
+        return filmBox;
+    }
     @FXML
     public void initialize() {
-        generateQRButton.setOnAction(e -> createPayment());
+
+        setupFilms();
     }
 
-    private void createPayment() {
-        try {
-            String orderId = orderIdField.getText();
-            String amountStr = amountField.getText();
-            if (orderId.isEmpty() || amountStr.isEmpty()) {
-                paymentStatusLabel.setText("Vui lòng nhập đầy đủ thông tin.");
-                return;
+    private VBox createFilmBox(Film film) {
+        String posterPath = "src/main/resources/Image/" + film.getPosterUrl() + ".png"; // hoặc đường dẫn tương đối khác
+        File file = new File(posterPath);
+        if (!file.exists()) {
+            System.out.println("Không tìm thấy ảnh: " + posterPath);
+            return null;
+        }
+        Image image = new Image(file.toURI().toString());
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(160);
+        imageView.setFitHeight(190);
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+
+        Label nameLabel = new Label(film.getName());
+        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black;");
+        Label directorLabel = new Label("Đạo diễn: " + film.getDirector());
+        directorLabel.setStyle("-fx-text-fill: black;");
+        Button bookButton = new Button("🎟️ Đặt vé");
+        bookButton.setStyle("-fx-background-color: #61C17E; -fx-text-fill: white;");
+        bookButton.setOnAction(event -> {
+            selectedFilm = film;
+            System.out.println("Hiển thị thông tin chi tiết cho phim: " + film.getName());
+            setFilmDetails(film);
+
+            // Hiển thị form chi tiết phim (showFilmDetail)
+            ShowFilmDetail.setVisible(true);
+        });
+
+        VBox filmBox = new VBox(8, imageView, nameLabel, directorLabel, bookButton);
+        filmBox.setAlignment(Pos.CENTER);
+        filmBox.setPadding(new Insets(10));
+        filmBox.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #61C17E; -fx-border-radius: 3; -fx-background-radius: 3;");
+        filmBox.setPrefWidth(180);
+        FlowPane.setMargin(filmBox, new Insets(10, 12, 10,12));
+        return filmBox;
+    }
+
+
+    private void showFilms(List<Film> films) {
+        int count = 0;
+        for (Film film : films) {
+            try {
+                HBox filmBox1 = createMainItem(film);
+                VBox filmBox2 = createFilmBox(film);
+
+                if (filmBox2 != null) moviePosters1.getChildren().add(filmBox2);
+//                if (count <= 3)
+//                {
+//                    if (filmBox1 != null) moviePosters.getChildren().add(filmBox1);
+//                    count++;
+//                }
+//                moviePosters.setSpacing(20);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            long amount = Long.parseLong(amountStr) * 100; // VNPay dùng đơn vị nhỏ (x100)
-            String createDate = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-
-            // Kiểm tra lại các tham số trước khi gửi
-            System.out.println("OrderId: " + orderId);
-            System.out.println("Amount: " + amount);
-            System.out.println("CreateDate: " + createDate);
-
-            // Thêm tham số cần thiết
-            Map<String, String> params = new HashMap<>();
-            params.put("vnp_Version", "2.1.0");
-            params.put("vnp_Command", "pay");
-            params.put("vnp_TmnCode", vnp_TmnCode);
-            params.put("vnp_Amount", String.valueOf(amount));
-            params.put("vnp_CurrCode", "VND");
-            params.put("vnp_TxnRef", orderId);
-            params.put("vnp_OrderInfo", "Thanh toan don hang " + orderId);
-            params.put("vnp_ReturnUrl", vnp_ReturnUrl);
-            params.put("vnp_IpAddr", "127.0.0.1"); // Địa chỉ IP của người thanh toán
-            params.put("vnp_CreateDate", createDate);
-
-            // Kiểm tra lại tham số trước khi tiếp tục
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                System.out.println(entry.getKey() + ": " + entry.getValue());
-            }
-
-            // Sắp xếp các tham số theo tên và mã hóa URL
-            List<String> fieldNames = new ArrayList<>(params.keySet());
-            Collections.sort(fieldNames);
-
-            StringBuilder hashData = new StringBuilder();
-            StringBuilder query = new StringBuilder();
-
-            // Tạo chuỗi dữ liệu cần thiết để tính toán hash và chuỗi query
-            for (int i = 0; i < fieldNames.size(); i++) {
-                String key = fieldNames.get(i);
-                String value = URLEncoder.encode(params.get(key), StandardCharsets.UTF_8.toString());
-
-                hashData.append(key).append('=').append(value);
-                query.append(key).append('=').append(value);
-                if (i != fieldNames.size() - 1) {
-                    hashData.append('&');
-                    query.append('&');
-                }
-            }
-
-            // Tính toán HMAC-SHA512
-            String secureHash = hmacSHA512(vnp_HashSecret, hashData.toString());
-            query.append("&vnp_SecureHash=").append(secureHash);
-
-            // Kiểm tra lại URL thanh toán
-            System.out.println("Payment URL: " + vnp_PayUrl + "?" + query);
-
-            // Tạo QR code
-            generateQRCode(vnp_PayUrl + "?" + query);
-            paymentStatusLabel.setText("Mã QR đã được tạo. Quét để thanh toán.");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            paymentStatusLabel.setText("Có lỗi xảy ra.");
-        } finally {
-            generateQRButton.setDisable(false); // Re-enable button after processing
         }
     }
 
-    private void generateQRCode(String data) throws Exception {
-        // Disable the button while processing
-        generateQRButton.setDisable(true);
+    public void setFilmDetails(Film film) {
+        filmNameLabel.setText("Tên phim: " + film.getName());
+        filmDirectorLabel.setText("Đạo diễn: " + film.getDirector());
+        filmActorLabel.setText("Diễn viên: " + film.getActor());
+        filmReleaseDateLabel.setText("Ngày phát hành: " + film.getReleaseDate());
+        filmLengthLabel.setText("Thời lượng: " + film.getLength() + " phút");
+        filmAgeLimitLabel.setText("Giới hạn tuổi: " + film.getAgeLimit() + "+");
 
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, 300, 300);
-        BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
-        Image fxImage = SwingFXUtils.toFXImage(qrImage, null);
-        qrImageView.setImage(fxImage);
-    }
+        // Nội dung phim
+        filmContentLabel.setText(film.getContent());
 
-    private String hmacSHA512(String key, String data) throws Exception {
-        Mac hmac512 = Mac.getInstance("HmacSHA512");
-        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA512");
-        hmac512.init(secretKey);
-        byte[] bytes = hmac512.doFinal(data.getBytes(StandardCharsets.UTF_8));
-        return bytesToHex(bytes);
-    }
-
-    private String bytesToHex(byte[] bytes) {
-        StringBuilder hash = new StringBuilder();
-        for (byte b : bytes) {
-            String hex = Integer.toHexString(0xff & b);
-            if (hex.length() == 1) hash.append('0');
-            hash.append(hex);
+        // Cập nhật ảnh poster của phim
+        String posterPath = "src/main/resources/Image/" + film.getPosterUrl() + ".png"; // Ví dụ: "inception"
+        File file = new File(posterPath);
+        if (!file.exists()) {
+            System.out.println("Không tìm thấy ảnh: " + posterPath);
+            return;
         }
-        return hash.toString();
+        Image image = new Image(file.toURI().toString());
+        filmPosterImageView.setImage(image);
+
+        //filmRating
+        showAverageRating(film.getId());
+
+        // Hiển thị trailer
+        loadTrailer(film.getTrailer());
     }
+
+    private void loadTrailer(String youtubeUrl) {
+        if (youtubeUrl == null || youtubeUrl.isEmpty()) return;
+
+        // Chuyển từ dạng https://www.youtube.com/watch?v=xxx thành https://www.youtube.com/embed/xxx
+        String embedUrl = youtubeUrl.replace("watch?v=", "embed/");
+
+        // Giảm kích thước và căn giữa iframe bên trong WebView
+        String embedHTML = """
+        <html>
+            <body style='margin:0px;padding:0px;display:flex;justify-content:center;align-items:center;height:100%%;'>
+                <iframe width='100%%' height='100%%' 
+                        src='%s?autoplay=1'
+                        frameborder='0' allow='autoplay; encrypted-media' allowfullscreen>
+                </iframe>
+            </body>
+        </html>
+        """.formatted(embedUrl);
+
+        WebEngine webEngine = webView.getEngine();
+        webEngine.loadContent(embedHTML);
+    }
+    @FXML
+    void handleBookTicket() {
+        // Xử lý đặt vé ở đây
+        if (selectedFilm != null) {
+            // Nếu film đã được chọn, thực hiện hành động
+            ShowFilmDetail.setVisible(false);
+            buyForm.setVisible(true);
+            buyTicketController.showMovieShowOfFilm(selectedFilm.getId());
+        } else {
+            // Nếu không có phim được chọn, có thể hiển thị thông báo hoặc xử lý gì đó
+            System.out.println("Không có phim nào được chọn!");
+        }
+    }
+    void hideForm(){
+        movieForm.setVisible(false);
+        ShowFilmDetail.setVisible(false);
+        scheduleForm.setVisible(false);
+        mainMenuForm.setVisible(false);
+        introForm.setVisible(false);
+        buyForm.setVisible(false);
+    }
+    @FXML
+    void onSearchFilmByName() {
+        String keyword = searchField.getText().trim().toLowerCase();
+
+        // Ẩn tất cả các pane không liên quan
+        hideForm();
+
+        // Hiện pane chứa danh sách film
+        movieForm.setVisible(true);
+
+        // Nếu ô tìm kiếm rỗng thì hiển thị tất cả film
+        if (keyword.isEmpty()) {
+            moviePosters.getChildren().clear();
+            moviePosters1.getChildren().clear();
+            setupFilms();
+            return;
+        }
+
+        // Lọc danh sách phim
+        List<Film> filtered = filmService.getAllFilms().stream()
+                .filter(f -> f.getName().toLowerCase().contains(keyword))
+                .toList();
+
+//        // Hiển thị phim đã lọc
+        moviePosters.getChildren().clear();
+        moviePosters1.getChildren().clear();
+        showFilms(filtered);
+    }
+    private void showAverageRating(int filmId) {
+        List<FilmRating> ratings = FilmRatingDao.getRatingsByFilmId(filmId);
+
+        if (ratings.isEmpty()) {
+            averageRatingLabel.setText("Chưa có đánh giá");
+            return;
+        }
+
+        double total = 0;
+        for (FilmRating r : ratings) {
+            total += r.getRating();
+        }
+
+        double avg = total / ratings.size();
+        averageRatingLabel.setText(String.format("Đánh giá: %.1f/5 sao", avg));
+    }
+
+    @FXML
+    private void handleShowReviews() {
+        ratingScrollPane.setVisible(true); // HIỆN khung cuộn chứa đánh giá
+        ratingListContainer.getChildren().removeIf(node -> !(node instanceof Button));
+
+        List<FilmRating> ratings = FilmRatingDao.getRatingsByFilmId(selectedFilm.getId());
+        if (ratings.isEmpty()) {
+            ratingListContainer.getChildren().add(0, new Label("Chưa có đánh giá nào."));
+            return;
+        }
+
+        for (FilmRating rating : ratings) {
+            String username = UserDao.getUsernameById(rating.getUserId());
+            Label userLabel = new Label("👤 Người dùng: " + username);
+            Label commentLabel = new Label("📝 Nội dung: " + rating.getReview());
+            Label ratingLabel = new Label("⭐ Số sao: " + "⭐".repeat(rating.getRating()));
+
+            VBox reviewBox = new VBox(userLabel, commentLabel, ratingLabel);
+            reviewBox.setSpacing(5);
+            reviewBox.setStyle("-fx-padding: 10; -fx-background-color: white; -fx-background-radius: 5; -fx-border-color: #ccc;");
+            ratingListContainer.getChildren().add(0, reviewBox); // add vào đầu
+        }
+    }
+
+    @FXML
+    private void handleBackToDetail() {
+        ratingScrollPane.setVisible(false); // ẨN
+    }
+
+
 }

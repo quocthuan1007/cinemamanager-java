@@ -95,8 +95,12 @@ public class HistoryController {
         colSoGhe.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getSeatCount())));
         colGiaTri.setCellValueFactory(cellData -> new SimpleStringProperty(formatCurrency(cellData.getValue().getTotalCost())));
 
-        User Info = UserService.getUser(UserSession.getInstance().getUserId());
-        int userID = Info.getId();
+        User info = UserService.getUser(UserSession.getInstance().getUserId());
+        if (info == null) {
+            showAlert(Alert.AlertType.ERROR, "Lỗi người dùng", "Không thể tải thông tin người dùng. Vui lòng cập nhật thông tin cá nhân trước.");
+            return; // Không tiếp tục nếu không có thông tin user
+        }
+        int userID = info.getId();
         List<Invoice> invoices = billDao.getInvoicesByUserAndDateRange(userID);
         invoiceData.setAll(invoices);
         invoiceTable.setItems(invoiceData);
@@ -172,7 +176,6 @@ public class HistoryController {
     void onBack1() {
         mainMenu.getBillPane2().setVisible(false);
 //        billPane2.setVisible(false);
-        submitRatingButton.setDisable(true);
         selectedInvoice = null;
         currentRating = 0;
         updateStarDisplay(0);
@@ -228,10 +231,17 @@ public class HistoryController {
 
         if (success) {
             showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã gửi đánh giá thành công.");
-            selectedInvoice.setRating(currentRating);
             commentField.clear();
             currentRating = 0;
             updateStarDisplay(0);
+
+            // Load lại đánh giá vừa lưu (nếu muốn cập nhật)
+            FilmRating updatedRating = filmRatingDao.getRatingByUserAndFilm(userID, selectedInvoice.getFilmId());
+            if (updatedRating != null) {
+                commentField.setText(updatedRating.getReview());
+                currentRating = updatedRating.getRating();
+                updateStarDisplay(currentRating);
+            }
         } else {
             showAlert(Alert.AlertType.ERROR, "Thất bại", "Không thể gửi đánh giá. Vui lòng thử lại.");
         }

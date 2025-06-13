@@ -4,6 +4,8 @@ import com.utc2.cinema.model.entity.FilmRating;
 import com.utc2.cinema.config.Database;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FilmRatingDao {
 
@@ -86,6 +88,30 @@ public class FilmRatingDao {
             newRating.setReview(comment);
             return insertRating(newRating);
         }
+    }
+    public static List<FilmRating> getRatingsByFilmId(int filmId) {
+        List<FilmRating> ratings = new ArrayList<>();
+        String sql = "SELECT * FROM FilmRating WHERE FilmId = ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, filmId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    FilmRating rating = new FilmRating();
+                    rating.setId(rs.getInt("Id"));
+                    rating.setUserId(rs.getInt("UserId"));
+                    rating.setFilmId(rs.getInt("FilmId"));
+                    rating.setRating(rs.getInt("Rating"));
+                    rating.setReview(rs.getString("Comment"));
+                    rating.setRatedAt(rs.getTimestamp("CreatedAt").toLocalDateTime());
+                    ratings.add(rating);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ratings;
     }
 
 }
