@@ -14,6 +14,49 @@ import static com.utc2.cinema.dao.FoodDao.getFoodComboByBillId;
 import static com.utc2.cinema.dao.SeatDao.getSeatNamesByBillId;
 
 public class BillDao {
+    public static String getBillStatus(int billId) {
+        Connection conn = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            conn = Database.getConnection();
+            String sql = "SELECT BillStatus FROM Bill WHERE Id = ?";
+            st = conn.prepareStatement(sql);
+            st.setInt(1, billId);
+            rs = st.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("BillStatus");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Database.closeConnection(conn);
+            if (st != null) try { st.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return null;
+    }
+    public static boolean updateBillStatus(int billId, String newStatus) {
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+            conn = Database.getConnection();
+            String sql = "UPDATE Bill SET BillStatus = ? WHERE Id = ?";
+            st = conn.prepareStatement(sql);
+            st.setString(1, newStatus);
+            st.setInt(2, billId);
+
+            int rowsUpdated = st.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Database.closeConnection(conn);
+            if (st != null) try { st.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return false;
+    }
 
     public static boolean insertBill(Bill bill) {
         String sql = "INSERT INTO Bill (UserId, DatePurchased, BillStatus) VALUES (?, ?, ?)";

@@ -7,13 +7,9 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-/**
- *
- * @author CTT VNPAY
- */
 public class ajaxServlet {
 
-    public static String createURL(long vnpAmount, String vnpBankCode, String language) throws ServletException, IOException {
+    public static String createURL(long vnpAmount, String vnpBankCode, String language, int billId) throws ServletException, IOException {
 
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
@@ -47,7 +43,8 @@ public class ajaxServlet {
             vnp_Params.put("vnp_Locale", "vn");
         }
 
-        vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl);
+        String returnUrlWithBillId = Config.vnp_ReturnUrl + "?billId=" + billId;
+        vnp_Params.put("vnp_ReturnUrl", returnUrlWithBillId);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
@@ -94,7 +91,7 @@ public class ajaxServlet {
 
     public static void main(String[] args) {
         try {
-            String url = ajaxServlet.createURL(1500000, "NCB", "vn");
+            String url = ajaxServlet.createURL(1500000, "NCB", "vn", 12);
             System.out.println("URL thanh toán: " + url);
             java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
         } catch (Exception e) {

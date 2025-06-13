@@ -52,7 +52,7 @@
         </Pane>
         <Pane layoutY="153.0" prefHeight="692.0" prefWidth="1160.0">
             <children>
-                <Pane fx:id="mainMenuForm" layoutY="-62.0" prefHeight="758.0" prefWidth="1160.0" styleClass="main-content">
+                <Pane fx:id="mainMenuForm" layoutY="-62.0" prefHeight="758.0" prefWidth="1160.0" styleClass="main-content" visible="false">
                     <children>
                   <Pane layoutX="59.0" layoutY="37.0" prefHeight="663.0" prefWidth="1038.0" styleClass="main-menu">
                      <children>
@@ -75,7 +75,7 @@
                               <Image url="@../Image/BTH-removebg-preview.png" />
                            </image>
                         </ImageView>
-                        <Label layoutX="776.0" layoutY="201.0" style="-fx-text-fill: white;" text="Cinema" textFill="WHITE">
+                        <Label layoutX="795.0" layoutY="202.0" style="-fx-text-fill: white;" text="Cinema" textFill="WHITE">
                            <font>
                               <Font size="25.0" />
                            </font>
@@ -181,7 +181,7 @@
                         </ScrollPane>
                     </children>
                 </Pane>
-                <Pane fx:id="buyForm" prefHeight="692.0" prefWidth="1160.0" styleClass="buy-content" visible="false">
+                <Pane fx:id="buyForm" layoutY="-58.0" prefHeight="692.0" prefWidth="1160.0" styleClass="buy-content" visible="false">
                     <AnchorPane prefHeight="706.0" prefWidth="1160.0">
                         <HBox alignment="CENTER" layoutX="0.0" prefHeight="693.0" prefWidth="1160.0" spacing="60" style="-fx-padding: 20;">
 

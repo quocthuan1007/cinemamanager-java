@@ -4,27 +4,44 @@ import com.utc2.cinema.dao.*;
 import com.utc2.cinema.model.entity.*;
 import com.utc2.cinema.service.FilmService;
 import com.utc2.cinema.service.UserService;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.web.WebView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
-import java.io.File;
-import java.io.InputStream;
+import javax.servlet.ServletException;
+import java.awt.*;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class BuyTicketController {
@@ -137,6 +154,27 @@ public class BuyTicketController {
         totalLabel.setText("Tổng tiền: 0 VNĐ");
 
     }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+    private void openURLInWebView(String url) {
+        Platform.runLater(() -> {
+            WebView webView = new WebView();
+            webView.getEngine().load(url);
+
+            Stage stage = new Stage();
+            stage.setTitle("Thanh toán");
+            stage.setScene(new Scene(webView, 1000, 700));
+            stage.show();
+        });
+    }
+    private double totalPrice;
+
     public void onPay() {
         if (selectedFilm != null) {
             String filmName = selectedFilm.getName();  // Lấy tên phim
@@ -155,7 +193,7 @@ public class BuyTicketController {
                     .collect(Collectors.joining(", "));  // Nối các tên món ăn và số lượng với dấu ", "
             // Nối các tên món ăn và số lượng với dấu ", "
             // Cập nhật combo
-            double totalPrice = total;  // Tổng tiền
+            totalPrice = total;  // Tổng tiền
             NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
             totalLabel.setText(formatter.format(totalPrice));
             // Cập nhật thông tin hóa đơn vào các Label
@@ -165,82 +203,161 @@ public class BuyTicketController {
             seatLabel.setText(seat);
             comboLabel.setText(combo);
             totalLabel.setText(totalPrice + " VNĐ");
-
             // Hiển thị Pane hóa đơn
             billPane.setVisible(true);
         }
     }
-    public void onAppcetPay() {
+
+        public void onAppcetPay() {
         try {
-            // Kiểm tra xem UserSession đã được tạo chưa
             if (UserSession.getInstance() == null) {
                 System.out.println("User session is not available.");
-                return; // Nếu session không có, dừng hàm và thông báo lỗi
+                return;
             }
 
-            // Lấy thông tin người dùng từ UserService
             User Info = UserService.getUser(UserSession.getInstance().getUserId());
             if (Info == null) {
-                CustomAlert.showError("","Có lỗi xảy ra!", "Vui lòng cập nhật thông tin cá nhân!!");
-                return; // Nếu không tìm thấy thông tin người dùng, dừng hàm
+                CustomAlert.showError("", "Có lỗi xảy ra!", "Vui lòng cập nhật thông tin cá nhân!!");
+                return;
             }
 
-            // ✅ KIỂM TRA GHẾ ĐƯỢC CHỌN
             if (selectedSeats == null || selectedSeats.isEmpty()) {
                 CustomAlert.showError("Thiếu ghế", "Bạn chưa chọn ghế!", "Vui lòng chọn ít nhất một ghế để tiếp tục.");
                 return;
             }
 
             int userId = Info.getId();
-            String billStatus = "PAID";
+            String billStatus = "PENDING";
             Date datePurchased = new Date(System.currentTimeMillis());
-
-            // Tạo đối tượng Bill
             Bill bill = new Bill(userId, datePurchased, billStatus);
             boolean isBillSaved = BillDao.insertBill(bill);
+            int billId = bill.getId();
 
-            if (isBillSaved) {
-                int billId = bill.getId();
+            int price = (int) Math.round(totalPrice);
+            String url = ajaxServlet.createURL(price, "NCB", "vn", billId);
+            System.out.println("URL thanh toán: " + url);
+            openURLInWebView(url);
+            showCountdownAlert(Info, billId);
 
-                // Xử lý các ghế đã chọn
-                for (String seatPosition : selectedSeats) {
-                    Seats seat = SeatDao.getSeatByPositionAndRoom(seatPosition, selectedMovieShow.getRoomId());
-                    if (seat == null) continue;
-
-                    SeatType seatType = SeatTypeDao.getSeatTypeById(seat.getSeatTypeId());
-                    if (seatType == null) continue;
-
-                    // Tạo đối tượng Reservation
-                    Reservation reservation = new Reservation(
-                            0,                          // id (auto increment)
-                            bill.getId(),               // billId
-                            seat.getId(),               // seatId
-                            selectedMovieShow.getId(),  // showId
-                            seatType.getCost(),         // cost
-                            seatType.getName()          // seatTypeName
-                    );
-                    ReservationDao.insertReservation(reservation);
-                }
-
-                // Xử lý các món ăn đã chọn
-                for (FoodOrder foodOrder : foodOrderList) {
-                    if (foodOrder.getCount() > 0) {
-                        // Không cần tính tổng tiền vào cơ sở dữ liệu, chỉ cần lưu các món ăn đã chọn
-                        foodOrder.setBillId(billId);
-                        FoodOrderDao.insertFoodOrder(foodOrder);
-                    }
-                }
-
-                // Hiển thị giao diện thanh toán thành công
-                paySuccessPane.setVisible(true);
-                billPane.setVisible(false);
-            } else {
-                System.out.println("Thanh toán không thành công!");
-            }
         } catch (Exception e) {
-            e.printStackTrace(); // In lỗi nếu có
+            e.printStackTrace();
             System.out.println("Đã xảy ra lỗi trong quá trình thanh toán.");
         }
+    }
+    private boolean checkPaymentStatus(int billId) {
+        try {
+            Bill bill = BillDao.getBillById(billId);
+            return bill != null && "PAID".equals(bill.getBillStatus());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private void showCountdownAlert(User info, int billId) {
+        final int COUNTDOWN_SECONDS = 60;
+        final int[] remainingSeconds = {COUNTDOWN_SECONDS};
+
+        Stage stage = new Stage();
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        Label headerLabel = new Label("Vui lòng hoàn tất thanh toán");
+        headerLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+
+        Label contentLabel = new Label("Thời gian còn lại: " + remainingSeconds[0] + " giây");
+        contentLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #333;");
+
+        VBox root = new VBox(20, headerLabel, contentLabel);
+        root.setAlignment(Pos.CENTER);
+        root.setPadding(new Insets(20));
+        root.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: #2c3e50; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle("Đang chờ thanh toán");
+        stage.show();
+
+        // Task chạy vòng lặp check DB
+        Task<Boolean> dbCheckTask = new Task<>() {
+            @Override
+            protected Boolean call() {
+                while (true) {
+                    boolean isPaid = checkPaymentStatus(billId);
+                    if (isPaid) {
+                        return true;
+                    }
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        return false;
+                    }
+                }
+            }
+        };
+
+        dbCheckTask.setOnSucceeded(event -> {
+            if (dbCheckTask.getValue()) {
+                Platform.runLater(() -> {
+                    stage.close();
+                    processReservationAfterPayment(billId);
+                });
+            }
+        });
+
+        new Thread(dbCheckTask).start();
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            remainingSeconds[0]--;
+            contentLabel.setText("Thời gian còn lại: " + remainingSeconds[0] + " giây");
+
+            if (remainingSeconds[0] <= 0) {
+                stage.close();
+                if (!dbCheckTask.isDone()) {
+                    dbCheckTask.cancel();
+                    Platform.runLater(() -> {
+                        CustomAlert.showError("Thanh toán thất bại", "", "Hết thời gian chờ thanh toán.");
+                        BillDao.updateBillStatus(billId, "FAILED");
+                    });
+                }
+            }
+        }));
+
+        timeline.setCycleCount(COUNTDOWN_SECONDS);
+        timeline.play();
+    }
+
+    private void processReservationAfterPayment(int billId) {
+        // Xử lý các ghế đã chọn
+        for (String seatPosition : selectedSeats) {
+            Seats seat = SeatDao.getSeatByPositionAndRoom(seatPosition, selectedMovieShow.getRoomId());
+            if (seat == null) continue;
+
+            SeatType seatType = SeatTypeDao.getSeatTypeById(seat.getSeatTypeId());
+            if (seatType == null) continue;
+
+            Reservation reservation = new Reservation(
+                    0,
+                    billId,
+                    seat.getId(),
+                    selectedMovieShow.getId(),
+                    seatType.getCost(),
+                    seatType.getName()
+            );
+            ReservationDao.insertReservation(reservation);
+        }
+
+        // Xử lý các món ăn đã chọn
+        for (FoodOrder foodOrder : foodOrderList) {
+            if (foodOrder.getCount() > 0) {
+                foodOrder.setBillId(billId);
+                FoodOrderDao.insertFoodOrder(foodOrder);
+            }
+        }
+
+        // Hiển thị giao diện thanh toán thành công
+        paySuccessPane.setVisible(true);
+        billPane.setVisible(false);
     }
 
     private void showAllFilms() {

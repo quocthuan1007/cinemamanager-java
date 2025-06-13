@@ -1,6 +1,8 @@
 package com.utc2.cinema.view;
 
 import com.utc2.cinema.controller.LoginController;
+import com.utc2.cinema.dao.BillDao;
+import com.utc2.cinema.model.entity.Bill;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,10 +13,7 @@ import javafx.stage.StageStyle;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -66,22 +65,28 @@ public class Login extends Application {
         SpringApplication.run(Login.class, args);
         launch(args);
     }
+
     @Controller
     public class Api {
-        @RequestMapping(value ="/vnpay_return", method = RequestMethod.GET)
+        @GetMapping("/payment-status")
         @ResponseBody
-        public String getBuilding(@RequestParam Map<String, String> apiContent) {
-            System.out.println("All parameters: " + apiContent);
+        public String checkPaymentStatus(@RequestParam("billId") int billId) {
+            String status = BillDao.getBillById(billId).getBillStatus();
+            return status;
+        }
 
-            String vnp_Amount = apiContent.get("vnp_Amount");
-            String vnp_BankCode = apiContent.get("vnp_BankCode");
-            String vnp_ResponseCode = apiContent.get("vnp_ResponseCode");
-            String vnp_TransactionStatus = apiContent.get("vnp_TransactionStatus");
-            String vnp_SecureHash = apiContent.get("vnp_SecureHash");
+        @GetMapping("/vnpay_return")
+        @ResponseBody
+        public String vnpayReturn(@RequestParam Map<String, String> params, @RequestParam("billId") int billId) {
+            System.out.println("VNPay callback về với billId = " + billId);
+            boolean updated = BillDao.updateBillStatus(billId, "PAID");
+            Bill bill = BillDao.getBillById(billId);
 
-            System.out.println("Amount: " + vnp_Amount);
-            System.out.println("Response Code: " + vnp_ResponseCode);
-            return "Hello";
+            // Nếu hóa đơn đã FAILED thì từ chối xử lý
+            if (bill == null || !"PENDING".equals(bill.getBillStatus())) {
+                return "FAIL: Có lỗi xảy ra";
+            }
+            return updated ? "SUCCESS" : "FAIL";
         }
     }
 

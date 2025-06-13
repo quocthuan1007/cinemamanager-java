@@ -42,6 +42,10 @@ public class LoginController {
             stage.setScene(scene);
             stage.setResizable(false);
             stage.show();
+            stage.setOnCloseRequest(event -> {
+                System.out.println("🔄 Shutting down...");
+                System.exit(0); // Tắt toàn bộ JVM - kill tất cả threads
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -59,6 +63,10 @@ public class LoginController {
             stage.setScene(scene);
             stage.setResizable(false);
             stage.show();
+            stage.setOnCloseRequest(event -> {
+                System.out.println("🔄 Shutting down...");
+                System.exit(0); // Tắt toàn bộ JVM - kill tất cả threads
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -259,6 +267,10 @@ public class LoginController {
                     stage.setScene(scene);
                     stage.setResizable(false);
                     stage.show();
+                    stage.setOnCloseRequest(e -> {
+                        System.out.println("🔄 Shutting down...");
+                        System.exit(0); // Tắt toàn bộ JVM - kill tất cả threads
+                    });
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
