@@ -6,6 +6,7 @@ import com.utc2.cinema.model.entity.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -110,5 +111,20 @@ public class UserDao{
         }
         return false;
     }
+    public static String getUsernameById(int userId) {
+        String query = "SELECT name FROM User WHERE id = ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("name"); // Hoặc "email" nếu bạn dùng email
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Người dùng ẩn danh";
+    }
+
 
 }

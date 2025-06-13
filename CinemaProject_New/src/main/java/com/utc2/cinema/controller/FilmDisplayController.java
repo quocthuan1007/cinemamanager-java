@@ -1,6 +1,9 @@
 package com.utc2.cinema.controller;
 
+import com.utc2.cinema.dao.FilmRatingDao;
+import com.utc2.cinema.dao.UserDao;
 import com.utc2.cinema.model.entity.Film;
+import com.utc2.cinema.model.entity.FilmRating;
 import com.utc2.cinema.service.FilmService;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -32,7 +35,7 @@ public class FilmDisplayController
         List<Film> films = filmService.getAllFilms();
         showFilms(films);
     }
-    @FXML private Pane ShowFilmDetail;
+
     @FXML private Pane buyForm;
     private ScrollPane mainShowFilm;
     private HBox moviePosters;
@@ -46,7 +49,7 @@ public class FilmDisplayController
     private Label filmContentLabel;
     private ImageView filmPosterImageView;
     private WebView webView;
-    private Film selectedFilm;
+    private static Film selectedFilm;
     @FXML
     private TextField searchField;
     @FXML
@@ -57,13 +60,16 @@ public class FilmDisplayController
     private Pane scheduleForm;
     @FXML
     private Pane introForm;
+    @FXML private Label averageRatingLabel;
+    @FXML private static VBox ratingListContainer;
+    @FXML private static ScrollPane ratingScrollPane;
 
     private BuyTicketController buyTicketController;
     public FilmDisplayController(MainMenuController mainMenu) {
         buyTicketController = mainMenu.getBuyTicketController();
         this.mainShowFilm = mainMenu.getMainShowFilm();
         this.buyForm = mainMenu.getBuyForm();
-        this.ShowFilmDetail = mainMenu.getShowfilmdetail();
+        this.showfilmdetail = mainMenu.getShowfilmDetail();
         this.moviePosters = mainMenu.getMoviePosters();
         this.moviePosters1 = mainMenu.getMoviePosters1();
         this.filmNameLabel = mainMenu.getFilmNameLabel();
@@ -81,6 +87,9 @@ public class FilmDisplayController
         this.scheduleForm=mainMenu.getScheduleForm();
         this.movieForm=mainMenu.getMovieForm();
         this.searchField=mainMenu.getSearchField();
+        this.averageRatingLabel=mainMenu.getAverageRatingLabel();
+        this.ratingListContainer=mainMenu.getRatingListContainer();
+        this.ratingScrollPane=mainMenu.getRatingScrollPane();
     }
     private HBox createMainItem(Film film) {
         String posterPath = "src/main/resources/Image/" + film.getPosterUrl() + ".png";
@@ -116,7 +125,8 @@ public class FilmDisplayController
         bookButton.setOnAction(event -> {
             selectedFilm = film;
             setFilmDetails(film);
-            ShowFilmDetail.setVisible(true);
+            showfilmdetail.setVisible(true);
+            movieForm.setVisible(false);
         });
 
         VBox infoBox = new VBox(8, nameLabel, directorLabel, bookButton);
@@ -161,7 +171,11 @@ public class FilmDisplayController
 
         return filmBox;
     }
+    @FXML
+    public void initialize() {
 
+        setupFilms();
+    }
 
     private VBox createFilmBox(Film film) {
         String posterPath = "src/main/resources/Image/" + film.getPosterUrl() + ".png"; // hoặc đường dẫn tương đối khác
@@ -189,7 +203,8 @@ public class FilmDisplayController
             setFilmDetails(film);
 
             // Hiển thị form chi tiết phim (showFilmDetail)
-            ShowFilmDetail.setVisible(true);
+            showfilmdetail.setVisible(true);
+            movieForm.setVisible(false);
         });
 
         VBox filmBox = new VBox(8, imageView, nameLabel, directorLabel, bookButton);
@@ -243,6 +258,9 @@ public class FilmDisplayController
         Image image = new Image(file.toURI().toString());
         filmPosterImageView.setImage(image);
 
+        //filmRating
+        showAverageRating(film.getId());
+
         // Hiển thị trailer
         loadTrailer(film.getTrailer());
     }
@@ -273,7 +291,7 @@ public class FilmDisplayController
         // Xử lý đặt vé ở đây
         if (selectedFilm != null) {
             // Nếu film đã được chọn, thực hiện hành động
-            ShowFilmDetail.setVisible(false);
+            showfilmdetail.setVisible(false);
             buyForm.setVisible(true);
             buyTicketController.showMovieShowOfFilm(selectedFilm.getId());
         } else {
@@ -283,7 +301,7 @@ public class FilmDisplayController
     }
     void hideForm(){
         movieForm.setVisible(false);
-        ShowFilmDetail.setVisible(false);
+        showfilmdetail.setVisible(false);
         scheduleForm.setVisible(false);
         mainMenuForm.setVisible(false);
         introForm.setVisible(false);
@@ -316,6 +334,52 @@ public class FilmDisplayController
         moviePosters.getChildren().clear();
         moviePosters1.getChildren().clear();
         showFilms(filtered);
+    }
+    private void showAverageRating(int filmId) {
+        List<FilmRating> ratings = FilmRatingDao.getRatingsByFilmId(filmId);
+
+        if (ratings.isEmpty()) {
+            averageRatingLabel.setText("Chưa có đánh giá");
+            return;
+        }
+
+        double total = 0;
+        for (FilmRating r : ratings) {
+            total += r.getRating();
+        }
+
+        double avg = total / ratings.size();
+        averageRatingLabel.setText(String.format("Đánh giá: %.1f/5 sao", avg));
+    }
+
+    @FXML
+    static void handleShowReviews() {
+
+        ratingScrollPane.setVisible(true); // HIỆN khung cuộn chứa đánh giá
+        ratingListContainer.getChildren().removeIf(node -> !(node instanceof Button));
+
+        List<FilmRating> ratings = FilmRatingDao.getRatingsByFilmId(selectedFilm.getId());
+        if (ratings.isEmpty()) {
+            ratingListContainer.getChildren().add(0, new Label("Chưa có đánh giá nào."));
+            return;
+        }
+
+        for (FilmRating rating : ratings) {
+            String username = UserDao.getUsernameById(rating.getUserId());
+            Label userLabel = new Label("👤 Người dùng: " + username);
+            Label commentLabel = new Label("📝 Nội dung: " + rating.getReview());
+            Label ratingLabel = new Label("⭐ Số sao: " + "⭐".repeat(rating.getRating()));
+
+            VBox reviewBox = new VBox(userLabel, commentLabel, ratingLabel);
+            reviewBox.setSpacing(5);
+            reviewBox.setStyle("-fx-padding: 10; -fx-background-color: white; -fx-background-radius: 5; -fx-border-color: #ccc;-fx-font-size-14px");
+            ratingListContainer.getChildren().add(0, reviewBox); // add vào đầu
+        }
+    }
+
+    @FXML
+    static void handleBackToDetail() {
+        ratingScrollPane.setVisible(false); // ẨN
     }
 
 }
