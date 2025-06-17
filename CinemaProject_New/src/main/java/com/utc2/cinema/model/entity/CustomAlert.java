@@ -3,6 +3,7 @@ package com.utc2.cinema.model.entity;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -95,5 +96,23 @@ public class CustomAlert {
         stage.setScene(scene);
         stage.setTitle(title);
         stage.showAndWait();
+    }
+    public static void showError(String title, String content) {
+        showCustomAlert(title, "", content, "alert-error", false, null);
+    }
+
+    public static void showWarning(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+    public static void showSuccess(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

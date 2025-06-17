@@ -1,360 +1,210 @@
 package com.utc2.cinema.controller;
 
-import com.utc2.cinema.dao.FilmRatingDao;
-import com.utc2.cinema.dao.UserDao;
-import com.utc2.cinema.model.entity.Film;
-import com.utc2.cinema.model.entity.FilmRating;
-import com.utc2.cinema.service.FilmService;
-import javafx.animation.TranslateTransition;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.utc2.cinema.config.Database;
+import com.utc2.cinema.dao.ThongKeDao;
+import com.utc2.cinema.model.entity.CustomAlert;
+import com.utc2.cinema.model.entity.StatisticalFilm;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
-import javafx.util.Duration;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.List;
+import java.io.FileOutputStream;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.*;
 
-public class test
-{
+public class test {
 
-    private final FilmService filmService = new FilmService();
+    @FXML private Pane thongKePane;
+    @FXML private TableView<StatisticalFilm> tableThongKe;
+    @FXML private TableColumn<StatisticalFilm, String> filmNameColumn;
+    @FXML private TableColumn<StatisticalFilm, Integer> showCountColumn;
+    @FXML private TableColumn<StatisticalFilm, Integer> seatSoldColumn;
+    @FXML private TableColumn<StatisticalFilm, Double> totalRevenueColumn;
+    @FXML private DatePicker batDauThongKe;
+    @FXML private DatePicker ketThucThongKe;
+    @FXML private TextField searchFilmField;
+    @FXML private Label totalShowLabel;
+    @FXML private Label totalSeatsLabel;
+    @FXML private Label totalRevenueLabel;
+    @FXML private PieChart pieChart;
+    @FXML private BarChart<String, Number> barChart;
 
-    public void setupFilms() {
-        List<Film> films = filmService.getAllFilms();
-        showFilms(films);
-    }
-    @FXML private Pane ShowFilmDetail;
-    @FXML private Pane buyForm;
-    @FXML private ScrollPane mainShowFilm;
-    @FXML private HBox moviePosters;
-    @FXML private FlowPane moviePosters1;
-    @FXML private Label filmNameLabel;
-    @FXML private Label filmDirectorLabel;
-    @FXML private Label filmActorLabel ;
-    @FXML private Label filmReleaseDateLabel;
-    @FXML private Label filmLengthLabel;
-    @FXML private Label filmAgeLimitLabel;
-    @FXML private Label filmContentLabel;
-    @FXML private ImageView filmPosterImageView;
-    @FXML private WebView webView;
-    private Film selectedFilm;
-    @FXML
-    private TextField searchField;
-    @FXML
-    private Pane movieForm;
-    @FXML Pane mainMenuForm;
-    @FXML Pane showfilmdetail;
-    @FXML
-    private Pane scheduleForm;
-    @FXML
-    private Pane introForm;
-    @FXML
-    private Label averageRatingLabel;
-    @FXML private VBox ratingListContainer;
-    @FXML private ScrollPane ratingScrollPane;
-
-    private BuyTicketController buyTicketController;
-
-    private HBox createMainItem(Film film) {
-        String posterPath = "src/main/resources/Image/" + film.getPosterUrl() + ".png";
-        File file = new File(posterPath);
-        if (!file.exists()) {
-            System.out.println("Không tìm thấy ảnh: " + posterPath);
-            return null;
-        }
-
-        // Ảnh phim bên trái
-        Image image = new Image(file.toURI().toString());
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(120);
-        imageView.setFitHeight(170);
-        imageView.setPreserveRatio(false);
-        imageView.setSmooth(true);
-        imageView.setStyle("-fx-background-radius: 10 0 0 10;");
-
-        // Thông tin phim bên phải
-        Label nameLabel = new Label(film.getName());
-        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #222;");
-
-        Label directorLabel = new Label("Đạo diễn: " + film.getDirector());
-        directorLabel.setStyle("-fx-text-fill: #555; -fx-font-size: 13px;");
-
-        Button bookButton = new Button("Đặt vé");
-        bookButton.setStyle(
-                "-fx-background-color: #61C17E;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-background-radius: 5;"
-        );
-        bookButton.setOnAction(event -> {
-            selectedFilm = film;
-            setFilmDetails(film);
-            ShowFilmDetail.setVisible(true);
-            movieForm.setVisible(false);
-        });
-
-        VBox infoBox = new VBox(8, nameLabel, directorLabel, bookButton);
-        infoBox.setAlignment(Pos.CENTER_LEFT);
-        infoBox.setPadding(new Insets(10));
-        infoBox.setPrefWidth(260); // phần thông tin rộng hơn để tổng vừa 400px
-
-        HBox filmBox = new HBox(imageView, infoBox);
-        filmBox.setSpacing(12);
-        filmBox.setPadding(new Insets(10));
-        filmBox.setPrefWidth(360);
-        filmBox.setMaxWidth(360);
-        filmBox.setMinWidth(360);
-
-
-        filmBox.setStyle(
-                "-fx-background-radius: 10;" +
-                        "-fx-border-radius: 10;" +
-                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0.2, 0, 2);"
-        );
-        String[] arr = {"#8181AB", "#D6957B", "#907EC2","#566ED9","#B55959"};
-        int randomIndex = (int)(Math.random() * arr.length);
-        filmBox.setStyle("-fx-background-color: " + arr[randomIndex] + ";");
-
-        TranslateTransition hoverUp = new TranslateTransition(Duration.millis(200), filmBox);
-        hoverUp.setToY(-10);  // Dịch lên 10px so với vị trí gốc
-
-        TranslateTransition hoverDown = new TranslateTransition(Duration.millis(200), filmBox);
-        hoverDown.setToY(0);  // Trả về vị trí ban đầu (0)
-
-        filmBox.setOnMouseEntered(e -> {
-            hoverDown.stop();
-            hoverUp.playFromStart();
-        });
-
-        filmBox.setOnMouseExited(e -> {
-            hoverUp.stop();
-            hoverDown.playFromStart();
-        });
-
-
-
-        return filmBox;
-    }
-    @FXML
     public void initialize() {
+        filmNameColumn.setCellValueFactory(cell -> cell.getValue().filmNameProperty());
+        showCountColumn.setCellValueFactory(cell -> cell.getValue().showCountProperty().asObject());
+        seatSoldColumn.setCellValueFactory(cell -> cell.getValue().seatSoldProperty().asObject());
+        totalRevenueColumn.setCellValueFactory(cell -> cell.getValue().totalRevenueProperty().asObject());
 
-        setupFilms();
+        // ⏰ Mặc định chọn ngày từ 1 tháng trước đến hôm nay
+        LocalDate now = LocalDate.now();
+        batDauThongKe.setValue(now.minusMonths(1));
+        ketThucThongKe.setValue(now);
+
+        // 📊 Tải dữ liệu mặc định luôn khi khởi động
+        loadData(null);
     }
 
-    private VBox createFilmBox(Film film) {
-        String posterPath = "src/main/resources/Image/" + film.getPosterUrl() + ".png"; // hoặc đường dẫn tương đối khác
-        File file = new File(posterPath);
-        if (!file.exists()) {
-            System.out.println("Không tìm thấy ảnh: " + posterPath);
-            return null;
+
+    @FXML
+    public void onSearchThongKe(ActionEvent event) {
+        loadData(null);
+    }
+
+    @FXML
+    public void onSearchFilmRevenue(ActionEvent event) {
+        String keyword = searchFilmField.getText().trim();
+        loadData(keyword);
+    }
+
+    private void loadData(String keyword) {
+        LocalDate startDate = batDauThongKe.getValue();
+        LocalDate endDate = ketThucThongKe.getValue();
+
+        if (startDate == null || endDate == null) {
+            CustomAlert.showError("Lỗi", "Vui lòng chọn ngày bắt đầu và kết thúc!");
+            return;
         }
-        Image image = new Image(file.toURI().toString());
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(160);
-        imageView.setFitHeight(190);
-        imageView.setPreserveRatio(true);
-        imageView.setSmooth(true);
+        if (!startDate.isBefore(endDate)) {
+            CustomAlert.showError("Lỗi", "Ngày bắt đầu phải trước ngày kết thúc!");
+            return;
+        }
 
-        Label nameLabel = new Label(film.getName());
-        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black;");
-        Label directorLabel = new Label("Đạo diễn: " + film.getDirector());
-        directorLabel.setStyle("-fx-text-fill: black;");
-        Button bookButton = new Button("🎟️ Đặt vé");
-        bookButton.setStyle("-fx-background-color: #61C17E; -fx-text-fill: white;");
-        bookButton.setOnAction(event -> {
-            selectedFilm = film;
-            System.out.println("Hiển thị thông tin chi tiết cho phim: " + film.getName());
-            setFilmDetails(film);
+        try {
+            ThongKeDao dao = new ThongKeDao();
+            List<StatisticalFilm> list = dao.getFilmStatistics(startDate, endDate, keyword);
+            ObservableList<StatisticalFilm> data = FXCollections.observableArrayList(list);
 
-            // Hiển thị form chi tiết phim (showFilmDetail)
-            ShowFilmDetail.setVisible(true);
-        });
+            int totalShows = data.stream().mapToInt(StatisticalFilm::getShowCount).sum();
+            int totalSeats = data.stream().mapToInt(StatisticalFilm::getSeatSold).sum();
+            double totalRevenue = data.stream().mapToDouble(StatisticalFilm::getTotalRevenue).sum();
 
-        VBox filmBox = new VBox(8, imageView, nameLabel, directorLabel, bookButton);
-        filmBox.setAlignment(Pos.CENTER);
-        filmBox.setPadding(new Insets(10));
-        filmBox.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #61C17E; -fx-border-radius: 3; -fx-background-radius: 3;");
-        filmBox.setPrefWidth(180);
-        FlowPane.setMargin(filmBox, new Insets(10, 12, 10,12));
-        return filmBox;
+            tableThongKe.setItems(data);
+            totalShowLabel.setText(totalShows + " suất chiếu");
+            totalSeatsLabel.setText(totalSeats + " vé đã bán");
+            totalRevenueLabel.setText(String.format("%.0f VNĐ", totalRevenue));
+
+            updateCharts(data);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            CustomAlert.showError("Lỗi", "Không thể truy xuất dữ liệu thống kê.");
+        }
     }
 
+    private void updateCharts(List<StatisticalFilm> data) {
+        pieChart.getData().clear();
+        barChart.getData().clear();
 
-    private void showFilms(List<Film> films) {
-        int count = 0;
-        for (Film film : films) {
-            try {
-                HBox filmBox1 = createMainItem(film);
-                VBox filmBox2 = createFilmBox(film);
+        XYChart.Series<String, Number> seatSeries = new XYChart.Series<>();
+        seatSeries.setName("Vé bán");
 
-                if (filmBox2 != null) moviePosters1.getChildren().add(filmBox2);
-//                if (count <= 3)
-//                {
-//                    if (filmBox1 != null) moviePosters.getChildren().add(filmBox1);
-//                    count++;
-//                }
-//                moviePosters.setSpacing(20);
-            } catch (Exception e) {
-                e.printStackTrace();
+        XYChart.Series<String, Number> showSeries = new XYChart.Series<>();
+        showSeries.setName("Suất chiếu");
+
+        int otherShows = 0, otherSeats = 0;
+        int limit = Math.min(4, data.size());
+
+        for (int i = 0; i < data.size(); i++) {
+            StatisticalFilm sf = data.get(i);
+            if (i < 4) {
+                seatSeries.getData().add(new XYChart.Data<>(sf.getFilmName(), sf.getSeatSold()));
+                showSeries.getData().add(new XYChart.Data<>(sf.getFilmName(), sf.getShowCount()));
+                pieChart.getData().add(new PieChart.Data(sf.getFilmName(), sf.getSeatSold()));
+            } else {
+                otherSeats += sf.getSeatSold();
+                otherShows += sf.getShowCount();
             }
         }
-    }
 
-    public void setFilmDetails(Film film) {
-        filmNameLabel.setText("Tên phim: " + film.getName());
-        filmDirectorLabel.setText("Đạo diễn: " + film.getDirector());
-        filmActorLabel.setText("Diễn viên: " + film.getActor());
-        filmReleaseDateLabel.setText("Ngày phát hành: " + film.getReleaseDate());
-        filmLengthLabel.setText("Thời lượng: " + film.getLength() + " phút");
-        filmAgeLimitLabel.setText("Giới hạn tuổi: " + film.getAgeLimit() + "+");
-
-        // Nội dung phim
-        filmContentLabel.setText(film.getContent());
-
-        // Cập nhật ảnh poster của phim
-        String posterPath = "src/main/resources/Image/" + film.getPosterUrl() + ".png"; // Ví dụ: "inception"
-        File file = new File(posterPath);
-        if (!file.exists()) {
-            System.out.println("Không tìm thấy ảnh: " + posterPath);
-            return;
-        }
-        Image image = new Image(file.toURI().toString());
-        filmPosterImageView.setImage(image);
-
-        //filmRating
-        showAverageRating(film.getId());
-
-        // Hiển thị trailer
-        loadTrailer(film.getTrailer());
-    }
-
-    private void loadTrailer(String youtubeUrl) {
-        if (youtubeUrl == null || youtubeUrl.isEmpty()) return;
-
-        // Chuyển từ dạng https://www.youtube.com/watch?v=xxx thành https://www.youtube.com/embed/xxx
-        String embedUrl = youtubeUrl.replace("watch?v=", "embed/");
-
-        // Giảm kích thước và căn giữa iframe bên trong WebView
-        String embedHTML = """
-        <html>
-            <body style='margin:0px;padding:0px;display:flex;justify-content:center;align-items:center;height:100%%;'>
-                <iframe width='100%%' height='100%%' 
-                        src='%s?autoplay=1'
-                        frameborder='0' allow='autoplay; encrypted-media' allowfullscreen>
-                </iframe>
-            </body>
-        </html>
-        """.formatted(embedUrl);
-
-        WebEngine webEngine = webView.getEngine();
-        webEngine.loadContent(embedHTML);
-    }
-    @FXML
-    void handleBookTicket() {
-        // Xử lý đặt vé ở đây
-        if (selectedFilm != null) {
-            // Nếu film đã được chọn, thực hiện hành động
-            ShowFilmDetail.setVisible(false);
-            buyForm.setVisible(true);
-            buyTicketController.showMovieShowOfFilm(selectedFilm.getId());
-        } else {
-            // Nếu không có phim được chọn, có thể hiển thị thông báo hoặc xử lý gì đó
-            System.out.println("Không có phim nào được chọn!");
-        }
-    }
-    void hideForm(){
-        movieForm.setVisible(false);
-        ShowFilmDetail.setVisible(false);
-        scheduleForm.setVisible(false);
-        mainMenuForm.setVisible(false);
-        introForm.setVisible(false);
-        buyForm.setVisible(false);
-    }
-    @FXML
-    void onSearchFilmByName() {
-        String keyword = searchField.getText().trim().toLowerCase();
-
-        // Ẩn tất cả các pane không liên quan
-        hideForm();
-
-        // Hiện pane chứa danh sách film
-        movieForm.setVisible(true);
-
-        // Nếu ô tìm kiếm rỗng thì hiển thị tất cả film
-        if (keyword.isEmpty()) {
-            moviePosters.getChildren().clear();
-            moviePosters1.getChildren().clear();
-            setupFilms();
-            return;
+        if (data.size() > 4) {
+            seatSeries.getData().add(new XYChart.Data<>("Khác", otherSeats));
+            showSeries.getData().add(new XYChart.Data<>("Khác", otherShows));
+            pieChart.getData().add(new PieChart.Data("Khác", otherSeats));
         }
 
-        // Lọc danh sách phim
-        List<Film> filtered = filmService.getAllFilms().stream()
-                .filter(f -> f.getName().toLowerCase().contains(keyword))
-                .toList();
-
-//        // Hiển thị phim đã lọc
-        moviePosters.getChildren().clear();
-        moviePosters1.getChildren().clear();
-        showFilms(filtered);
-    }
-    private void showAverageRating(int filmId) {
-        List<FilmRating> ratings = FilmRatingDao.getRatingsByFilmId(filmId);
-
-        if (ratings.isEmpty()) {
-            averageRatingLabel.setText("Chưa có đánh giá");
-            return;
-        }
-
-        double total = 0;
-        for (FilmRating r : ratings) {
-            total += r.getRating();
-        }
-
-        double avg = total / ratings.size();
-        averageRatingLabel.setText(String.format("Đánh giá: %.1f/5 sao", avg));
+        barChart.getData().addAll(seatSeries, showSeries);
     }
 
     @FXML
-    private void handleShowReviews() {
-        ratingScrollPane.setVisible(true); // HIỆN khung cuộn chứa đánh giá
-        ratingListContainer.getChildren().removeIf(node -> !(node instanceof Button));
+    public void onExportPdf(ActionEvent event) {
+        LocalDate startDate = batDauThongKe.getValue();
+        LocalDate endDate = ketThucThongKe.getValue();
 
-        List<FilmRating> ratings = FilmRatingDao.getRatingsByFilmId(selectedFilm.getId());
-        if (ratings.isEmpty()) {
-            ratingListContainer.getChildren().add(0, new Label("Chưa có đánh giá nào."));
+        if (startDate == null || endDate == null) {
+            CustomAlert.showError("Lỗi", "Vui lòng chọn ngày bắt đầu và kết thúc!");
             return;
         }
 
-        for (FilmRating rating : ratings) {
-            String username = UserDao.getUsernameById(rating.getUserId());
-            Label userLabel = new Label("👤 Người dùng: " + username);
-            Label commentLabel = new Label("📝 Nội dung: " + rating.getReview());
-            Label ratingLabel = new Label("⭐ Số sao: " + "⭐".repeat(rating.getRating()));
+        List<StatisticalFilm> data = tableThongKe.getItems();
+        if (data == null || data.isEmpty()) {
+            CustomAlert.showWarning("Cảnh báo", "Không có dữ liệu để xuất.");
+            return;
+        }
 
-            VBox reviewBox = new VBox(userLabel, commentLabel, ratingLabel);
-            reviewBox.setSpacing(5);
-            reviewBox.setStyle("-fx-padding: 10; -fx-background-color: white; -fx-background-radius: 5; -fx-border-color: #ccc;");
-            ratingListContainer.getChildren().add(0, reviewBox); // add vào đầu
+        try {
+            Document document = new Document(PageSize.A4);
+            String filePath = "ThongKe_DoanhThu.pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(filePath));
+            document.open();
+
+            Paragraph title = new Paragraph("BÁO CÁO THỐNG KÊ DOANH THU PHIM\n",
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18));
+            title.setAlignment(Paragraph.ALIGN_CENTER);
+            document.add(title);
+
+            Paragraph dateInfo = new Paragraph("Từ ngày " + startDate + " đến ngày " + endDate + "\n\n");
+            dateInfo.setAlignment(Paragraph.ALIGN_CENTER);
+            document.add(dateInfo);
+
+            PdfPTable table = new PdfPTable(4);
+            table.setWidths(new int[]{3, 2, 2, 3});
+            table.setWidthPercentage(100);
+
+            table.addCell("Tên phim");
+            table.addCell("Số suất chiếu");
+            table.addCell("Số vé bán");
+            table.addCell("Doanh thu");
+
+            for (StatisticalFilm sf : data) {
+                table.addCell(sf.getFilmName());
+                table.addCell(String.valueOf(sf.getShowCount()));
+                table.addCell(String.valueOf(sf.getSeatSold()));
+                table.addCell(String.format("%.0f VNĐ", sf.getTotalRevenue()));
+            }
+
+            document.add(table);
+
+            Paragraph totals = new Paragraph(String.format(
+                    "\nTổng cộng: %d suất chiếu, %d vé bán, %.0f VNĐ doanh thu",
+                    data.stream().mapToInt(StatisticalFilm::getShowCount).sum(),
+                    data.stream().mapToInt(StatisticalFilm::getSeatSold).sum(),
+                    data.stream().mapToDouble(StatisticalFilm::getTotalRevenue).sum()
+            ));
+            document.add(totals);
+
+            document.close();
+
+            CustomAlert.showSuccess("Thành công", "Xuất file PDF thành công:\n" + filePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+            CustomAlert.showError("Lỗi", "Không thể xuất file PDF.");
         }
     }
-
     @FXML
-    private void handleBackToDetail() {
-        ratingScrollPane.setVisible(false); // ẨN
+    public void onExportExcel(ActionEvent event) {
+        // TODO: Viết logic xuất Excel tại đây
+        System.out.println("Xuất Excel được nhấn");
     }
-
-
 }

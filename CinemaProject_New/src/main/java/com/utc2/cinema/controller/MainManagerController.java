@@ -930,26 +930,26 @@ public class MainManagerController implements Initializable {
     private DatePicker batDauThongKe;
 
     @FXML
-    private TableColumn<Statistical, String> dateThongKe;
+    private TableColumn<StatisticalFilm, String> dateThongKe;
 
     @FXML
-    private TableColumn<Statistical, Float> foodThongKe;
+    private TableColumn<StatisticalFilm, Float> foodThongKe;
 
     @FXML
     private DatePicker ketThucThongKe;
 
     @FXML
-    private TableColumn<Statistical, Float> sumThongKe;
+    private TableColumn<StatisticalFilm, Float> sumThongKe;
 
     @FXML
-    private TableColumn<Statistical, Float> ticketThongKe;
+    private TableColumn<StatisticalFilm, Float> ticketThongKe;
 
     @FXML
     private Button timThongKe;
     @FXML
-    private TableView<Statistical> tableThongKe;
+    private TableView<StatisticalFilm> tableThongKe;
 
-    public TableView<Statistical> getTableThongKe() {
+    public TableView<StatisticalFilm> getTableThongKe() {
         return tableThongKe;
     }
 
@@ -957,11 +957,11 @@ public class MainManagerController implements Initializable {
         return timThongKe;
     }
 
-    public TableColumn<Statistical, Float> getTicketThongKe() {
+    public TableColumn<StatisticalFilm, Float> getTicketThongKe() {
         return ticketThongKe;
     }
 
-    public TableColumn<Statistical, Float> getSumThongKe() {
+    public TableColumn<StatisticalFilm, Float> getSumThongKe() {
         return sumThongKe;
     }
 
@@ -969,13 +969,7 @@ public class MainManagerController implements Initializable {
         return ketThucThongKe;
     }
 
-    public TableColumn<Statistical, Float> getFoodThongKe() {
-        return foodThongKe;
-    }
 
-    public TableColumn<Statistical, String> getDateThongKe() {
-        return dateThongKe;
-    }
 
     public DatePicker getBatDauThongKe() {
         return batDauThongKe;
@@ -986,4 +980,13 @@ public class MainManagerController implements Initializable {
     void onSearchThongKe(ActionEvent e) {
         statisticalController.onSearchThongKe(e);
     }
+
+    public TableColumn<StatisticalFilm, String> getDateThongKe() {
+        return dateThongKe;
+    }
+
+    public TableColumn<StatisticalFilm, Float> getFoodThongKe() {
+        return foodThongKe;
+    }
+
 }

@@ -189,4 +189,96 @@
     -fx-background-color: #61C17E; /* nền xanh lá toàn dòng */
     -fx-text-fill: #1B2830;        /* chữ màu đậm */
 }
+/* ===== CUSTOM TABLEVIEW ===== */
+.custom-table {
+    -fx-background-color: transparent;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 10;
+}
+
+.custom-table .column-header-background {
+    -fx-background-color: #3B4B5C;
+    -fx-background-radius: 12 12 0 0;
+    -fx-border-color: transparent;
+}
+
+.custom-table .column-header {
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER-LEFT;
+}
+.custom-table .column-header .label {
+    -fx-text-fill: white; /* màu trắng rõ ràng */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.custom-table .table-row-cell {
+    -fx-background-color: #2C3E50;
+    -fx-cell-size: 40px; /* Chiều cao dòng ổn định */
+}
+
+.custom-table .table-row-cell:filled:hover {
+    -fx-background-color: #3A506B;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.custom-table .table-row-cell:selected {
+    -fx-background-color: #5C677D;
+    -fx-text-fill: white;
+}
+
+.custom-table .table-cell {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-padding: 6 12;
+    -fx-alignment: CENTER-LEFT;
+    -fx-border-color: transparent;
+}
+
+/* Scroll bar tinh chỉnh */
+.custom-table .scroll-bar:vertical,
+.custom-table .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.custom-table .scroll-bar .thumb {
+    -fx-background-color: #5C677D;
+    -fx-background-radius: 5;
+}
+
+.custom-table .scroll-bar .track {
+    -fx-background-color: #2C3E50;
+}
+//HOA DON//
+.pane-bill{
+    -fx-background-color: linear-gradient(to top left, #1B2830, #474D67);
+    -fx-background-radius: 10;
+}
+.button-onback,
+.button-rating,
+.button-detail {
+    -fx-background-color: #3B4B5C;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-background-radius: 10;
+    -fx-font-weight: bold;
+}
+
+.button-onback:hover,
+.button-rating:hover,
+.button-detail:hover {
+    -fx-background-color: #61C17E;
+    -fx-text-fill: white;
+}
+
+
+
+
+
 

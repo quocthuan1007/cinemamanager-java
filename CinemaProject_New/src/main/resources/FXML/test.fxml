@@ -1,85 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.web.WebView?>
 
 <AnchorPane maxHeight="740.0" maxWidth="1160.0" prefHeight="740.0" prefWidth="1160.0" stylesheets="@../CSS/MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.test">
 
-    <Pane fx:id="movieForm" layoutY="-37.0" prefHeight="650.0" prefWidth="1160.0" styleClass="movie-content">
+    <Pane fx:id="thongKePane" layoutX="46.0" layoutY="12.0" prefHeight="740.0" prefWidth="1160.0" style="-fx-background-color: #FFFFFF;">
         <children>
-            <ScrollPane layoutX="160.0" layoutY="87.0" prefHeight="646.0" prefWidth="840.0">
-                <content>
-                    <FlowPane fx:id="moviePosters1" prefHeight="10.0" prefWidth="831.0" />
-                </content>
-            </ScrollPane>
+         <Pane layoutX="-3.0" prefHeight="339.0" prefWidth="1143.0" styleClass="label-main">
+            <children>
+      
+                        <!-- Bộ lọc thời gian -->
+                  <Label layoutX="14.0" layoutY="13.0" text="Ngày bắt đầu:" textFill="WHITE" />
+                  <DatePicker fx:id="batDauThongKe" layoutX="107.0" layoutY="9.0" />
+                  <Label layoutX="364.0" layoutY="15.0" text="Ngày kết thúc:" textFill="WHITE" />
+                  <DatePicker fx:id="ketThucThongKe" layoutX="453.0" layoutY="9.0" />
+                  <Button fx:id="timThongKe" layoutX="655.0" layoutY="6.0" mnemonicParsing="false" onAction="#onSearchThongKe" styleClass="button-detail" text="Tìm" />
+                  <Button fx:id="exportPDFButton" layoutX="1046.0" layoutY="84.0" onAction="#onExportPdf" styleClass="button-detail" text="Xuất PDF" />
+      
+                        <!-- Thanh tìm kiếm theo tên phim -->
+                  <Label layoutX="817.0" layoutY="13.0" text="Tìm phim:" textFill="WHITE" />
+                  <TextField fx:id="searchFilmField" layoutX="886.0" layoutY="9.0" promptText="Nhập tên phim..." />
+                  <Button fx:id="searchFilmButton" layoutX="1045.0" layoutY="12.0" onAction="#onSearchFilmRevenue" styleClass="button-detail" text="Tìm phim" />
+      
+                  <!-- VBox chứa bảng và tổng -->
+                  <VBox spacing="10.0" />
+   
+                                  <!-- Hàng tổng -->
+                   <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="278.0" prefHeight="30.0" prefWidth="787.0" spacing="20.0">
+                       <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Tổng:" textFill="WHITE" />
+                       <Label fx:id="totalShowLabel" text="0 suất chiếu" textFill="WHITE" />
+                       <Label fx:id="totalSeatsLabel" text="0 ghế đã đặt" textFill="WHITE" />
+                       <Label fx:id="totalRevenueLabel" text="0 VNĐ" textFill="WHITE" />
+                   </HBox>
+                   <!-- Bảng thống kê doanh thu phim -->
+                   <TableView fx:id="tableThongKe" layoutX="2.0" layoutY="45.0" prefHeight="250.0" prefWidth="810.0" styleClass="custom-table">
+                       <columns>
+                           <TableColumn fx:id="filmNameColumn" prefWidth="250.0" text="Tên phim" />
+                           <TableColumn fx:id="showCountColumn" prefWidth="170.0" text="Số suất chiếu" />
+                           <TableColumn fx:id="seatSoldColumn" prefWidth="170.0" text="Số ghế đã đặt" />
+                           <TableColumn fx:id="totalRevenueColumn" prefWidth="210.0" text="Tổng doanh thu" />
+                       </columns>
+                   </TableView>
+                <Button
+                        fx:id="exportExcelButton"
+                        layoutX="1046.0"
+                        layoutY="154.0"
+                        onAction="#onExportExcel"
+                        styleClass="button-detail"
+                        text="Xuất Excel" />
+            </children>
+         </Pane>
+
+            <!-- Biểu đồ cột -->
+            <BarChart fx:id="barChart" layoutX="50.0" layoutY="423.0" prefHeight="297.0" prefWidth="500.0" title="Top 4 phim  khác - Suất chiếu / Ghế bán">
+                <xAxis>
+                    <CategoryAxis fx:id="barChartXAxis" label="Phim" />
+                </xAxis>
+                <yAxis>
+                    <NumberAxis fx:id="barChartYAxis" label="Số lượng" />
+                </yAxis>
+            </BarChart>
+
+            <!-- Biểu đồ tròn -->
+            <PieChart fx:id="pieChart" layoutX="595.0" layoutY="423.0" prefHeight="278.0" prefWidth="500.0" title="Tỷ lệ ghế bán ra theo phim" />
         </children>
     </Pane>
-
-    <Pane fx:id="ShowFilmDetail" layoutY="-37.0" prefHeight="650.0" prefWidth="1160.0" styleClass="showfilm-content" visible="false">
-        <VBox layoutX="100.0" layoutY="0" spacing="20">
-
-            <HBox spacing="20">
-                <ImageView fx:id="filmPosterImageView" fitHeight="270.0" fitWidth="200.0" preserveRatio="true" />
-
-                <VBox prefWidth="300.0" spacing="10">
-                    <Label fx:id="filmNameLabel">
-                        <font><Font size="24.0" /></font>
-                    </Label>
-                    <Label fx:id="filmDirectorLabel"><font><Font size="18.0" /></font></Label>
-                    <Label fx:id="filmActorLabel"><font><Font size="16.0" /></font></Label>
-                    <Label fx:id="filmTypeLabel"><font><Font size="16.0" /></font></Label>
-                    <Label fx:id="filmReleaseDateLabel"><font><Font size="16.0" /></font></Label>
-                    <Label fx:id="filmLengthLabel"><font><Font size="16.0" /></font></Label>
-                    <Label fx:id="filmAgeLimitLabel"><font><Font size="16.0" /></font></Label>
-
-                    <Button fx:id="bookTicketButton" onAction="#handleBookTicket" prefWidth="200.0" styleClass="redButton" text="Đặt Vé" />
-                </VBox>
-
-                <VBox alignment="TOP_CENTER" prefHeight="270.0" prefWidth="349.0">
-                    <children>
-                        <Label alignment="CENTER" text="Nội dung:"><font><Font size="14.0" /></font></Label>
-                        <Label fx:id="filmContentLabel" prefHeight="86.0" prefWidth="300.0" style="-fx-font-size: 14px; -fx-font-family: 'Arial'; -fx-padding: 10px; -fx-background-color: #3B4B5C; -fx-background-radius: 10; -fx-text-fill: white;" wrapText="true" />
-
-                        <!-- Label trung bình sao -->
-                        <Label fx:id="averageRatingLabel" style="-fx-font-size: 14px; -fx-text-fill: black;" text="Đánh giá: 0.0/5 sao" />
-
-                        <!-- Nút xem đánh giá -->
-                        <Button fx:id="showReviewsButton" alignment="CENTER" onAction="#handleShowReviews" prefHeight="45.0" prefWidth="151.0" styleClass="button-detail" text="Xem đánh giá">
-                            <VBox.margin><Insets top="100.0" /></VBox.margin>
-                        </Button>
-                    </children>
-                </VBox>
-            </HBox>
-
-            <!-- Phần trailer -->
-            <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Trailer:" />
-            <WebView fx:id="webView" prefHeight="296.0" prefWidth="913.0" />
-
-
-
-        </VBox>
-        <!-- ScrollPane chứa đánh giá -->
-        <ScrollPane fx:id="ratingScrollPane" layoutX="306.0" layoutY="200.0" prefHeight="400.0" prefWidth="541.0" style="-fx-background-radius: 10; -fx-background-color: white;" visible="false">
-            <content>
-                <VBox fx:id="ratingListContainer" prefHeight="61.0" prefWidth="139.0" spacing="10" style="-fx-background-color: #f0f0f0; -fx-padding: 10px; -fx-background-radius: 10;">
-                    <!-- Danh sách đánh giá sẽ được thêm động từ controller -->
-
-                    <!-- Nút quay lại -->
-                    <Button fx:id="backToDetailButton" onAction="#handleBackToDetail" prefHeight="37.0" prefWidth="105.0" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold; -fx-alignment: center;" text="Quay lại" />
-                </VBox>
-            </content>
-        </ScrollPane>
-    </Pane>
-
-
 </AnchorPane>
