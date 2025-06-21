@@ -1,10 +1,13 @@
 package com.utc2.cinema.controller;
 
+import com.utc2.cinema.dao.AccountDao;
 import com.utc2.cinema.dao.FilmDao;
 import com.utc2.cinema.dao.MovieShowDao;
 import com.utc2.cinema.model.entity.*;
+import com.utc2.cinema.service.AccountService;
 import com.utc2.cinema.service.FilmService;
 import com.utc2.cinema.service.UserService;
+import com.utc2.cinema.utils.PasswordUtils;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -616,6 +619,8 @@ public class MainMenuController implements Initializable {
         mainShowFilm.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);  // Tắt thanh cuộn dọc
         mainShowFilm.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
+
+
     }
     ///  confirm-info
     @FXML
@@ -720,5 +725,40 @@ public class MainMenuController implements Initializable {
             showfilmdetail.setVisible(true);
         }
     }
+/// //////change pass
+    public Pane getChangePasswordForm() {
+        return changePasswordForm;
+    }
 
+    public TextField getOldPasswordField() {
+        return oldPasswordField;
+    }
+
+    public TextField getNewPasswordField() {
+        return newPasswordField;
+    }
+
+    public TextField getConfirmPasswordField() {
+        return confirmPasswordField;
+    }
+
+    @FXML
+    private Pane changePasswordForm;
+
+    @FXML
+    private TextField oldPasswordField;
+
+    @FXML
+    private TextField newPasswordField;
+
+    @FXML
+    private TextField confirmPasswordField;
+    @FXML
+    public void onCloseConfirmChangePassword(ActionEvent actionEvent) {
+        userConfirmController.onCloseConfirmChangePassword(actionEvent);
+    }
+    @FXML
+    public void onConfirmChangePassword(ActionEvent event) {
+        userConfirmController.onConfirmChangePassword(event);
+    }
 }

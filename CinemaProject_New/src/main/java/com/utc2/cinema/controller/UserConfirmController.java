@@ -1,19 +1,24 @@
 package com.utc2.cinema.controller;
 
+import com.utc2.cinema.dao.AccountDao;
 import com.utc2.cinema.model.entity.CustomAlert;
 import com.utc2.cinema.model.entity.User;
 import com.utc2.cinema.model.entity.UserSession;
+import com.utc2.cinema.service.AccountService;
 import com.utc2.cinema.service.UserService;
+import com.utc2.cinema.utils.PasswordUtils;
 import com.utc2.cinema.utils.ValidationUtils;
 import com.utc2.cinema.view.Login;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -31,6 +36,10 @@ public class UserConfirmController {
     private DatePicker birthConfirm;
     private TextField addressConfirm;
     private Pane infoForm;
+    private Pane changePasswordForm;
+    private TextField oldPasswordField;
+    private TextField newPasswordField;
+    private TextField confirmPasswordField;
     public UserConfirmController(MainMenuController mainMenu)
     {
         this.userMain = mainMenu.getUserMain();
@@ -40,6 +49,10 @@ public class UserConfirmController {
         this.birthConfirm = mainMenu.getBirthConfirm();
         this.addressConfirm = mainMenu.getAddressConfirm();
         this.infoForm = mainMenu.getInfoContainer();
+        this.changePasswordForm = mainMenu.getChangePasswordForm();
+        this.oldPasswordField=mainMenu.getOldPasswordField();
+        this.newPasswordField=mainMenu.getNewPasswordField();
+        this.confirmPasswordField=mainMenu.getConfirmPasswordField();
     }
     public void setupUser() {
         if (UserSession.getInstance() != null) {
@@ -102,18 +115,21 @@ public class UserConfirmController {
         }
 
         infoMenu.getItems().clear();
-        Label editLabel = new Label("✏️  Thông tin");
-        Label logoutLabel = new Label("🚪  Đăng xuất");
+        Label editLabel = new Label("* Thông tin");
+        Label resetPass = new Label("* Đổi mật khẩu");
+        Label logoutLabel = new Label("* Đăng xuất");
 
         String labelStyle = "-fx-padding: 8 16; -fx-font-size: 14; -fx-text-fill: #333;";
+        resetPass.setStyle(labelStyle);
         editLabel.setStyle(labelStyle);
         logoutLabel.setStyle(labelStyle);
 
         CustomMenuItem editItem = new CustomMenuItem(editLabel, true);
+        CustomMenuItem resetItem = new CustomMenuItem(resetPass, true);
         CustomMenuItem logoutItem = new CustomMenuItem(logoutLabel, true);
 
         editLabel.setOnMouseClicked(e -> {
-            if (!infoForm.isVisible()) {
+            if (!infoForm.isVisible() && !changePasswordForm.isVisible()) {
                 loadUserInfo();
                 FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), infoForm);
                 fadeIn.setFromValue(0);
@@ -123,7 +139,21 @@ public class UserConfirmController {
             }
             infoMenu.hide();
         });
+        resetPass.setOnMouseClicked(e -> {
+            if (!changePasswordForm.isVisible() && !infoForm.isVisible()) {
+                oldPasswordField.clear();
+                newPasswordField.clear();
+                confirmPasswordField.clear();
 
+                FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), changePasswordForm);
+                fadeIn.setFromValue(0);
+                fadeIn.setToValue(1);
+                fadeIn.play();
+
+                changePasswordForm.setVisible(true);
+            }
+            infoMenu.hide();
+        });
         logoutLabel.setOnMouseClicked(e -> {
             Stage parentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             parentStage.close();
@@ -158,7 +188,7 @@ public class UserConfirmController {
             infoMenu.hide();
         });
 
-        infoMenu.getItems().addAll(editItem, logoutItem);
+        infoMenu.getItems().addAll(editItem,resetItem, logoutItem);
         infoMenu.show((Node) event.getSource(), event.getScreenX(), event.getScreenY());
     }
 
@@ -229,6 +259,50 @@ public class UserConfirmController {
         } catch (Exception e) {
             e.printStackTrace();
             CustomAlert.showError("","Có lỗi xảy ra!", "Lưu thất bại!");
+        }
+    }
+
+    public void onConfirmChangePassword(ActionEvent event) {
+        String oldPass = oldPasswordField.getText().trim();
+        String newPass = newPasswordField.getText().trim();
+        String confirmPass = confirmPasswordField.getText().trim();
+
+        if (oldPass.isEmpty() || newPass.isEmpty() || confirmPass.isEmpty()) {
+            CustomAlert.showError("", "Lỗi", "Vui lòng nhập đầy đủ thông tin.");
+            return;
+        }
+
+        if (!newPass.equals(confirmPass)) {
+            CustomAlert.showError("", "Lỗi", "Mật khẩu mới và xác nhận không khớp.");
+            return;
+        }
+
+        if (!PasswordUtils.isValidPassword(newPass)) {
+            CustomAlert.showError("", "Lỗi", "Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
+            return;
+        }
+
+        String emailInput = UserSession.getInstance().getEmail();
+
+        String storedHash = AccountService.getPassword(emailInput);
+        if (storedHash == null || !PasswordUtils.checkPassword(oldPass, storedHash)) {
+            CustomAlert.showError("", "Lỗi", "Mật khẩu cũ không chính xác.");
+            return;
+        }
+        boolean success = AccountDao.updatePasswordByEmail(emailInput, newPass);
+        if (success) {
+            CustomAlert.showInfo("", "Thành công", "Đổi mật khẩu thành công!");
+            changePasswordForm.setVisible(false);
+        } else {
+            CustomAlert.showError("", "Lỗi", "Không thể cập nhật mật khẩu.");
+        }
+    }
+
+    @FXML
+    public void onCloseConfirmChangePassword(ActionEvent actionEvent) {
+        if(changePasswordForm.isVisible())
+        {
+            changePasswordForm.setVisible(false);
         }
     }
 }

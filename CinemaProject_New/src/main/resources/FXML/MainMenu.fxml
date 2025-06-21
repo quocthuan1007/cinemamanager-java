@@ -23,8 +23,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane maxHeight="740.0" maxWidth="1160.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1160.0" stylesheets="@../CSS/MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.MainMenuController">
-
+<AnchorPane fx:id="hilo" maxHeight="740.0" maxWidth="1160.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1160.0" stylesheets="@../CSS/MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.utc2.cinema.controller.MainMenuController">
     <children>
         <Pane>
             <children>
@@ -471,46 +470,50 @@
                 </Pane>
             </children>
         </Pane>
-        <Pane fx:id="infoContainer" layoutX="444.0" layoutY="138.0" prefHeight="491.0" prefWidth="343.0" styleClass="confirm-info" visible="false">
+
+        <Pane fx:id="changePasswordForm" layoutX="363.0" layoutY="198.0" opacity="1" prefHeight="371.0" prefWidth="433.0" style="-fx-background-color: #ffffff; -fx-border-color: #007bff; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 20; -fx-background-radius: 10;" visible="false">
+         <children>
+            <VBox alignment="CENTER" layoutX="67.0" layoutY="51.0" prefHeight="270.0" prefWidth="300.0" spacing="15">
+               <children>
+                  <Label style="-fx-font-size: 20px; -fx-text-fill: #007bff; -fx-font-weight: bold;" text="🔒 Đổi Mật Khẩu" />
+                  <TextField fx:id="oldPasswordField" promptText="Mật khẩu cũ" style="-fx-background-radius: 6; -fx-font-size: 14px; -fx-padding: 10;" />
+                  <TextField fx:id="newPasswordField" promptText="Mật khẩu mới" style="-fx-background-radius: 6; -fx-font-size: 14px; -fx-padding: 10;" />
+                  <TextField fx:id="confirmPasswordField" promptText="Xác nhận mật khẩu" style="-fx-background-radius: 6; -fx-font-size: 14px; -fx-padding: 10;" />
+                  <Button onAction="#onConfirmChangePassword" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20; -fx-background-radius: 6;" text="✅ Xác nhận" />
+               </children>
+            </VBox>
+            <Button layoutX="352.0" layoutY="6.0" onAction="#onCloseConfirmChangePassword" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20; -fx-background-radius: 6;" text="Đóng" />
+         </children>
+      </Pane>
+        <Pane fx:id="infoContainer" layoutX="401.0" layoutY="85.0" prefHeight="570.0" prefWidth="357.0" style="-fx-background-color: #ffffff; -fx-border-color: #007bff; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 20;" visible="false">
             <children>
-                <Button fx:id="saveConfirm" layoutX="146.0" layoutY="460.0" mnemonicParsing="false" onAction="#onPlayerSaveInfoConfirm" styleClass="button1" text="Save" />
-                <Button fx:id="closeConfirm" layoutX="292.0" layoutY="-3.0" minWidth="40.0" mnemonicParsing="false" onAction="#onPlayerCloseInfoConfirm" prefHeight="34.0" prefWidth="40.0" styleClass="button1" text="X" />
-                <TextField fx:id="nameConfirm" layoutX="52.0" layoutY="68.0" prefHeight="47.0" prefWidth="240.0" styleClass="text-field-info" />
-                <Label layoutX="125.0" layoutY="32.0" text="Họ và tên">
-                    <font>
-                        <Font size="22.0" />
-                    </font>
-                </Label>
-                <Label layoutX="125.0" layoutY="117.0" text="Giới tính">
-                    <font>
-                        <Font size="22.0" />
-                    </font>
-                </Label>
-                <Label layoutX="118.0" layoutY="203.0" text="Ngày sinh">
-                    <font>
-                        <Font size="22.0" />
-                    </font>
-                </Label>
-                <Label layoutX="122.0" layoutY="282.0" text="Điện thoại">
-                    <font>
-                        <Font size="22.0" />
-                    </font>
-                </Label>
-                <Label layoutX="140.0" layoutY="360.0" text="Địa chỉ">
-                    <font>
-                        <Font size="22.0" />
-                    </font>
-                </Label>
-                <TextField fx:id="numberConfirm" layoutX="53.0" layoutY="314.0" prefHeight="46.0" prefWidth="240.0" styleClass="text-field-info" />
-                <TextField fx:id="addressConfirm" layoutX="53.0" layoutY="392.0" prefHeight="46.0" prefWidth="240.0" styleClass="text-field-info" />
-                <ChoiceBox fx:id="genderConfirm" layoutX="108.0" layoutY="149.0" prefHeight="10.0" prefWidth="129.0" styleClass="text-field-info" />
-                <DatePicker fx:id="birthConfirm" layoutX="64.0" layoutY="235.0" styleClass="text-field-info" />
+                <VBox alignment="CENTER" layoutX="46.0" layoutY="65.0" prefHeight="491.0" prefWidth="266.0" spacing="15">
+                    <children>
+                        <Label style="-fx-font-size: 20px; -fx-text-fill: #007bff; -fx-font-weight: bold;" text="📄 Xác nhận thông tin" />
+
+                              <Label style="-fx-font-size: 14px;" text="Họ và tên" />
+                        <TextField fx:id="nameConfirm" prefWidth="282.0" promptText="Nhập họ tên" style="-fx-background-radius: 6; -fx-font-size: 14px; -fx-padding: 10;" />
+
+                              <Label style="-fx-font-size: 14px;" text="Giới tính" />
+                        <ChoiceBox fx:id="genderConfirm" prefWidth="200.0" style="-fx-background-radius: 6; -fx-font-size: 14px;" />
+
+                              <Label style="-fx-font-size: 14px;" text="Ngày sinh" />
+                        <DatePicker fx:id="birthConfirm" prefWidth="200.0" style="-fx-background-radius: 6; -fx-font-size: 14px;" />
+
+                              <Label style="-fx-font-size: 14px;" text="Điện thoại" />
+                        <TextField fx:id="numberConfirm" promptText="Nhập số điện thoại" style="-fx-background-radius: 6; -fx-font-size: 14px; -fx-padding: 10;" />
+
+                              <Label style="-fx-font-size: 14px;" text="Địa chỉ" />
+                        <TextField fx:id="addressConfirm" promptText="Nhập địa chỉ" style="-fx-background-radius: 6; -fx-font-size: 14px; -fx-padding: 10;" />
+
+                              <Button fx:id="saveConfirm" onAction="#onPlayerSaveInfoConfirm" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20; -fx-background-radius: 6;" text="✅ Lưu" />
+                    </children>
+                </VBox>
+
+                      <!-- Nút đóng góc phải -->
+                <Button fx:id="closeConfirm" layoutX="280.0" layoutY="8.0" onAction="#onPlayerCloseInfoConfirm" prefHeight="34.0" prefWidth="64.0" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px; -fx-background-radius: 6;" text="Đóng" />
             </children>
         </Pane>
-
-
-
-
 
 
 

@@ -5,7 +5,7 @@ import jakarta.mail.internet.*;
 import java.util.Properties;
 
 public class EmailOTP {
-    public static void sendEmail(String to, String otp) throws Exception {
+    public static void sendEmail(String to, String title, String content) throws Exception {
         String from = "minecraftchannel510@gmail.com";
         String password = "mlzf kxqe glfw wfcp";
 
@@ -22,17 +22,28 @@ public class EmailOTP {
         });
 
         Message msg = new MimeMessage(session);
-        msg.setFrom(new InternetAddress(from));
+        msg.setFrom(new InternetAddress(from, "BTH-CINEMA"));
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-        msg.setSubject("Mã xác thực OTP");
-        msg.setText("Mã xác thực của bạn là: " + otp);
+        msg.setSubject(title);
+
+        String htmlContent = "<!DOCTYPE html>"
+                + "<html><body style='font-family:Arial,sans-serif;'>"
+                + "<div style='max-width:500px;" +
+                "margin:auto;" +
+                "padding:20px;" +
+                "border:1px solid #ccc;" +
+                "border-radius:10px;" +
+                "background-color:#61C17E;'>"
+                + "<h2 style='color:#333;'>Thông báo từ hệ thống</h2>"
+                + "<p style='font-size:20px;color:#FFFFFF;'>" + content + "</p>"
+                + "<br><p style='font-size:14px;color:#999;'>Nếu bạn không yêu cầu, hãy bỏ qua email này.</p>"
+                + "</div></body></html>";
+
+        msg.setContent(htmlContent, "text/html; charset=UTF-8");
 
         Transport.send(msg);
-        System.out.println("Đã gửi OTP qua email.");
+        System.out.println("Email đã gửi tới " + to);
     }
-    public static void main(String[] args) throws Exception {
-        String otp = CreateOTP.generateOTP(6);
-        EmailOTP.sendEmail("lebao.071295@gmail.com", otp);
-    }
+
 }
 

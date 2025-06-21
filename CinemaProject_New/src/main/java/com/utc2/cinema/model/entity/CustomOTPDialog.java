@@ -16,12 +16,12 @@ public class CustomOTPDialog {
     private static double xOffset = 0;
     private static double yOffset = 0;
 
-    public static Optional<String> show(String email) {
+    public static Optional<String> show(String email, String info) {
         Stage stage = new Stage();
         stage.initStyle(StageStyle.UNDECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
 
-        Label headerLabel = new Label("OTP đã được gửi đến:");
+        Label headerLabel = new Label(info);
         headerLabel.getStyleClass().add("header-panel");
 
         Label emailLabel = new Label(email);
