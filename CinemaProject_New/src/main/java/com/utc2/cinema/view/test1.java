@@ -18,7 +18,7 @@ public class test1 extends Application {
     public void start(Stage primaryStage) {
         try {
             // Tải tệp FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/test.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Login.fxml"));
             // Tải nội dung từ FXML và thiết lập giao diện
             AnchorPane root = loader.load();
 

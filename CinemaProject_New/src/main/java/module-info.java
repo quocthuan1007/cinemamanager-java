@@ -12,6 +12,8 @@ module CinemaProject {
 
     requires spring.context;
 
+    requires org.apache.poi.poi;
+    requires org.apache.poi.ooxml;
 
     requires gson;
     requires java.sql;

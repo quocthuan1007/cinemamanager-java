@@ -14,6 +14,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -948,45 +950,71 @@ public class MainManagerController implements Initializable {
     private Button timThongKe;
     @FXML
     private TableView<StatisticalFilm> tableThongKe;
+    @FXML private TableColumn<StatisticalFilm, Integer> showCountColumn;
+    @FXML private TableColumn<StatisticalFilm, Integer> seatSoldColumn;
+    @FXML private TableColumn<StatisticalFilm, Double> totalRevenueColumn;
+    @FXML private TableColumn<StatisticalFilm, String> filmNameColumn;
+    @FXML private TextField searchFilmField;
+    @FXML private Label totalShowLabel;
+    @FXML private Label totalSeatsLabel;
+    @FXML private Label totalRevenueLabel;
+    @FXML private PieChart pieChart;
+    @FXML private BarChart<String, Number> barChart;
 
     public TableView<StatisticalFilm> getTableThongKe() {
         return tableThongKe;
     }
 
-    public Button getTimThongKe() {
-        return timThongKe;
+    public TableColumn<StatisticalFilm, String> getFilmNameColumn() {
+        return filmNameColumn;
     }
 
-    public TableColumn<StatisticalFilm, Float> getTicketThongKe() {
-        return ticketThongKe;
+    public TableColumn<StatisticalFilm, Integer> getShowCountColumn() {
+        return showCountColumn;
     }
 
-    public TableColumn<StatisticalFilm, Float> getSumThongKe() {
-        return sumThongKe;
+    public TableColumn<StatisticalFilm, Integer> getSeatSoldColumn() {
+        return seatSoldColumn;
+    }
+
+    public TableColumn<StatisticalFilm, Double> getTotalRevenueColumn() {
+        return totalRevenueColumn;
+    }
+
+    public DatePicker getBatDauThongKe() {
+        return batDauThongKe;
     }
 
     public DatePicker getKetThucThongKe() {
         return ketThucThongKe;
     }
 
-
-
-    public DatePicker getBatDauThongKe() {
-        return batDauThongKe;
+    public TextField getSearchFilmField() {
+        return searchFilmField;
     }
 
-
-    @FXML
-    void onSearchThongKe(ActionEvent e) {
-        statisticalController.onSearchThongKe(e);
+    public Label getTotalShowLabel() {
+        return totalShowLabel;
     }
 
-    public TableColumn<StatisticalFilm, String> getDateThongKe() {
-        return dateThongKe;
+    public Label getTotalSeatsLabel() {
+        return totalSeatsLabel;
     }
 
-    public TableColumn<StatisticalFilm, Float> getFoodThongKe() {
-        return foodThongKe;
+    public Label getTotalRevenueLabel() {
+        return totalRevenueLabel;
     }
 
+    public PieChart getPieChart() {
+        return pieChart;
+    }
+
+    public BarChart<String, Number> getBarChart() {
+        return barChart;
+    }
+    ActionEvent event;
+    @FXML void onSearchThongKe(){ManageStatisticalController.onSearchThongKe(event);}
+    @FXML void onSearchFilmRevenue(){ManageStatisticalController.onSearchFilmRevenue(event);}
+    @FXML void onExportPdf(){ManageStatisticalController.onExportPdf(event);}
+    @FXML void onExportExcel(){ManageStatisticalController.onExportExcel(event);}
 }

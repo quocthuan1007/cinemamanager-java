@@ -160,6 +160,61 @@ public class ReservationDao {
 
         return reservedSeats;
     }
+    public List<String> getSeatsByShowIdAndStatus(int showId, String status) {
+        List<String> seats = new ArrayList<>();
+        String sql = """
+        SELECT s.position FROM Reservation r
+        JOIN Seats s ON r.SeatId = s.Id
+        WHERE r.ShowId = ? AND r.SeatStatus = ?
+        """;
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, showId);
+            stmt.setString(2, status);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                seats.add(rs.getString("position"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return seats;
+    }
+    public boolean insertChoosingReservation(int showId, int seatId, int cost, String seatTypeName) {
+        String sql = """
+        INSERT INTO Reservation (SeatId, ShowId, Cost, SeatTypeName, SeatStatus)
+        VALUES (?, ?, ?, ?, 'CHOOSING')
+    """;
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, seatId);
+            stmt.setInt(2, showId);
+            stmt.setInt(3, cost);
+            stmt.setString(4, seatTypeName);
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean deleteChoosingReservation(int seatId, int showId) {
+        String sql = "DELETE FROM Reservation WHERE SeatId = ? AND ShowId = ? AND SeatStatus = 'CHOOSING'";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, seatId);
+            stmt.setInt(2, showId);
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 
 
 }

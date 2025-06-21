@@ -14,6 +14,7 @@ public class Reservation {
     private int showId;
     private int cost;
     private String seatTypeName;
+    private String status;
 
     public Reservation(int id, int billId, int seatId, int showId, int cost, String seatTypeName) {
         this.id = id;
@@ -22,6 +23,15 @@ public class Reservation {
         this.showId = showId;
         this.cost = cost;
         this.seatTypeName = seatTypeName;
+    }
+    public Reservation(int id, int billId, int seatId, int showId, int cost, String seatTypeName, String status) {
+        this.id = id;
+        this.billId = billId;
+        this.seatId = seatId;
+        this.showId = showId;
+        this.cost = cost;
+        this.seatTypeName = seatTypeName;
+        this.status = status;
     }
 
     public int getId() {

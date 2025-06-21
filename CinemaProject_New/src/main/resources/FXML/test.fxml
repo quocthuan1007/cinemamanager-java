@@ -19,26 +19,44 @@
 
     <Pane fx:id="thongKePane" layoutX="46.0" layoutY="12.0" prefHeight="740.0" prefWidth="1160.0" style="-fx-background-color: #FFFFFF;">
         <children>
-         <Pane layoutX="-3.0" prefHeight="339.0" prefWidth="1143.0" styleClass="label-main">
+         <Pane layoutX="5.0" layoutY="10.0" prefHeight="339.0" prefWidth="1143.0" styleClass="label-main">
             <children>
       
-                        <!-- Bộ lọc thời gian -->
+                              <!-- Biểu đồ cột -->
+                <BarChart fx:id="barChart" layoutX="50.0" layoutY="50.0" prefHeight="300.0" prefWidth="500.0" title="Top 4 phim khác - Suất chiếu / Ghế bán">
+                    <xAxis>
+                        <CategoryAxis fx:id="barChartXAxis" label="Phim" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis fx:id="barChartYAxis" label="Số lượng" styleClass="chart-title" />
+                    </yAxis>
+                </BarChart>
+
+                <!-- Biểu đồ tròn -->
+                <PieChart fx:id="pieChart" layoutX="650.0" layoutY="50.0" prefHeight="300.0" prefWidth="500.0" title="Tỷ lệ ghế bán ra theo phim" />
+
+            </children>
+         </Pane>
+         <Pane layoutY="382.0" prefHeight="339.0" prefWidth="1143.0" styleClass="label-main">
+            <children>
+      
+                                          <!-- Bộ lọc thời gian -->
                   <Label layoutX="14.0" layoutY="13.0" text="Ngày bắt đầu:" textFill="WHITE" />
                   <DatePicker fx:id="batDauThongKe" layoutX="107.0" layoutY="9.0" />
                   <Label layoutX="364.0" layoutY="15.0" text="Ngày kết thúc:" textFill="WHITE" />
                   <DatePicker fx:id="ketThucThongKe" layoutX="453.0" layoutY="9.0" />
                   <Button fx:id="timThongKe" layoutX="655.0" layoutY="6.0" mnemonicParsing="false" onAction="#onSearchThongKe" styleClass="button-detail" text="Tìm" />
-                  <Button fx:id="exportPDFButton" layoutX="1046.0" layoutY="84.0" onAction="#onExportPdf" styleClass="button-detail" text="Xuất PDF" />
+                  <Button fx:id="exportPDFButton" layoutX="1046.0" layoutY="94.0" onAction="#onExportPdf" styleClass="button-detail" text="Xuất PDF" />
       
-                        <!-- Thanh tìm kiếm theo tên phim -->
+                                          <!-- Thanh tìm kiếm theo tên phim -->
                   <Label layoutX="817.0" layoutY="13.0" text="Tìm phim:" textFill="WHITE" />
                   <TextField fx:id="searchFilmField" layoutX="886.0" layoutY="9.0" promptText="Nhập tên phim..." />
                   <Button fx:id="searchFilmButton" layoutX="1045.0" layoutY="12.0" onAction="#onSearchFilmRevenue" styleClass="button-detail" text="Tìm phim" />
       
-                  <!-- VBox chứa bảng và tổng -->
+                                    <!-- VBox chứa bảng và tổng -->
                   <VBox spacing="10.0" />
-   
-                                  <!-- Hàng tổng -->
+      
+                                                 <!-- Hàng tổng -->
                    <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="278.0" prefHeight="30.0" prefWidth="787.0" spacing="20.0">
                        <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Tổng:" textFill="WHITE" />
                        <Label fx:id="totalShowLabel" text="0 suất chiếu" textFill="WHITE" />
@@ -54,28 +72,9 @@
                            <TableColumn fx:id="totalRevenueColumn" prefWidth="210.0" text="Tổng doanh thu" />
                        </columns>
                    </TableView>
-                <Button
-                        fx:id="exportExcelButton"
-                        layoutX="1046.0"
-                        layoutY="154.0"
-                        onAction="#onExportExcel"
-                        styleClass="button-detail"
-                        text="Xuất Excel" />
+                <Button fx:id="exportExcelButton" layoutX="1043.0" layoutY="154.0" onAction="#onExportExcel" styleClass="button-detail" text="Xuất Excel" />
             </children>
          </Pane>
-
-            <!-- Biểu đồ cột -->
-            <BarChart fx:id="barChart" layoutX="50.0" layoutY="423.0" prefHeight="297.0" prefWidth="500.0" title="Top 4 phim  khác - Suất chiếu / Ghế bán">
-                <xAxis>
-                    <CategoryAxis fx:id="barChartXAxis" label="Phim" />
-                </xAxis>
-                <yAxis>
-                    <NumberAxis fx:id="barChartYAxis" label="Số lượng" />
-                </yAxis>
-            </BarChart>
-
-            <!-- Biểu đồ tròn -->
-            <PieChart fx:id="pieChart" layoutX="595.0" layoutY="423.0" prefHeight="278.0" prefWidth="500.0" title="Tỷ lệ ghế bán ra theo phim" />
         </children>
     </Pane>
 </AnchorPane>

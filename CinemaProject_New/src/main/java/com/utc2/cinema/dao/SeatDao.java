@@ -26,7 +26,8 @@ public class SeatDao {
                         rs.getInt("id"),
                         rs.getString("position"),
                         rs.getInt("roomId"),
-                        rs.getInt("seatTypeId")
+                        rs.getInt("seatTypeId"),
+                        rs.getString("seatStatus")
                 );
             }
         } catch (Exception e) {
@@ -82,7 +83,7 @@ public class SeatDao {
                 seat.setPosition(rs.getString("position"));
                 seat.setRoomId(rs.getInt("roomId"));
                 seat.setSeatTypeId(rs.getInt("seatTypeId"));
-
+                seat.setSeatStatus(rs.getString("seatStatus"));
                 seatsList.add(seat);
             }
         } catch (SQLException e) {
@@ -110,4 +111,20 @@ public class SeatDao {
 
         return seatList;
     }
+    public static boolean updateSeatStatus(String position, int roomId, String newStatus) {
+        String sql = "UPDATE Seats SET seatStatus = ? WHERE position = ? AND roomId = ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, newStatus);  // ví dụ: "CHOOSING"
+            stmt.setString(2, position);   // ví dụ: "A1"
+            stmt.setInt(3, roomId);
+
+            return stmt.executeUpdate() > 0;  // trả true nếu cập nhật thành công
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

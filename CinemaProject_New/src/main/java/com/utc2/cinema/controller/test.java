@@ -6,7 +6,6 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.utc2.cinema.config.Database;
 import com.utc2.cinema.dao.ThongKeDao;
 import com.utc2.cinema.model.entity.CustomAlert;
 import com.utc2.cinema.model.entity.StatisticalFilm;
@@ -19,6 +18,10 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileOutputStream;
 import java.sql.SQLException;
@@ -204,7 +207,69 @@ public class test {
     }
     @FXML
     public void onExportExcel(ActionEvent event) {
-        // TODO: Viết logic xuất Excel tại đây
-        System.out.println("Xuất Excel được nhấn");
+        List<StatisticalFilm> data = tableThongKe.getItems();
+        if (data == null || data.isEmpty()) {
+            CustomAlert.showWarning("Cảnh báo", "Không có dữ liệu để xuất.");
+            return;
+        }
+
+        LocalDate startDate = batDauThongKe.getValue();
+        LocalDate endDate = ketThucThongKe.getValue();
+
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Thống kê phim");
+
+            int rowIndex = 0;
+
+            // Dòng thông tin ngày thống kê
+            Row infoRow = sheet.createRow(rowIndex++);
+            infoRow.createCell(0).setCellValue("Thống kê từ ngày " + startDate + " đến " + endDate);
+
+            // Dòng trống
+            rowIndex++;
+
+            // Tiêu đề cột
+            Row header = sheet.createRow(rowIndex++);
+            header.createCell(0).setCellValue("Tên phim");
+            header.createCell(1).setCellValue("Số suất chiếu");
+            header.createCell(2).setCellValue("Số vé bán");
+            header.createCell(3).setCellValue("Doanh thu (VNĐ)");
+
+            // Dữ liệu từng dòng
+            double totalRevenue = 0;
+            for (StatisticalFilm sf : data) {
+                Row row = sheet.createRow(rowIndex++);
+                row.createCell(0).setCellValue(sf.getFilmName());
+                row.createCell(1).setCellValue(sf.getShowCount());
+                row.createCell(2).setCellValue(sf.getSeatSold());
+                row.createCell(3).setCellValue(sf.getTotalRevenue());
+                totalRevenue += sf.getTotalRevenue();
+            }
+
+            // Dòng trống
+            rowIndex++;
+
+            // Dòng tổng doanh thu
+            Row totalRow = sheet.createRow(rowIndex);
+            totalRow.createCell(2).setCellValue("Tổng doanh thu:");
+            totalRow.createCell(3).setCellValue(String.format("%.0f", totalRevenue));
+
+            // Tự động co giãn cột
+            for (int i = 0; i < 4; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            // Lưu file
+            String filePath = "ThongKe_DoanhThu.xlsx";
+            try (FileOutputStream out = new FileOutputStream(filePath)) {
+                workbook.write(out);
+            }
+
+            CustomAlert.showSuccess("Thành công", "Xuất file Excel thành công:\n" + filePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+            CustomAlert.showError("Lỗi", "Không thể xuất file Excel.");
+        }
     }
+
 }

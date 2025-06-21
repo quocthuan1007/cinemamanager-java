@@ -2,6 +2,10 @@
 
 <?import java.lang.String?>
 <?import javafx.collections.FXCollections?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ComboBox?>
@@ -45,22 +49,66 @@
     <!-- Phần nội dung thay đổi -->
     <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
-         <Pane fx:id="thongKePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
+         <Pane fx:id="thongKePane" layoutX="46.0" layoutY="12.0" prefHeight="740.0" prefWidth="1160.0" style="-fx-background-color: #FFFFFF;">
             <children>
-               <DatePicker fx:id="batDauThongKe" layoutX="122.0" layoutY="132.0" />
-               <DatePicker fx:id="ketThucThongKe" layoutX="318.0" layoutY="132.0" />
-               <Button fx:id="timThongKe" layoutX="518.0" layoutY="132.0" mnemonicParsing="false" onAction="#onSearchThongKe" text="Tìm" />
-               <TableView fx:id="tableThongKe" layoutX="124.0" layoutY="173.0" prefHeight="517.0" prefWidth="702.0">
-                 <columns>
-                   <TableColumn fx:id="dateThongKe" prefWidth="191.20001220703125" text="Ngày" />
-                   <TableColumn fx:id="foodThongKe" prefWidth="163.99996948242188" text="Tiền đồ ăn" />
-                     <TableColumn fx:id="ticketThongKe" prefWidth="159.99993896484375" text="Tiền đặt vé" />
-                     <TableColumn fx:id="sumThongKe" prefWidth="186.4000244140625" text="Tổng tiền" />
-                 </columns>
-               </TableView>
-               <Label layoutX="122.0" layoutY="112.0" text="Ngày bắt đầu" />
-               <Label layoutX="318.0" layoutY="112.0" text="Ngày kết thúc" />
-            </children></Pane>
+               <Pane layoutX="5.0" layoutY="10.0" prefHeight="339.0" prefWidth="1143.0" styleClass="label-main">
+                  <children>
+
+                     <!-- Biểu đồ cột -->
+                     <BarChart fx:id="barChart" layoutX="14.0" layoutY="50.0" prefHeight="300.0" prefWidth="500.0" title="Top 4 phim khác - Suất chiếu / Ghế bán">
+                        <xAxis>
+                           <CategoryAxis fx:id="barChartXAxis" label="Phim" />
+                        </xAxis>
+                        <yAxis>
+                           <NumberAxis fx:id="barChartYAxis" label="Số lượng" styleClass="chart-title" />
+                        </yAxis>
+                     </BarChart>
+
+                     <!-- Biểu đồ tròn -->
+                     <PieChart fx:id="pieChart" layoutX="514.0" layoutY="50.0" prefHeight="300.0" prefWidth="409.0" title="Tỷ lệ ghế bán ra theo phim" />
+
+                  </children>
+               </Pane>
+               <Pane layoutY="382.0" prefHeight="339.0" prefWidth="1143.0" styleClass="label-main">
+                  <children>
+
+                     <!-- Bộ lọc thời gian -->
+                     <Label layoutX="14.0" layoutY="13.0" text="Ngày bắt đầu:" textFill="WHITE" />
+                     <DatePicker fx:id="batDauThongKe" layoutX="107.0" layoutY="9.0" />
+                     <Label layoutX="364.0" layoutY="15.0" text="Ngày kết thúc:" textFill="WHITE" />
+                     <DatePicker fx:id="ketThucThongKe" layoutX="453.0" layoutY="9.0" />
+                     <Button fx:id="timThongKe" layoutX="655.0" layoutY="6.0" mnemonicParsing="false" onAction="#onSearchThongKe" styleClass="button-detail" text="Tìm" />
+                     <Button fx:id="exportPDFButton" layoutX="829.0" layoutY="104.0" onAction="#onExportPdf" styleClass="button-detail" text="Xuất PDF" />
+
+                     <!-- Thanh tìm kiếm theo tên phim -->
+                     <Label layoutX="747.0" layoutY="15.0" text="Tìm phim:" textFill="WHITE" />
+                     <TextField fx:id="searchFilmField" layoutX="800.0" layoutY="11.0" prefHeight="23.0" prefWidth="137.0" promptText="Nhập tên phim..." />
+                     <Button fx:id="searchFilmButton" layoutX="828.0" layoutY="57.0" onAction="#onSearchFilmRevenue" styleClass="button-detail" text="Tìm phim" />
+
+                     <!-- VBox chứa bảng và tổng -->
+                     <VBox spacing="10.0" />
+                     <!-- Bảng thống kê doanh thu phim -->
+                     <TableView fx:id="tableThongKe" layoutX="2.0" layoutY="45.0" prefHeight="300.0" prefWidth="810.0" styleClass="custom-table">
+                        <columns>
+                           <TableColumn fx:id="filmNameColumn" prefWidth="250.0" text="Tên phim" />
+                           <TableColumn fx:id="showCountColumn" prefWidth="170.0" text="Số suất chiếu" />
+                           <TableColumn fx:id="seatSoldColumn" prefWidth="170.0" text="Số ghế đã đặt" />
+                           <TableColumn fx:id="totalRevenueColumn" prefWidth="210.0" text="Tổng doanh thu" />
+                        </columns>
+                     </TableView>
+                     <Button fx:id="exportExcelButton" layoutX="825.0" layoutY="154.0" onAction="#onExportExcel" styleClass="button-detail" text="Xuất Excel" />
+                  </children>
+               </Pane>
+
+               <!-- Hàng tổng -->
+               <HBox alignment="CENTER_LEFT" layoutX="5.0" layoutY="736.0" prefHeight="30.0" prefWidth="787.0" spacing="20.0">
+                  <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Tổng:" textFill="WHITE" />
+                  <Label fx:id="totalShowLabel" text="0 suất chiếu" textFill="WHITE" />
+                  <Label fx:id="totalSeatsLabel" text="0 ghế đã đặt" textFill="WHITE" />
+                  <Label fx:id="totalRevenueLabel" text="0 VNĐ" textFill="WHITE" />
+               </HBox>
+            </children>
+         </Pane>
          <Pane fx:id="foodPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" visible="false">
             <children>
                <Pane fx:id="foodForm" layoutX="651.0" layoutY="122.0" prefHeight="315.0" prefWidth="282.0" style="-fx-background-color: #EEEEEE;" visible="false">

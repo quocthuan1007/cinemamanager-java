@@ -101,3 +101,6 @@
     -fx-background-color: #61C17E;
     -fx-text-fill: white;
 }
+.chart-title {
+    -fx-text-fill: white;
+}

@@ -12,6 +12,7 @@ public class Seats {
     private String position;
     private int roomId;
     private int seatTypeId;
+    private String seatStatus;
 
     public Seats(int id, String position, int roomId, int seatTypeId) {
         this.id = id;
@@ -25,6 +26,14 @@ public class Seats {
         this.roomId = roomId;
         this.seatTypeId = seatTypeId;
     }
+    public Seats(int id, String position, int roomId, int seatTypeId, String seatStatus) {
+        this.id = id;
+        this.position = position;
+        this.roomId = roomId;
+        this.seatTypeId = seatTypeId;
+        this.seatStatus = seatStatus;
+    }
+
     public Seats() {
         // constructor mặc định
     }
@@ -59,5 +68,13 @@ public class Seats {
 
     public void setSeatTypeId(int seatTypeId) {
         this.seatTypeId = seatTypeId;
+    }
+
+    public String getSeatStatus() {
+        return seatStatus;
+    }
+
+    public void setSeatStatus(String seatStatus) {
+        this.seatStatus = seatStatus;
     }
 }

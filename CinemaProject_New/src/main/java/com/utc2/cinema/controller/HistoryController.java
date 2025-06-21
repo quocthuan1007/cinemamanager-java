@@ -97,7 +97,6 @@ public class HistoryController {
 
         User info = UserService.getUser(UserSession.getInstance().getUserId());
         if (info == null) {
-            showAlert(Alert.AlertType.ERROR, "Lỗi người dùng", "Không thể tải thông tin người dùng. Vui lòng cập nhật thông tin cá nhân trước.");
             return; // Không tiếp tục nếu không có thông tin user
         }
         int userID = info.getId();

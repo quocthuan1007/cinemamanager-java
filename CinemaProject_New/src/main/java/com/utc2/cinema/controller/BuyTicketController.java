@@ -525,10 +525,12 @@ public class BuyTicketController {
         Image seatNormal = new Image(getClass().getResourceAsStream("/Image/ghe thuong.png"));
         Image seatVip = new Image(getClass().getResourceAsStream("/Image/ghe vip.png"));
 
-        List<String> reservedSeats = new ReservationDao().getReservedSeatsByShowId(showId);
+        ReservationDao reservationDao = new ReservationDao();
+        List<String> reservedSeats = reservationDao.getSeatsByShowIdAndStatus(showId, "RESERVED");
+        List<String> choosingSeats = reservationDao.getSeatsByShowIdAndStatus(showId, "CHOOSING");
+
         int centerColumn = columns / 2;
 
-        // Thêm header cột
         for (int j = 0; j < columns; j++) {
             Label columnLabel = new Label(String.valueOf(j + 1));
             columnLabel.setPrefSize(60, 60);
@@ -551,49 +553,87 @@ public class BuyTicketController {
                 btn.setPrefSize(60, 60);
                 btn.setCursor(Cursor.HAND);
 
-                ImageView iv = new ImageView(((columns % 2 == 0 && (j == centerColumn - 1 || j == centerColumn)) ||
-                        (columns % 2 != 0 && j == centerColumn)) ? seatVip : seatNormal);
+                boolean vip = ((columns % 2 == 0 && (j == centerColumn - 1 || j == centerColumn)) ||
+                        (columns % 2 != 0 && j == centerColumn));
+
+                ImageView iv = new ImageView(vip ? seatVip : seatNormal);
                 iv.setFitWidth(50);
                 iv.setFitHeight(50);
                 iv.setPreserveRatio(true);
                 btn.setGraphic(iv);
 
-                boolean vip = ((columns % 2 == 0 && (j == centerColumn - 1 || j == centerColumn)) ||
-                        (columns % 2 != 0 && j == centerColumn));
-                btn.setStyle(vip
-                        ? (reservedSeats.contains(seatName) ? "-fx-background-color: darkred; -fx-border-color: black; -fx-border-radius: 5px;"
-                        : "-fx-background-color: gold; -fx-border-color: black; -fx-border-radius: 5px;")
-                        : (reservedSeats.contains(seatName) ? "-fx-background-color: red; -fx-border-color: black; -fx-border-radius: 5px;"
-                        : "-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 5px;"));
+                // Trạng thái ghế
+                boolean isReserved = reservedSeats.contains(seatName);
+                boolean isChoosing = choosingSeats.contains(seatName);
 
-                Tooltip tip = new Tooltip("Ghế " + seatName + (reservedSeats.contains(seatName) ? " - Đã đặt" : ""));
-                Tooltip.install(btn, tip);
-                btn.setDisable(reservedSeats.contains(seatName));
+                if (isReserved) {
+                    btn.setStyle("-fx-background-color: red; -fx-border-color: black; -fx-border-radius: 5px;");
+                    btn.setDisable(true);
+                    Tooltip.install(btn, new Tooltip("Ghế " + seatName + " - Đã đặt"));
+                } else if (isChoosing) {
+                    btn.setStyle("-fx-background-color: gray; -fx-border-color: black; -fx-border-radius: 5px;");
+                    btn.setDisable(true);
+                    Tooltip.install(btn, new Tooltip("Ghế " + seatName + " - Đang được chọn"));
+                } else {
+                    btn.setStyle(vip
+                            ? "-fx-background-color: gold; -fx-border-color: black; -fx-border-radius: 5px;"
+                            : "-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 5px;");
+                    Tooltip.install(btn, new Tooltip("Ghế " + seatName));
+                    btn.setDisable(false);
+                    btn.setUserData(false);
 
-                btn.setUserData(false);
-                final String sName = seatName;
-                final boolean isVip = vip;
-                btn.setOnAction(e -> {
-                    boolean sel = (boolean) btn.getUserData();
-                    if (!sel) {
-                        selectedSeats.add(sName);
-                        seatTotalPrice += isVip ? 100000 : 70000;
-                        btn.setStyle("-fx-background-color: green; -fx-border-color: black; -fx-border-radius: 5px;");
-                    } else {
-                        selectedSeats.remove(sName);
-                        seatTotalPrice -= isVip ? 100000 : 70000;
-                        btn.setStyle(isVip
-                                ? "-fx-background-color: gold; -fx-border-color: black; -fx-border-radius: 5px;"
-                                : "-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 5px;");
-                    }
-                    btn.setUserData(!sel);
-                    updateTotalPrice();
-                });
+                    final String sName = seatName;
+                    final boolean isVip = vip;
+
+                    btn.setOnAction(e -> {
+                        boolean sel = (boolean) btn.getUserData();
+                        Seats seat = SeatDao.getSeatByPositionAndRoom(sName, roomId);
+                        int cost = isVip ? 100000 : 70000;
+
+                        if (!sel) {
+                            // Check lại lần cuối tránh race condition
+                            List<String> currentReserved = reservationDao.getSeatsByShowIdAndStatus(showId, "RESERVED");
+                            List<String> currentChoosing = reservationDao.getSeatsByShowIdAndStatus(showId, "CHOOSING");
+
+                            if (currentReserved.contains(sName) || currentChoosing.contains(sName)) {
+                                CustomAlert.showWarning("Ghế đã được chọn", "Vui lòng chọn ghế khác.");
+                                reloadSeatMap(roomId, showId);
+                                return;
+                            }
+
+                            boolean success = reservationDao.insertChoosingReservation(showId, seat.getId(), cost, isVip ? "VIP" : "Thường");
+                            if (success) {
+                                selectedSeats.add(sName);
+                                seatTotalPrice += cost;
+                                btn.setStyle("-fx-background-color: green; -fx-border-color: black; -fx-border-radius: 5px;");
+                                btn.setUserData(true);
+                            } else {
+                                CustomAlert.showError("Lỗi", "Không thể chọn ghế.");
+                            }
+
+                        } else {
+                            reservationDao.deleteChoosingReservation(seat.getId(), showId); // hoặc xóa luôn reservation CHOOSING nếu cần
+                            selectedSeats.remove(sName);
+                            seatTotalPrice -= cost;
+                            btn.setStyle(isVip
+                                    ? "-fx-background-color: gold; -fx-border-color: black; -fx-border-radius: 5px;"
+                                    : "-fx-background-color: white; -fx-border-color: black; -fx-border-radius: 5px;");
+                            btn.setUserData(false);
+                        }
+
+                        updateTotalPrice();
+                    });
+                }
 
                 seatGrid.add(btn, j + 1, i + 1);
             }
         }
     }
+
+    private void reloadSeatMap(int roomId, int showId) {
+        openSeatSelection(roomId, showId);
+    }
+
     private void loadFoodList() {
         // Lấy danh sách món ăn từ cơ sở dữ liệu
         foodList = FoodDao.getAllFoods();  // Giả sử FoodDao lấy danh sách món ăn từ cơ sở dữ liệu

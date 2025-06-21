@@ -19,7 +19,7 @@ import java.net.URL;
 
 public class PaymentCountdown {
 
-    private static final int COUNTDOWN_SECONDS = 60;
+    private static final int COUNTDOWN_SECONDS = 120;
     private int remainingSeconds = COUNTDOWN_SECONDS;
     private Timeline timeline;
     private String orderId;

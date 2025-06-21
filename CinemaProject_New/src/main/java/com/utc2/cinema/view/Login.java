@@ -62,7 +62,7 @@ public class Login extends Application {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(Login.class, args);
+//        SpringApplication.run(Login.class, args);
         launch(args);
     }
 

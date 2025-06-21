@@ -1,0 +1,9 @@
+InputStream fontStream = getClass().getResourceAsStream("/fonts/times.ttf");
+BaseFont baseFont = BaseFont.createFont(
+    "times.ttf",
+    BaseFont.IDENTITY_H,
+    BaseFont.EMBEDDED,
+    BaseFont.CACHED,
+    fontStream.readAllBytes(),
+    null
+);
