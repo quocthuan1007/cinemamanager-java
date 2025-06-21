@@ -1,11 +1,13 @@
 package com.utc2.cinema.controller;
 
+import com.utc2.cinema.model.entity.CustomAlert;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
@@ -29,20 +31,31 @@ public class PaymentCountdown {
     public void start(Stage stage, String paymentUrl, String orderId) {
         this.orderId = orderId;
 
-        countdownLabel = new Label("Thời gian chờ: " + remainingSeconds + " giây");
-        VBox root = new VBox(20, countdownLabel);
-        root.setStyle("-fx-padding: 30; -fx-alignment: center;");
-        Scene scene = new Scene(root, 400, 200);
-        stage.setTitle("Thanh toán");
+        countdownLabel = new Label("⏳ Thời gian chờ: " + remainingSeconds + " giây");
+        countdownLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #007bff;");
+        Button cancelButton = new Button("❌ Huỷ thanh toán");
+        cancelButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20; -fx-background-radius: 6;");
+        cancelButton.setOnAction(e -> {
+            if (timeline != null) timeline.stop();
+            stage.close();
+            CustomAlert.showError("Bạn vừa huỷ thanh toán","","Vui lòng thanh toán lại!");
+        });
+
+        VBox contentBox = new VBox(20, countdownLabel, cancelButton);
+        contentBox.setStyle("-fx-padding: 20; -fx-background-color: #ffffff; -fx-border-color: #007bff; -fx-border-radius: 10; -fx-background-radius: 10;");
+        contentBox.setPrefSize(433, 200);
+        contentBox.setAlignment(javafx.geometry.Pos.CENTER);
+
+        Scene scene = new Scene(contentBox);
+        stage.setTitle("Thanh toán VNPay");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
 
-        // Mở trình duyệt WebView để người dùng thanh toán
         openPaymentPage(paymentUrl);
-
-        // Bắt đầu countdown
         startCountdown();
     }
+
 
     private void openPaymentPage(String url) {
         Platform.runLater(() -> {
@@ -61,14 +74,13 @@ public class PaymentCountdown {
             remainingSeconds--;
             countdownLabel.setText("Thời gian chờ: " + remainingSeconds + " giây");
 
-            // Cứ mỗi 3 giây kiểm tra thanh toán
             if (remainingSeconds % 3 == 0) {
                 checkPaymentStatus();
             }
 
             if (remainingSeconds <= 0) {
                 timeline.stop();
-                showFailure();
+                CustomAlert.showError("Hết thời gian thanh toán!","","Vui lòng thanh toán lại!");
             }
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -94,29 +106,11 @@ public class PaymentCountdown {
             String response = task.getValue();
             if ("PAID".equalsIgnoreCase(response)) {
                 timeline.stop();
-                showSuccess();
+                CustomAlert.showInfo("Thanh toán thành công","","Hoàn tất");
             }
         });
 
         new Thread(task).start();
-    }
-
-    private void showSuccess() {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Thanh toán thành công");
-            alert.setContentText("Giao dịch đã được xác nhận thành công!");
-            alert.showAndWait();
-        });
-    }
-
-    private void showFailure() {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Thanh toán thất bại");
-            alert.setContentText("Hết thời gian chờ mà giao dịch chưa hoàn tất.");
-            alert.showAndWait();
-        });
     }
 }
 

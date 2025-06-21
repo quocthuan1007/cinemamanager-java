@@ -80,6 +80,14 @@ public class Login extends Application {
         public String vnpayReturn(@RequestParam Map<String, String> params, @RequestParam("billId") int billId) {
             System.out.println("VNPay callback về với billId = " + billId);
             Bill bill = BillDao.getBillById(billId);
+
+            if (bill == null) {
+                return "FAIL: Bill không tồn tại";
+            }
+
+            if (!"PENDING".equalsIgnoreCase(bill.getBillStatus().trim())) {
+                return "FAIL: Bill không còn ở trạng thái PENDING";
+            }
             // Nếu hóa đơn null hoac khac pending
             if (bill == null || !"PENDING".equals(bill.getBillStatus())) {
                 return "FAIL: Có lỗi xảy ra";

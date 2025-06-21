@@ -2,6 +2,7 @@ package com.utc2.cinema.dao;
 
 import com.utc2.cinema.config.Database;
 import com.utc2.cinema.model.entity.Account;
+import com.utc2.cinema.utils.PasswordUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -179,6 +180,29 @@ public class AccountDao implements DaoInterface<Account>
 
         return accounts;
     }
+    public static boolean updatePasswordByEmail(String email, String newPlainPassword) {
+        Connection connect = Database.getConnection();
+        boolean success = false;
+
+        try {
+            String hashedPassword = PasswordUtils.hashPassword(newPlainPassword); // Mã hoá mật khẩu mới
+
+            PreparedStatement st = connect.prepareStatement("UPDATE account SET password = ? WHERE email = ?");
+            st.setString(1, hashedPassword);
+            st.setString(2, email);
+
+            int rowsAffected = st.executeUpdate();
+            success = rowsAffected > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Database.closeConnection(connect);
+        }
+
+        return success;
+    }
+
     public String getPassword(String userName)
     {
         Connection connect = Database.getConnection();

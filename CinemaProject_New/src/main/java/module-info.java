@@ -18,7 +18,11 @@ module CinemaProject {
     requires gson;
     requires java.sql;
     requires spring.web;
+
+    requires jakarta.mail;
+
     requires itextpdf;
+
 
     opens com.utc2.cinema.view to javafx.fxml;
     exports com.utc2.cinema.view;

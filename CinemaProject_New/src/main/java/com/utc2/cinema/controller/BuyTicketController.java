@@ -162,17 +162,19 @@ public class BuyTicketController {
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
+    private Stage webViewStage;
     private void openURLInWebView(String url) {
         Platform.runLater(() -> {
             WebView webView = new WebView();
             webView.getEngine().load(url);
 
-            Stage stage = new Stage();
-            stage.setTitle("Thanh toán");
-            stage.setScene(new Scene(webView, 1000, 700));
-            stage.show();
+            webViewStage = new Stage();
+            webViewStage.setTitle("VNPay Thanh Toán");
+            webViewStage.setScene(new Scene(webView, 1000, 700));
+            webViewStage.show();
         });
     }
+
     private double totalPrice;
 
     public void onPay() {
@@ -253,52 +255,75 @@ public class BuyTicketController {
             return false;
         }
     }
+    private Timeline timeline;
+    private Task<Boolean> dbCheckTask;
 
     private void showCountdownAlert(User info, int billId) {
-        final int COUNTDOWN_SECONDS = 60;
+        final int COUNTDOWN_SECONDS = 180;
         final int[] remainingSeconds = {COUNTDOWN_SECONDS};
 
         Stage stage = new Stage();
         stage.initStyle(StageStyle.UNDECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
 
-        Label headerLabel = new Label("Vui lòng hoàn tất thanh toán");
-        headerLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        Label headerLabel = new Label("🕒 Vui lòng hoàn tất thanh toán");
+        headerLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #007bff; -fx-font-weight: bold;");
 
         Label contentLabel = new Label("Thời gian còn lại: " + remainingSeconds[0] + " giây");
         contentLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #333;");
 
-        VBox root = new VBox(20, headerLabel, contentLabel);
-        root.setAlignment(Pos.CENTER);
-        root.setPadding(new Insets(20));
-        root.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: #2c3e50; -fx-border-width: 2px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+        Button cancelBtn = new Button("❌ Huỷ thanh toán");
+        cancelBtn.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8 20; -fx-background-radius: 6;");
+        cancelBtn.setOnAction(ev -> {
+            if (!dbCheckTask.isDone()) {
+                dbCheckTask.cancel();
+            }
+            timeline.stop();
+            stage.close();
+            CustomAlert.showError("Đã huỷ", "", "Bạn đã huỷ thanh toán.");
+            BillDao.updateBillStatus(billId, "FAILED");
+            if (webViewStage != null) {
+                webViewStage.close();
+            }
+        });
 
-        Scene scene = new Scene(root);
+        VBox centerBox = new VBox(15, headerLabel, contentLabel, cancelBtn);
+        centerBox.setPrefWidth(300);
+        centerBox.setAlignment(Pos.CENTER);
+        centerBox.setLayoutX(67);
+        centerBox.setLayoutY(51);
+
+        Pane container = new Pane(centerBox);
+        container.setPrefSize(433, 220);
+        container.setStyle("-fx-background-color: #ffffff; -fx-border-color: #007bff; -fx-border-radius: 10; " +
+                "-fx-background-radius: 10; -fx-padding: 20;");
+
+        Scene scene = new Scene(container);
         stage.setScene(scene);
         stage.setTitle("Đang chờ thanh toán");
         stage.show();
 
-        // Task chạy vòng lặp check DB
-        Task<Boolean> dbCheckTask = new Task<>() {
+        // Task check DB
+        dbCheckTask = new Task<>() {
             @Override
             protected Boolean call() {
-                while (true) {
+                while (!isCancelled()) {
                     boolean isPaid = checkPaymentStatus(billId);
-                    if (isPaid) {
-                        return true;
-                    }
+                    if (isPaid) return true;
                     try {
                         Thread.sleep(3000);
                     } catch (InterruptedException e) {
                         return false;
                     }
                 }
+                return false;
             }
         };
 
         dbCheckTask.setOnSucceeded(event -> {
             if (dbCheckTask.getValue()) {
                 Platform.runLater(() -> {
+                    timeline.stop();
                     stage.close();
                     processReservationAfterPayment(billId);
                 });
@@ -307,25 +332,29 @@ public class BuyTicketController {
 
         new Thread(dbCheckTask).start();
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             remainingSeconds[0]--;
             contentLabel.setText("Thời gian còn lại: " + remainingSeconds[0] + " giây");
 
             if (remainingSeconds[0] <= 0) {
+                timeline.stop();
                 stage.close();
                 if (!dbCheckTask.isDone()) {
                     dbCheckTask.cancel();
                     Platform.runLater(() -> {
                         CustomAlert.showError("Thanh toán thất bại", "", "Hết thời gian chờ thanh toán.");
                         BillDao.updateBillStatus(billId, "FAILED");
+                        if (webViewStage != null) {
+                            webViewStage.close();
+                        }
                     });
                 }
             }
         }));
-
         timeline.setCycleCount(COUNTDOWN_SECONDS);
         timeline.play();
     }
+
 
     private void processReservationAfterPayment(int billId) {
         // Xử lý các ghế đã chọn
@@ -358,6 +387,9 @@ public class BuyTicketController {
         // Hiển thị giao diện thanh toán thành công
         paySuccessPane.setVisible(true);
         billPane.setVisible(false);
+        if (webViewStage != null) {
+            webViewStage.close();
+        }
     }
 
     private void showAllFilms() {
