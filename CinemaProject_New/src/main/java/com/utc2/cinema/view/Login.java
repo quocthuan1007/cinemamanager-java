@@ -80,6 +80,7 @@ public class Login extends Application {
         public String vnpayReturn(@RequestParam Map<String, String> params, @RequestParam("billId") int billId) {
             System.out.println("VNPay callback về với billId = " + billId);
 
+
             Bill bill = BillDao.getBillById(billId);
 
             if (bill == null) {
@@ -89,7 +90,11 @@ public class Login extends Application {
             if (!"PENDING".equalsIgnoreCase(bill.getBillStatus().trim())) {
                 return "FAIL: Bill không còn ở trạng thái PENDING";
             }
-
+            Bill bill = BillDao.getBillById(billId);
+            // Nếu hóa đơn null hoac khac pending
+            if (bill == null || !"PENDING".equals(bill.getBillStatus())) {
+                return "FAIL: Có lỗi xảy ra";
+            }
             boolean updated = BillDao.updateBillStatus(billId, "PAID");
             return updated ? "SUCCESS" : "FAIL";
         }
