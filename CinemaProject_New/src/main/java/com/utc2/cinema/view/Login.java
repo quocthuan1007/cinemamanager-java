@@ -24,7 +24,7 @@ public class Login extends Application {
 
     @Override
     public void start(Stage stage) {
-        stage.initStyle(StageStyle.UNDECORATED); // Bỏ khung cửa sổ mặc định
+        stage.initStyle(StageStyle.UNDECORATED);
 
         try {
             // Load nội dung từ FXML
@@ -62,7 +62,7 @@ public class Login extends Application {
     }
 
     public static void main(String[] args) {
-//        SpringApplication.run(Login.class, args);
+        SpringApplication.run(Login.class, args);
         launch(args);
     }
 
@@ -88,7 +88,6 @@ public class Login extends Application {
             if (!"PENDING".equalsIgnoreCase(bill.getBillStatus().trim())) {
                 return "FAIL: Bill không còn ở trạng thái PENDING";
             }
-            // Nếu hóa đơn null hoac khac pending
             if (bill == null || !"PENDING".equals(bill.getBillStatus())) {
                 return "FAIL: Có lỗi xảy ra";
             }
