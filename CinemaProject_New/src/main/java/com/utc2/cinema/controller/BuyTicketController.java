@@ -558,6 +558,10 @@ public class BuyTicketController {
         Image seatVip = new Image(getClass().getResourceAsStream("/Image/ghe vip.png"));
 
         ReservationDao reservationDao = new ReservationDao();
+
+        // ✅ XÓA GHẾ CHOOSING quá 3 phút
+        reservationDao.deleteExpiredChoosingReservations(showId, 3);
+
         List<String> reservedSeats = reservationDao.getSeatsByShowIdAndStatus(showId, "RESERVED");
         List<String> choosingSeats = reservationDao.getSeatsByShowIdAndStatus(showId, "CHOOSING");
 
@@ -594,7 +598,6 @@ public class BuyTicketController {
                 iv.setPreserveRatio(true);
                 btn.setGraphic(iv);
 
-                // Trạng thái ghế
                 boolean isReserved = reservedSeats.contains(seatName);
                 boolean isChoosing = choosingSeats.contains(seatName);
 
@@ -623,7 +626,6 @@ public class BuyTicketController {
                         int cost = isVip ? 100000 : 70000;
 
                         if (!sel) {
-                            // Check lại lần cuối tránh race condition
                             List<String> currentReserved = reservationDao.getSeatsByShowIdAndStatus(showId, "RESERVED");
                             List<String> currentChoosing = reservationDao.getSeatsByShowIdAndStatus(showId, "CHOOSING");
 
@@ -644,7 +646,7 @@ public class BuyTicketController {
                             }
 
                         } else {
-                            reservationDao.deleteChoosingReservation(seat.getId(), showId); // hoặc xóa luôn reservation CHOOSING nếu cần
+                            reservationDao.deleteChoosingReservation(seat.getId(), showId);
                             selectedSeats.remove(sName);
                             seatTotalPrice -= cost;
                             btn.setStyle(isVip
@@ -661,6 +663,7 @@ public class BuyTicketController {
             }
         }
     }
+
 
     private void reloadSeatMap(int roomId, int showId) {
         openSeatSelection(roomId, showId);

@@ -214,7 +214,17 @@ public class ReservationDao {
 
         return false;
     }
-
-
+    public void deleteExpiredChoosingReservations(int showId, int expireMinutes) {
+        String sql = "DELETE FROM Reservation " +
+                "WHERE ShowId = ? AND SeatStatus = 'CHOOSING' AND TIMESTAMPDIFF(MINUTE, TimeCreated, NOW()) >= ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, showId);
+            stmt.setInt(2, expireMinutes);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

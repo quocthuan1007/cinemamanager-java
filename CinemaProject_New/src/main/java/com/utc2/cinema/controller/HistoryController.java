@@ -2,10 +2,7 @@ package com.utc2.cinema.controller;
 
 import com.utc2.cinema.dao.BillDao;
 import com.utc2.cinema.dao.FilmRatingDao;
-import com.utc2.cinema.model.entity.FilmRating;
-import com.utc2.cinema.model.entity.Invoice;
-import com.utc2.cinema.model.entity.User;
-import com.utc2.cinema.model.entity.UserSession;
+import com.utc2.cinema.model.entity.*;
 import com.utc2.cinema.service.UserService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -167,7 +164,7 @@ public class HistoryController {
             showBillDetail(invoice);
 
         } else {
-            showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Vui lòng chọn một hóa đơn để xem chi tiết.");
+            CustomAlert.showError("Cảnh báo","", "Vui lòng chọn một hóa đơn để xem chi tiết.");
         }
     }
 
