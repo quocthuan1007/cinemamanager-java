@@ -20,15 +20,6 @@ INSERT INTO Role (Name) VALUES
 ('Staff'),
 ('Customer');
 
-INSERT INTO Account (Email, Password, AccountStatus, RoleId)
-VALUES
-('quocthuan@gmail.com', '123123123', 'ONLINE', 1),  -- Admin
-('staff@gmail.com', 'staff123', 'ONLINE', 2),        -- Nhân viên
-('customer@gmail.com', 'cust123', 'OFFLINE', 3),     -- Khách hàng
-('phamvand@gmail.com', 'd123456', 'ONLINE', 3);      -- Khách hàng (Phạm Văn D)
-
-
-
 
 CREATE TABLE User (
     Id INT PRIMARY KEY AUTO_INCREMENT,
@@ -100,9 +91,11 @@ CREATE TABLE Seats (
     Position NVARCHAR(255),
     RoomId INT,
     SeatTypeId INT,
+    SeatStatus VARCHAR(20) DEFAULT 'AVAILABLE',  -- 👈 Cột trạng thái ghế
     FOREIGN KEY (RoomId) REFERENCES Room(Id) ON DELETE CASCADE,
     FOREIGN KEY (SeatTypeId) REFERENCES SeatType(Id) ON DELETE CASCADE
 );
+
 
 CREATE TABLE Bill (
     Id INT PRIMARY KEY AUTO_INCREMENT,
@@ -118,10 +111,12 @@ CREATE TABLE Reservation (
     SeatId INT,
     ShowId INT,
     Cost INT,
-    SeatTypeName TEXT, -- Sửa từ NVARCHAR(longtext)
+    SeatTypeName TEXT,
+    SeatStatus VARCHAR(20) DEFAULT 'RESERVED',  -- CHOOSING hoặc RESERVED
+    TimeCreated DATETIME DEFAULT CURRENT_TIMESTAMP, -- ✅ Thêm cột thời gian tạo
     FOREIGN KEY (BillId) REFERENCES Bill(Id) ON DELETE CASCADE,
     FOREIGN KEY (SeatId) REFERENCES Seats(Id) ON DELETE CASCADE,
-    FOREIGN KEY (ShowId) REFERENCES MovieShow (Id) ON DELETE CASCADE
+    FOREIGN KEY (ShowId) REFERENCES MovieShow(Id) ON DELETE CASCADE
 );
 
 CREATE TABLE Food (
@@ -397,5 +392,74 @@ VALUES
 -- FROM Food_Order fo
 -- JOIN Food f ON fo.FoodId = f.Id
 -- WHERE fo.BillId = 5;
+use cinema;
+-- Phim 1
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId) VALUES
+('2025-06-20 09:00:00', '2025-06-20 10:30:00', 1, 1),
+('2025-06-03 14:00:00', '2025-06-03 15:30:00', 1, 2),
+('2025-06-04 10:00:00', '2025-06-04 11:30:00', 1, 1),
+('2025-06-05 13:00:00', '2025-06-05 14:30:00', 1, 2);
+
+-- Phim 2
+use cinema;
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId) VALUES
+('2025-06-20 16:00:00', '2025-06-20 18:00:00', 2, 1),
+('2025-06-04 18:30:00', '2025-06-04 20:30:00', 2, 2),
+('2025-06-04 21:00:00', '2025-06-04 23:00:00', 2, 1),
+('2025-06-05 15:00:00', '2025-06-05 17:00:00', 2, 1);
+
+-- Phim 3
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId) VALUES
+('2025-06-03 12:00:00', '2025-06-03 13:30:00', 3, 2),
+('2025-06-04 14:00:00', '2025-06-04 15:30:00', 3, 1),
+('2025-06-05 17:30:00', '2025-06-05 19:00:00', 3, 2);
+
+-- Phim 4
+use cinema;
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId) VALUES
+('2025-06-14 19:00:00', '2025-06-14 21:00:00', 4, 1),
+('2025-06-04 09:00:00', '2025-06-04 11:00:00', 4, 1),
+('2025-06-05 20:00:00', '2025-06-05 22:00:00', 4, 1);
+
+-- Phim 5
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId) VALUES
+('2025-06-03 21:30:00', '2025-06-03 23:00:00', 5, 1),
+('2025-06-04 16:00:00', '2025-06-04 17:30:00', 5, 2),
+('2025-06-05 10:00:00', '2025-06-05 11:30:00', 5, 1);
+
+-- Phim 7
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId) VALUES
+('2025-06-03 11:00:00', '2025-06-03 13:00:00', 7, 2),
+('2025-06-04 12:30:00', '2025-06-04 14:30:00', 7, 1),
+('2025-06-05 16:00:00', '2025-06-05 18:00:00', 7, 1);
+
+-- Phim 8
+INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId) VALUES
+('2025-06-03 18:00:00', '2025-06-03 20:00:00', 8, 1),
+('2025-06-04 20:30:00', '2025-06-04 22:30:00', 8, 2),
+('2025-06-05 11:30:00', '2025-06-05 13:30:00', 8, 1);
+
+
+use cinema;
+SELECT f.Name AS FilmName,
+                   COUNT(DISTINCT ms.Id) AS ShowCount,
+                   COUNT(r.Id) AS SeatsSold,
+                   SUM(IFNULL(r.Cost, 0)) AS TotalRevenue
+            FROM MovieShow ms
+            JOIN Film f ON f.Id = ms.FilmId
+            LEFT JOIN Reservation r ON r.ShowId = ms.Id
+            LEFT JOIN Bill b ON b.Id = r.BillId AND b.DatePurchased BETWEEN ? AND ?
+            WHERE ms.StartTime BETWEEN ? AND ?;
+use cinema;
+ALTER TABLE Reservation ADD COLUMN SeatStatus VARCHAR(20) DEFAULT 'RESERVED';
+
+
+
+CREATE EVENT IF NOT EXISTS delete_expired_choosing_seats
+ON SCHEDULE EVERY 1 MINUTE
+DO
+  DELETE FROM Reservation
+  WHERE SeatStatus = 'CHOOSING'
+    AND TIMESTAMPDIFF(MINUTE, TimeCreated, NOW()) >= 2;
 
 
