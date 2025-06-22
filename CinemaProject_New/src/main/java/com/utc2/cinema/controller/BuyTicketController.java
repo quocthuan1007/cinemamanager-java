@@ -84,6 +84,9 @@ public class BuyTicketController {
     private ObservableList<FoodOrder> foodOrderObservableList = FXCollections.observableArrayList();
     private List<Food> foodList = new ArrayList<>();
 
+    private static int currentRoomId;
+    private static int currentShowId;
+
     public BuyTicketController(MainMenuController mainMenu) {
         this.mainMenu = mainMenu;
 
@@ -139,6 +142,12 @@ public class BuyTicketController {
     @FXML
     public void onBackToSchedule() {
 
+        // ✅ Xóa ghế đang CHOOSING nếu quay lại
+        ReservationDao reservationDao = new ReservationDao();
+        for (String seatName : selectedSeats) {
+            Seats seat = SeatDao.getSeatByPositionAndRoom(seatName, currentRoomId);
+            reservationDao.deleteChoosingReservation(seat.getId(), currentShowId);
+        }
         total = 0;
         seatTotalPrice = 0;
         selectedSeats.clear();    // Xóa hết ghế đã chọn
@@ -548,6 +557,9 @@ public class BuyTicketController {
         int rows = room.getNumRows();
         int columns = room.getNumCols();
 
+        this.currentRoomId = roomId;
+        this.currentShowId = showId;
+
         seatGrid.getChildren().clear();
         seatGrid.setPadding(new Insets(30));
         seatGrid.setHgap(15);
@@ -629,7 +641,11 @@ public class BuyTicketController {
                             List<String> currentReserved = reservationDao.getSeatsByShowIdAndStatus(showId, "RESERVED");
                             List<String> currentChoosing = reservationDao.getSeatsByShowIdAndStatus(showId, "CHOOSING");
 
-                            if (currentReserved.contains(sName) || currentChoosing.contains(sName)) {
+                            if ((currentReserved.contains(sName) || currentChoosing.contains(sName))&&selectedSeats!=null) {
+                                CustomAlert.showWarning("Ghế đã được chọn", "Vui lòng chọn ghế khác.");
+                                return;
+                            }
+                            else if ((currentReserved.contains(sName) || currentChoosing.contains(sName))&&selectedSeats==null) {
                                 CustomAlert.showWarning("Ghế đã được chọn", "Vui lòng chọn ghế khác.");
                                 reloadSeatMap(roomId, showId);
                                 return;
