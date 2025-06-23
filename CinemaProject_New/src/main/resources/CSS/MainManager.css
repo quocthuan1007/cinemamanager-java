@@ -26,18 +26,8 @@
     -fx-background-color: #45a049;
 }
 
-#saveButton, #cancelButton {
-    -fx-background-color: #007BFF;
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-padding: 10px 20px;
-    -fx-border-radius: 5px;
-    -fx-cursor: hand;
-}
 
-#saveButton:hover, #cancelButton:hover {
-    -fx-background-color: #0056b3;
-}
+
 
 /* GridPane */
 .GridPane {
@@ -72,29 +62,11 @@
     -fx-font-size: 14px;
 }
 
-/* Nút bấm Lưu (màu xanh nước) */
-#saveButton {
-    -fx-background-color: #4CAF50;  /* Màu xanh nước */
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-padding: 10px 20px;
-    -fx-border-radius: 5px;
-    -fx-cursor: hand;
-}
 
-#saveButton:hover {
-    -fx-background-color: #45a049;  /* Màu xanh đậm khi hover */
-}
 
-/* Nút Hủy Bỏ (màu đỏ) */
-#cancelButton {
-    -fx-background-color: #FF5733;  /* Màu đỏ */
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-padding: 10px 20px;
-    -fx-border-radius: 5px;
-    -fx-cursor: hand;
-}
+
+
+
 
 #cancelButton:hover {
     -fx-background-color: #c44e2d;  /* Màu đỏ đậm khi hover */
@@ -102,7 +74,7 @@
 
 /* Nút Xóa Phòng Chiếu (màu đỏ) */
 #deleteRoomBtn {
-    -fx-background-color: #FF5733;  /* Màu đỏ */
+    -fx-background-color: red;  /* Màu đỏ */
     -fx-text-fill: white;
     -fx-font-size: 14px;
     -fx-padding: 10px 20px;
@@ -114,19 +86,9 @@
     -fx-background-color: #c44e2d;  /* Màu đỏ đậm khi hover */
 }
 
-/* Nút Thêm Phòng Chiếu (màu xanh) */
-#addRoomBtn {
-    -fx-background-color: #4CAF50;  /* Màu xanh */
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-padding: 10px 20px;
-    -fx-border-radius: 5px;
-    -fx-cursor: hand;
-}
 
-#addRoomBtn:hover {
-    -fx-background-color: #45a049;  /* Màu xanh đậm khi hover */
-}
+
+
 
 /* ScrollPane */
 #seatScrollPane {
@@ -351,9 +313,32 @@
     -fx-background-color: #61C17E;
     -fx-text-fill: white;
 }
+
+
+
+.chart,
+.chart-plot-background,
+.chart-legend,
+.axis,
+.axis-label,
+.chart-title {
+    -fx-background-color: transparent;
+    -fx-text-fill: white; /* hoặc black tùy bạn */
+}
+
+
 .chart-title {
     -fx-text-fill: white;
 }
 
+.chart-legend-item {
+    -fx-text-fill: white;
+}
 
+
+
+.chart-pie-label {
+    -fx-fill: white;
+    -fx-font-weight: bold;
+}
 

@@ -137,6 +137,22 @@ public class MovieShowDao {
         }
         return movieShows;
     }
+    public void updateMovieShow(MovieShow show) {
+        String sql = "UPDATE MovieShow SET StartTime = ?, EndTime = ?, FilmId = ?, RoomId = ? WHERE Id = ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setTimestamp(1, Timestamp.valueOf(show.getStartTime()));
+            ps.setTimestamp(2, Timestamp.valueOf(show.getEndTime()));
+            ps.setInt(3, show.getFilmId());
+            ps.setInt(4, show.getRoomId());
+            ps.setInt(5, show.getId());
+
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 

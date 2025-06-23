@@ -10,16 +10,20 @@ import com.utc2.cinema.dao.ThongKeDao;
 import com.utc2.cinema.model.entity.CustomAlert;
 
 import com.utc2.cinema.model.entity.StatisticalFilm;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -122,7 +126,13 @@ public class ManageStatisticalController {
             tableThongKe.setItems(data);
             totalShowLabel.setText(totalShows + " suất chiếu");
             totalSeatsLabel.setText(totalSeats + " vé đã bán");
-            totalRevenueLabel.setText(String.format("%.0f VNĐ", totalRevenue));
+            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+            String formattedRevenue = currencyFormatter.format(totalRevenue);
+
+            // Nếu bạn muốn bỏ ký hiệu ₫ và thay bằng "VNĐ":
+            formattedRevenue = formattedRevenue.replace("₫", "VNĐ");
+
+            totalRevenueLabel.setText(formattedRevenue);
 
             updateCharts(data);
         } catch (SQLException e) {
@@ -163,6 +173,19 @@ public class ManageStatisticalController {
         }
 
         barChart.getData().addAll(seatSeries, showSeries);
+
+        // Làm label của PieChart màu trắng (nếu render chậm thì cần Platform.runLater)
+        Platform.runLater(() -> {
+            for (PieChart.Data d : pieChart.getData()) {
+                Node node = d.getNode();
+                if (node != null) {
+                    Text text = (Text) node.lookup(".chart-pie-label");
+                    if (text != null) {
+                        text.setFill(Color.WHITE);
+                    }
+                }
+            }
+        });
     }
 
     @FXML

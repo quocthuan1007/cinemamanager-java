@@ -715,6 +715,9 @@ public class MainManagerController implements Initializable {
     private TableColumn<MovieShow, Void> colDelete;
 
     @FXML
+    private TableColumn<MovieShow, Void> colEdit;
+
+    @FXML
     private Pane confirmDeletePane;
 
     @FXML
@@ -765,6 +768,10 @@ public class MainManagerController implements Initializable {
 
     public TableColumn<MovieShow, Void> getColDelete() {
         return colDelete;
+    }
+
+    public TableColumn<MovieShow, Void> getColEdit() {
+        return colEdit;
     }
 
     public Pane getConfirmDeletePane() {
@@ -1017,4 +1024,6 @@ public class MainManagerController implements Initializable {
     @FXML void onSearchFilmRevenue(){ManageStatisticalController.onSearchFilmRevenue(event);}
     @FXML void onExportPdf(){ManageStatisticalController.onExportPdf(event);}
     @FXML void onExportExcel(){ManageStatisticalController.onExportExcel(event);}
+
+
 }

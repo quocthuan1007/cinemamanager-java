@@ -29,7 +29,7 @@ public class ManageScheduleController  {
     @FXML private TableColumn<MovieShow, String> colFilm;
     @FXML private TableColumn<MovieShow, Integer> colRoom;
     @FXML private TableColumn<MovieShow, Void> colDelete;
-
+    @FXML private TableColumn<MovieShow, Void> colEdit;
 
     @FXML private Pane confirmDeletePane;
     @FXML private Pane removePane;
@@ -50,6 +50,7 @@ public class ManageScheduleController  {
         this.colFilm = mainMenu.getColFilm();
         this.colRoom = mainMenu.getColRoom();
         this.colDelete = mainMenu.getColDelete();
+        this.colEdit = mainMenu.getColEdit();
 
         this.confirmDeletePane = mainMenu.getConfirmDeletePane();
         this.removePane = mainMenu.getRemovePane();
@@ -76,7 +77,7 @@ public class ManageScheduleController  {
     public void initialize() {
         loadMovieShows();
         setupTableColumns();
-        styleTableRows();
+
         loadFilmComboBox();
         loadRoomComboBox();
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -130,6 +131,7 @@ private void setupTableColumns() {
 
     // Thêm nút xóa vào bảng nếu cần thiết
     addDeleteButtonToTable();
+    addEditButtonToTable();
 }
 
 
@@ -224,56 +226,110 @@ private void setupTableColumns() {
         addMovieShowPane.setVisible(true);
     }
 
-    @FXML
-    void onSaveMovieShow() {
-        try {
-            String startTimeText = startTimeField.getText();
-            String endTimeText = endTimeField.getText();
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
-            LocalDateTime startTime = LocalDateTime.parse(startTimeText, formatter);
-            LocalDateTime endTime = LocalDateTime.parse(endTimeText, formatter);
+@FXML
+void onSaveMovieShow() {
+    try {
+        String startTimeText = startTimeField.getText();
+        String endTimeText = endTimeField.getText();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
 
-            // Kiểm tra thời gian bắt đầu có phải trong quá khứ không
-            if (startTime.isBefore(LocalDateTime.now())) {
-                showAlert("Lỗi thời gian", "Thời gian bắt đầu không thể là quá khứ.");
+        LocalDateTime startTime = LocalDateTime.parse(startTimeText, formatter);
+        LocalDateTime endTime = LocalDateTime.parse(endTimeText, formatter);
+
+        if (startTime.isBefore(LocalDateTime.now())) {
+            showAlert("Lỗi thời gian", "Thời gian bắt đầu không thể là quá khứ.");
+            return;
+        }
+
+        if (startTime.isAfter(endTime) || startTime.isEqual(endTime)) {
+            showAlert("Lỗi thời gian", "Thời gian bắt đầu phải trước thời gian kết thúc.");
+            return;
+        }
+
+        Film selectedFilm = filmComboBox.getSelectionModel().getSelectedItem();
+        Integer selectedRoom = roomComboBox.getSelectionModel().getSelectedItem();
+
+        if (selectedFilm == null || selectedRoom == null) {
+            showAlert("Thiếu thông tin", "Vui lòng chọn phim và phòng chiếu.");
+            return;
+        }
+
+        // Kiểm tra trùng lịch (trừ chính nó nếu đang sửa)
+        List<MovieShow> shows = movieShowDao.getAllMovieShows();
+        for (MovieShow existingShow : shows) {
+            if ((selectedMovieShow == null || existingShow.getId() != selectedMovieShow.getId()) &&
+                    existingShow.getRoomId() == selectedRoom &&
+                    startTime.isBefore(existingShow.getEndTime()) &&
+                    endTime.isAfter(existingShow.getStartTime())) {
+                showAlert("Trùng lịch", "Lịch chiếu trùng với một lịch đã có trong cùng phòng.");
                 return;
             }
+        }
 
-            if (startTime.isAfter(endTime) || startTime.isEqual(endTime)) {
-                showAlert("Lỗi thời gian", "Thời gian bắt đầu phải trước thời gian kết thúc.");
-                return;
-            }
-
-            Film selectedFilm = filmComboBox.getSelectionModel().getSelectedItem();
-            Integer selectedRoom = roomComboBox.getSelectionModel().getSelectedItem();
-
-            if (selectedFilm == null || selectedRoom == null) {
-                showAlert("Thiếu thông tin", "Vui lòng chọn phim và phòng chiếu.");
-                return;
-            }
-
-            // Kiểm tra trùng lịch
-            List<MovieShow> shows = movieShowDao.getAllMovieShows();
-            for (MovieShow existingShow : shows) {
-                if (existingShow.getRoomId() == selectedRoom &&
-                        startTime.isBefore(existingShow.getEndTime()) &&
-                        endTime.isAfter(existingShow.getStartTime())) {
-                    showAlert("Trùng lịch", "Lịch chiếu trùng với một lịch đã có trong cùng phòng.");
-                    return;
-                }
-            }
-
+        if (selectedMovieShow == null) {
+            // Thêm mới
             MovieShow movieShow = new MovieShow(startTime, endTime, selectedFilm.getId(), selectedRoom, false);
             movieShowDao.saveMovieShow(movieShow);
             movieShowList.add(movieShow);
-            addMovieShowPane.setVisible(false);
+        } else {
+            // Sửa
+            selectedMovieShow.setStartTime(startTime);
+            selectedMovieShow.setEndTime(endTime);
+            selectedMovieShow.setFilmId(selectedFilm.getId());
+            selectedMovieShow.setRoomId(selectedRoom);
+            movieShowDao.updateMovieShow(selectedMovieShow);
 
-        } catch (Exception e) {
-            showAlert("Lỗi định dạng", "Vui lòng nhập đúng định dạng thời gian: HH:mm dd/MM/yyyy");
+            selectedMovieShow = null; // reset
+        }
+
+        addMovieShowPane.setVisible(false);
+    } catch (Exception e) {
+        showAlert("Lỗi định dạng", "Vui lòng nhập đúng định dạng thời gian: HH:mm dd/MM/yyyy");
+    }
+}
+
+    private void loadMovieShowToForm(MovieShow movieShow) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
+        startTimeField.setText(movieShow.getStartTime().format(formatter));
+        endTimeField.setText(movieShow.getEndTime().format(formatter));
+
+        // Chọn phim và phòng trong ComboBox
+        for (Film film : filmComboBox.getItems()) {
+            if (film.getId() == movieShow.getFilmId()) {
+                filmComboBox.getSelectionModel().select(film);
+                break;
+            }
+        }
+
+        for (Integer roomId : roomComboBox.getItems()) {
+            if (roomId.equals(movieShow.getRoomId())) {
+                roomComboBox.getSelectionModel().select(roomId);
+                break;
+            }
         }
     }
 
+    private void addEditButtonToTable() {
+        colEdit.setCellFactory(col -> new TableCell<>() {
+            private final Button editBtn = new Button("Sửa");
+
+            {
+                editBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+                editBtn.setOnAction(event -> {
+                    selectedMovieShow = getTableView().getItems().get(getIndex());
+                    loadMovieShowToForm(selectedMovieShow);
+                    addMovieShowPane.setVisible(true);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : editBtn);
+            }
+        });
+    }
 
 
     @FXML
@@ -292,27 +348,29 @@ private void setupTableColumns() {
         String keyword = searchField.getText().trim().toLowerCase();
 
         if (keyword.isEmpty()) {
-            // Nếu không nhập gì thì hiển thị toàn bộ danh sách
             scheduleTable.setItems(movieShowList);
-            return;
-        }
-
-        // Tạo Map filmId -> Film để tra cứu tên phim
-        Map<Integer, Film> filmMap = new HashMap<>();
-        for (Film film : filmDao.getAllFilms()) {
-            filmMap.put(film.getId(), film);
-        }
-
-        // Lọc danh sách
-        ObservableList<MovieShow> filteredList = FXCollections.observableArrayList();
-        for (MovieShow show : movieShowList) {
-            Film film = filmMap.get(show.getFilmId());
-            if (film != null && film.getName().toLowerCase().contains(keyword)) {
-                filteredList.add(show);
+        } else {
+            // Map filmId -> Film
+            Map<Integer, Film> filmMap = new HashMap<>();
+            for (Film film : filmDao.getAllFilms()) {
+                filmMap.put(film.getId(), film);
             }
+
+            // Lọc
+            ObservableList<MovieShow> filteredList = FXCollections.observableArrayList();
+            for (MovieShow show : movieShowList) {
+                Film film = filmMap.get(show.getFilmId());
+                if (film != null && film.getName().toLowerCase().contains(keyword)) {
+                    filteredList.add(show);
+                }
+            }
+
+            scheduleTable.setItems(filteredList);
         }
 
-        scheduleTable.setItems(filteredList);
+        // 💡 GỌI LẠI SAU KHI ĐỔ DỮ LIỆU
+        addDeleteButtonToTable();
+        addEditButtonToTable();
     }
 
 
