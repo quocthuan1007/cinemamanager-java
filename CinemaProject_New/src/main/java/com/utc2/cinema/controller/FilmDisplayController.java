@@ -25,6 +25,7 @@ import javafx.util.Duration;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 public class FilmDisplayController
 {
@@ -288,17 +289,27 @@ public class FilmDisplayController
     }
 
     void handleBookTicket() {
-        // Xử lý đặt vé ở đây
         if (selectedFilm != null) {
-            // Nếu film đã được chọn, thực hiện hành động
             showfilmdetail.setVisible(false);
             buyForm.setVisible(true);
+            HBox filmSave= buyTicketController.getFilmSave();
+            Map<Integer,HBox> filmHBoxMap = buyTicketController.getFilmBoxMap();
+            if (filmSave != null)
+                filmSave.setStyle("-fx-alignment: center; -fx-padding: 10px; -fx-border-color: black; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-background-color: transparent;");
+
+            filmSave = filmHBoxMap.get(selectedFilm.getId());
+            if (filmSave != null){
+                buyTicketController.setFilmSave(filmSave);
+                filmSave.setStyle("-fx-alignment: center; -fx-padding: 10px; -fx-border-color: black; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-background-color: green;");
+                System.out.println("OKE ROI");
+            }
+            else System.out.println("KO OKE");
             buyTicketController.showMovieShowOfFilm(selectedFilm.getId());
         } else {
-            // Nếu không có phim được chọn, có thể hiển thị thông báo hoặc xử lý gì đó
             System.out.println("Không có phim nào được chọn!");
         }
     }
+
     void hideForm(){
         movieForm.setVisible(false);
         showfilmdetail.setVisible(false);

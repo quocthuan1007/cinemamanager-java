@@ -139,6 +139,16 @@ public class ScheduleDisplayController
             {
                 scheduleForm.setVisible(false);
                 buyForm.setVisible(true);
+                HBox filmSave= buyTicketController.getFilmSave();
+                Map<Integer,HBox> filmHBoxMap = buyTicketController.getFilmBoxMap();
+                if (filmSave != null)
+                    filmSave.setStyle("-fx-alignment: center; -fx-padding: 10px; -fx-border-color: black; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-background-color: transparent;");
+
+                filmSave = filmHBoxMap.get(filmId);
+                if (filmSave != null){
+                    buyTicketController.setFilmSave(filmSave);
+                    filmSave.setStyle("-fx-alignment: center; -fx-padding: 10px; -fx-border-color: black; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-background-color: green;");
+                }
                 buyTicketController.showMovieShowOfFilm(filmId);
             });
 

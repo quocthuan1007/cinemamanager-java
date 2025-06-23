@@ -423,9 +423,65 @@ public class BuyTicketController {
         boolean updateBill = BillDao.updateTotalPrice(billId, totalPrice);
         if(updateBill) System.out.println("Bill: "+ billId+" được update thành công");
         else System.out.println("Bill: "+ billId+" được update thất bại");
+
+        Bill billToEmail = BillDao.getBillById(billId);
+
+        try {
+            String userEmail = UserSession.getInstance().getEmail();
+            String emailTitle = "Hóa đơn BTH-Cinema #" + billToEmail.getId();
+            StringBuilder content = new StringBuilder();
+
+            content.append("Cảm ơn bạn đã mua vé tại BTH-Cinema!<br>");
+            content.append("Mã hóa đơn: ").append(billToEmail.getId()).append("<br>");
+            content.append("Ngày mua: ").append(billToEmail.getDatePurchased()).append("<br>");
+            content.append("Tổng tiền: ").append(String.format("%,.0f", billToEmail.getTotalPrice())).append(" VNĐ<br><br>");
+
+            content.append("<b>Danh sách ghế:</b><br>");
+            for (String seatPosition : selectedSeats) {
+                content.append("- Ghế: ").append(seatPosition).append("<br>");
+            }
+
+            if (!foodOrderList.isEmpty()) {
+                content.append("<br><b>Danh sách món ăn:</b><br>");
+                for (FoodOrder foodOrder : foodOrderList) {
+                    if (foodOrder.getCount() > 0) {
+                        content.append("- ")
+                                .append(foodOrder.getFood().getName())
+                                .append(" (")
+                                .append(String.format("%,.0f", foodOrder.getFood().getCost()))
+                                .append(" VNĐ) x")
+                                .append(foodOrder.getCount())
+                                .append(" = ")
+                                .append(String.format("%,.0f", foodOrder.getTotalPrice()))
+                                .append(" VNĐ<br>");
+                    }
+                }
+            }
+
+            EmailOTP.sendEmail(userEmail, emailTitle, content.toString());
+
+        } catch (Exception e) {
+            System.out.println("Gửi email thất bại: " + e.getMessage());
+        }
+
         totalPrice = 0;
     }
 
+    public HBox getFilmSave() {
+        return filmSave;
+    }
+
+    public Map<Integer, HBox> getFilmBoxMap() {
+        return filmBoxMap;
+    }
+
+    private Map<Integer, HBox> filmBoxMap = new HashMap<>();
+
+    public void setFilmSave(HBox filmSave) {
+        this.filmSave = filmSave;
+    }
+
+    private HBox filmSave;
     private void showAllFilms() {
         List<Film> allFilms = FilmDao.getAllFilms();
         filmsContainer.getChildren().clear();
@@ -473,10 +529,19 @@ public class BuyTicketController {
             HBox filmBox = new HBox();
             filmBox.setStyle("-fx-alignment: center; -fx-padding: 10px; -fx-border-color: black; -fx-border-radius: 10px; -fx-background-radius: 10px;");
             filmBox.getChildren().addAll(leftBox, spacer, rightBox);
-
+            filmBoxMap.put(film.getId(),filmBox);
             filmBox.setOnMouseClicked(event -> {
-                showMovieShowOfFilm(film.getId());
+                if (filmSave != filmBox) {
+                    if (filmSave != null)
+                        filmSave.setStyle("-fx-alignment: center; -fx-padding: 10px; -fx-border-color: black; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-background-color: transparent;");
+
+                    filmSave = filmBox;
+                    filmBox.setStyle("-fx-alignment: center; -fx-padding: 10px; -fx-border-color: black; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-background-color: green;");
+
+                    showMovieShowOfFilm(film.getId());
+                }
             });
+
 
             filmsContainer.getChildren().add(filmBox);
         }
@@ -537,6 +602,7 @@ public class BuyTicketController {
                 });
 
                 showLabel.setOnMouseClicked(event -> {
+                    showLabel.setStyle("-fx-background-color: lightgreen; -fx-padding: 10px; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-border-color: green; -fx-border-width: 2px;");
                     selectedMovieShow = show;
                     System.out.println("Click suất chiếu: " + showStart + " - " + showEnd);
                     filmListVBox.setVisible(false);
@@ -544,7 +610,6 @@ public class BuyTicketController {
                     seatSelectionPane.setVisible(true);
                     openSeatSelection(show.getRoomId(), show.getId());
                 });
-
                 showtimesHBox.getChildren().add(showLabel);
             }
 
@@ -769,6 +834,8 @@ public class BuyTicketController {
             };
             return cell;
         });
+        filmListVBox.setStyle("-fx-font-size: 14px;");
+        scheduleListVBox.setStyle("-fx-font-size: 14px;");
 
         totalColumn.setCellValueFactory(cellData -> new SimpleFloatProperty(cellData.getValue().getTotalPrice()).asObject());
     }
@@ -897,18 +964,26 @@ public class BuyTicketController {
 
     public void onClickInventory(MouseEvent mouseEvent) {
         if (!inventoryVoucher.isVisible()) {
-            inventoryVoucher.setVisible(true);
-            inventoryVoucher.setManaged(true);
-            inventoryVoucher.setSpacing(10);
-            inventoryVoucher.getChildren().clear();
-
             Inventory voucher = InventoryDao.findInventoryByUserId(UserSession.getInstance().getUserId());
-            if (voucher == null) return;
-
+            if (voucher == null) {
+                CustomAlert.showError("","Túi đồ","Túi đồ trống!!!");
+                return;
+            }
             int amountGold = voucher.getAmountOfGold();
             int amountSilver = voucher.getAmountOfSilver();
             int amountBronze = voucher.getAmountOfBronze();
             int amountTicket = voucher.getAmountOfTicketDiscount();
+
+            if(amountBronze ==0 && amountTicket ==0 && amountSilver ==0 && amountGold==0 )
+            {
+                CustomAlert.showError("","Túi đồ","Túi đồ trống!!!");
+                return;
+            }
+            
+            inventoryVoucher.setVisible(true);
+            inventoryVoucher.setManaged(true);
+            inventoryVoucher.setSpacing(10);
+            inventoryVoucher.getChildren().clear();
 
             if (amountGold > 0) {
                 inventoryVoucher.getChildren().add(createVoucherItem("Gold", amountGold));
