@@ -1,7 +1,9 @@
-drop database cinema;
-CREATE database cinema;
-use bai3
-use cinema;
+-- Reset Database
+DROP DATABASE IF EXISTS cinema;
+CREATE DATABASE cinema;
+USE cinema;
+
+-- ========================= BẢNG TÀI KHOẢN =========================
 CREATE TABLE Role (
     Id INT PRIMARY KEY AUTO_INCREMENT,
     Name NVARCHAR(255)
@@ -15,25 +17,20 @@ CREATE TABLE Account (
     RoleId INT,
     FOREIGN KEY (RoleId) REFERENCES Role(Id)
 );
-INSERT INTO Role (Name) VALUES
-('Admin'),
-('Staff'),
-('Customer');
 
-INSERT INTO Account (Email, Password, AccountStatus, RoleId)
-VALUES
-('quocthuan@gmail.com', '123123123', 'ONLINE', 1),  -- Admin
-('staff@gmail.com', 'staff123', 'ONLINE', 2),        -- Nhân viên
-('customer@gmail.com', 'cust123', 'OFFLINE', 3),     -- Khách hàng
-('phamvand@gmail.com', 'd123456', 'ONLINE', 3);      -- Khách hàng (Phạm Văn D)
-
-
-
+CREATE TABLE inventory (
+    account_id INT PRIMARY KEY,
+    amount_of_silver INT DEFAULT 0,
+    amount_of_bronze INT DEFAULT 0,
+    amount_of_gold INT DEFAULT 0,
+    amount_of_ticket_discount INT DEFAULT 0,
+    FOREIGN KEY (account_id) REFERENCES Account(Id) ON DELETE CASCADE
+);
 
 CREATE TABLE User (
     Id INT PRIMARY KEY AUTO_INCREMENT,
     Name NVARCHAR(255),
-    Gender int,
+    Gender BIT,
     Birth DATE,
     Phone NVARCHAR(20),
     Address NVARCHAR(255),
@@ -41,6 +38,7 @@ CREATE TABLE User (
     FOREIGN KEY (AccountId) REFERENCES Account(Id)
 );
 
+-- ========================= BẢNG PHIM =========================
 CREATE TABLE Genre (
     Id INT PRIMARY KEY AUTO_INCREMENT,
     Name NVARCHAR(255) NOT NULL
@@ -55,10 +53,10 @@ CREATE TABLE Film (
     Actor NVARCHAR(255),
     AgeLimit INT,
     FilmStatus NVARCHAR(50),
-    Content TEXT,  -- Sửa từ NVARCHAR(MAX)
-    Trailer TEXT,  -- Sửa từ NVARCHAR(MAX)
-    AdPosterUrl TEXT, -- Sửa từ NVARCHAR(MAX)
-    PosterUrl TEXT, -- Sửa từ NVARCHAR(MAX)
+    Content TEXT,
+    Trailer TEXT,
+    AdPosterUrl TEXT,
+    PosterUrl TEXT,
     ReleaseDate DATETIME(2)
 );
 
@@ -70,23 +68,13 @@ CREATE TABLE Film_Genre (
     FOREIGN KEY (GenreId) REFERENCES Genre(Id) ON DELETE CASCADE
 );
 
+-- ========================= BẢNG PHÒNG & GHẾ =========================
 CREATE TABLE Room (
     Id INT PRIMARY KEY AUTO_INCREMENT,
     RowNumber INT,
     ColNumber INT,
     RoomStatus NVARCHAR(50),
     Name NVARCHAR(255)
-);
-
-CREATE TABLE MovieShow  (
-    Id INT PRIMARY KEY AUTO_INCREMENT,
-    StartTime DATETIME(2),
-    EndTime DATETIME(2),
-    FilmId INT,
-    RoomId INT,
-    IsDeleted BIT DEFAULT 0,
-    FOREIGN KEY (FilmId) REFERENCES Film(Id) ON DELETE CASCADE,
-    FOREIGN KEY (RoomId) REFERENCES Room(Id) ON DELETE CASCADE
 );
 
 CREATE TABLE SeatType (
@@ -100,15 +88,30 @@ CREATE TABLE Seats (
     Position NVARCHAR(255),
     RoomId INT,
     SeatTypeId INT,
+    SeatStatus VARCHAR(20) DEFAULT 'AVAILABLE',
     FOREIGN KEY (RoomId) REFERENCES Room(Id) ON DELETE CASCADE,
     FOREIGN KEY (SeatTypeId) REFERENCES SeatType(Id) ON DELETE CASCADE
 );
 
+-- ========================= BẢNG LỊCH CHIẾU =========================
+CREATE TABLE MovieShow (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    StartTime DATETIME(2),
+    EndTime DATETIME(2),
+    FilmId INT,
+    RoomId INT,
+    IsDeleted BIT DEFAULT 0,
+    FOREIGN KEY (FilmId) REFERENCES Film(Id) ON DELETE CASCADE,
+    FOREIGN KEY (RoomId) REFERENCES Room(Id) ON DELETE CASCADE
+);
+
+-- ========================= BẢNG HÓA ĐƠN & ĐẶT VÉ =========================
 CREATE TABLE Bill (
     Id INT PRIMARY KEY AUTO_INCREMENT,
     UserId INT,
     DatePurchased DATETIME(2),
     BillStatus NVARCHAR(50),
+    TotalPrice DOUBLE DEFAULT 0,
     FOREIGN KEY (UserId) REFERENCES User(Id) ON DELETE CASCADE
 );
 
@@ -118,17 +121,20 @@ CREATE TABLE Reservation (
     SeatId INT,
     ShowId INT,
     Cost INT,
-    SeatTypeName TEXT, -- Sửa từ NVARCHAR(longtext)
+    SeatTypeName TEXT,
+    SeatStatus VARCHAR(20) DEFAULT 'RESERVED',
+    TimeCreated DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (BillId) REFERENCES Bill(Id) ON DELETE CASCADE,
     FOREIGN KEY (SeatId) REFERENCES Seats(Id) ON DELETE CASCADE,
-    FOREIGN KEY (ShowId) REFERENCES MovieShow (Id) ON DELETE CASCADE
+    FOREIGN KEY (ShowId) REFERENCES MovieShow(Id) ON DELETE CASCADE
 );
 
+-- ========================= BẢNG ĐỒ ĂN =========================
 CREATE TABLE Food (
     Id INT PRIMARY KEY AUTO_INCREMENT,
     Name NVARCHAR(255) NOT NULL,
-    Description TEXT, -- Sửa từ NVARCHAR(MAX)
-    Cost Float
+    Description TEXT,
+    Cost INT
 );
 
 CREATE TABLE Food_Order (
@@ -140,6 +146,85 @@ CREATE TABLE Food_Order (
     FOREIGN KEY (BillId) REFERENCES Bill(Id) ON DELETE CASCADE
 );
 
+-- ========================= BẢNG ĐÁNH GIÁ PHIM =========================
+CREATE TABLE FilmRating (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    UserId INT NOT NULL,
+    FilmId INT NOT NULL,
+    Rating INT CHECK (Rating BETWEEN 1 AND 5),
+    Comment TEXT,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (UserId, FilmId),
+    FOREIGN KEY (UserId) REFERENCES User(Id) ON DELETE CASCADE,
+    FOREIGN KEY (FilmId) REFERENCES Film(Id) ON DELETE CASCADE
+);
+
+-- ========================= EVENT TỰ ĐỘNG XÓA GHẾ =========================
+CREATE EVENT IF NOT EXISTS delete_expired_choosing_seats
+ON SCHEDULE EVERY 1 MINUTE
+DO
+DELETE FROM Reservation
+WHERE SeatStatus = 'CHOOSING'
+AND TIMESTAMPDIFF(MINUTE, TimeCreated, NOW()) >= 2;
+
+-- ========================= DỮ LIỆU MẪU =========================
+-- Role
+INSERT INTO Role (Name) VALUES ('Admin'), ('Staff'), ('Customer');
+
+-- Account
+INSERT INTO Account (Email, Password, AccountStatus, RoleId) VALUES
+('admin@gmail.com', '123', 'Active', 1),
+('staff@gmail.com', '123', 'Active', 2),
+('user@gmail.com', '123', 'Active', 3),
+('customer@gmail.com', '123', 'Active', 3);
+
+-- Inventory
+INSERT INTO inventory (account_id, amount_of_gold, amount_of_silver, amount_of_bronze, amount_of_ticket_discount) VALUES
+(1, 3, 2, 5, 1),
+(2, 1, 0, 3, 2),
+(3, 0, 2, 4, 0),
+(4, 0, 0, 2, 3);
+
+-- User
+INSERT INTO User (Name, Gender, Birth, Phone, Address, AccountId) VALUES
+('Quốc Thuận', 1, '1990-01-01', '0123456789', 'Hà Nội', 1),
+('Nguyễn Văn A', 1, '1992-05-15', '0987654321', 'Hồ Chí Minh', 2),
+('Trần Thị B', 0, '1995-08-20', '0934567890', 'Đà Nẵng', 3),
+('Phạm Văn D', 1, '1993-11-11', '0912345678', 'Cần Thơ', 4);
+
+-- Genre
+INSERT INTO Genre (Name) VALUES ('Hành động'), ('Hoạt hình'), ('Kinh dị'), ('Hài'), ('Tâm lý');
+
+-- SeatType
+INSERT INTO SeatType (Name, Cost) VALUES ('Thường', 70000), ('VIP', 100000);
+
+-- Room
+INSERT INTO Room (RowNumber, ColNumber, RoomStatus, Name) VALUES
+(5, 5, 'Hoạt động', 'Phòng 1'),
+(8, 12, 'Hoạt động', 'Phòng 2'),
+(6, 10, 'Bảo trì', 'Phòng 3');
+
+-- Seats
+-- Cập nhật trong admin
+
+-- Food
+INSERT INTO Food (Name, Description, Cost) VALUES
+('Pizza', 'Pizza hải sản đặc biệt với phô mai ngon tuyệt.', 100000),
+('Burger', 'Burger thịt bò, rau xà lách, phô mai.', 50000),
+('Coca Cola', 'Nước giải khát Coca Cola.', 20000);
+
+-- Bill
+INSERT INTO Bill (UserId, DatePurchased, BillStatus) VALUES
+(1, '2025-06-01 10:00:00', 'Đã thanh toán'),
+(2, '2025-06-01 11:00:00', 'Đã thanh toán');
+
+-- Food_Order
+INSERT INTO Food_Order (FoodId, BillId, Count) VALUES
+(1, 1, 2),
+(3, 1, 3),
+(2, 2, 1);
+
+-- Film (Bạn giữ như dữ liệu phim mẫu bạn đã viết trước đó)
 INSERT INTO Film (Name, Country, Length, Director, Actor, AgeLimit, FilmStatus, Content, Trailer, AdPosterUrl, PosterUrl, ReleaseDate)
 VALUES
 
@@ -196,151 +281,13 @@ VALUES (
     'poster/boGia.jpg',
     '2021-03-05'
 );
-
-INSERT INTO Genre (Name)
-VALUES
-('Hành động'),
-('Hoạt hình'),
-('Kinh dị'),
-('Hài'),
-('Tâm lý');
--- Immaculatte (FilmId = 6) là Kinh dị
-INSERT INTO Film_Genre (FilmId, GenreId)
-VALUES (6, 3);
-
--- Ant-Main (FilmId = 8) là Hành động + Hài
-INSERT INTO Film_Genre (FilmId, GenreId)
-VALUES
-(7, 1),
-(7, 4);
-INSERT INTO Film_Genre (FilmId, GenreId)
-VALUES (4, 5);
-
--- Mario Bros (FilmId = 2): Hoạt hình + Hài
-INSERT INTO Film_Genre (FilmId, GenreId)
-VALUES (1, 2), (1, 4);
-
--- Rocky (FilmId = 3): Hành động + Tâm lý
-INSERT INTO Film_Genre (FilmId, GenreId)
-VALUES (2, 1), (2, 5);
-
--- Avengers (FilmId = 9): Hành động
-INSERT INTO Film_Genre (FilmId, GenreId)
-VALUES (8, 1);
- use cinema;
- INSERT INTO Room (RowNumber, ColNumber, RoomStatus, Name)
-VALUES
-(5, 5, 'Hoạt động', 'Phòng 1'),
-(8, 12, 'Hoạt động', 'Phòng 2'),
-(6 , 10, 'Bảo trì', 'Phòng 3');
-
--- Thêm ghế cho phòng 1
-
-
--- Phim 6: Immaculatte (Id = 6)
--- Phim 1: Mario Bros (FilmId = 1)
--- Phim 1: Mario Bros (FilmId = 1)
--- Phim 1: Fast and Furious (FilmId = 1)
+-- MovieShow (Bạn giữ như dữ liệu mẫu bạn đã viết)
 INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
 VALUES
-('2025-04-29 16:00:00', '2025-04-29 17:30:00', 1, 2),
-('2025-04-28 19:00:00', '2025-04-28 20:30:00', 1, 1),
-('2025-04-29 10:00:00', '2025-04-29 11:30:00', 1, 1),
-('2025-04-29 13:00:00', '2025-04-29 14:30:00', 1, 2);
-
--- Phim 2: Rocky (FilmId = 2)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-05-01 12:00:00', '2025-05-01 14:00:00', 2, 1),
-('2025-05-01 15:00:00', '2025-05-01 17:00:00', 2, 2),
-('2025-05-01 20:00:00', '2025-05-01 22:00:00', 2, 2),
-('2025-05-01 22:30:00', '2025-05-01 00:30:00', 2, 1),
-('2025-05-01 14:00:00', '2025-05-01 16:00:00', 2, 1);
-
--- Phim 3: Ròm (FilmId = 3)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-28 14:00:00', '2025-04-28 15:30:00', 3, 1),
-('2025-04-28 16:00:00', '2025-04-28 17:30:00', 3, 2),
-('2025-04-29 18:00:00', '2025-04-29 19:30:00', 3, 2),
-('2025-04-29 20:00:00', '2025-04-29 21:30:00', 3, 1),
-('2025-04-30 16:00:00', '2025-04-30 17:30:00', 3, 1);
-
--- Phim 4: The Lion King (FilmId = 4)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-28 18:00:00', '2025-04-28 20:00:00', 4, 1),
-('2025-04-28 20:30:00', '2025-04-28 22:30:00', 4, 2),
-('2025-04-29 12:00:00', '2025-04-29 14:00:00', 4, 2),
-('2025-04-29 16:00:00', '2025-04-29 18:00:00', 4, 1),
-('2025-04-30 20:00:00', '2025-04-30 22:00:00', 4, 1);
-
--- Phim 5: Immaculatte (FilmId = 5)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-28 14:00:00', '2025-04-28 15:30:00', 5, 1),
-('2025-04-28 16:00:00', '2025-04-28 17:30:00', 5, 2),
-('2025-04-29 18:00:00', '2025-04-29 19:30:00', 5, 2),
-('2025-04-29 20:00:00', '2025-04-29 21:30:00', 5, 1),
-('2025-04-30 16:00:00', '2025-04-30 17:30:00', 5, 1);
-
--- Phim 7: Ant-Man and the Wasp: Quantumania (FilmId = 7)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-05-02 20:00:00', '2025-05-02 22:00:00', 7, 1),
-('2025-04-28 22:30:00', '2025-04-29 00:30:00', 7, 2),
-('2025-04-29 14:00:00', '2025-04-29 16:00:00', 7, 2),
-('2025-04-29 16:30:00', '2025-04-29 18:30:00', 7, 1),
-('2025-04-30 18:00:00', '2025-04-30 20:00:00', 7, 1);
-
--- Phim 8: Avengers: Infinity War (FilmId = 8)
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
-('2025-04-28 12:00:00', '2025-04-28 14:00:00', 8, 1),
-('2025-04-28 14:30:00', '2025-04-28 16:30:00', 8, 2),
-('2025-04-29 20:00:00', '2025-04-29 22:00:00', 8, 2),
-('2025-04-29 22:30:00', '2025-04-30 00:30:00', 8, 1),
-('2025-04-30 14:00:00', '2025-04-30 16:00:00', 8, 1);
-
-
-INSERT INTO SeatType (Name, Cost)
-VALUES
-('Thường', 70000),
-('VIP', 100000);
-
-
-INSERT INTO Seats (Position, RoomId, SeatTypeId)
-VALUES
-('A1', 1, 1), ('A2', 1, 1), ('A3', 1, 1), ('A4', 1, 1), ('A5', 1, 1),
-('B1', 1, 1), ('B2', 1, 1), ('B3', 1, 1), ('B4', 1, 1), ('B5', 1, 1),
-('C1', 1, 1), ('C2', 1, 1), ('C3', 1, 1), ('C4', 1, 1), ('C5', 1, 1),
-('D1', 1, 1), ('D2', 1, 1), ('D3', 1, 1), ('D4', 1, 1), ('D5', 1, 1),
-('E1', 1, 1), ('E2', 1, 1), ('E3', 1, 1), ('E4', 1, 1), ('E5', 1, 1),
-('F1', 2, 1), ('F2', 2, 1), ('F3', 2, 1), ('F4', 2, 1), ('F5', 2, 1),
-('G1', 2, 1), ('G2', 2, 1), ('G3', 2, 1), ('G4', 2, 1), ('G5', 2, 1);
-
-INSERT INTO Food (Name, Description, Cost) VALUES
-('Pizza', 'Pizza hải sản đặc biệt với phô mai ngon tuyệt.', 100000),
-('Burger', 'Burger thịt bò, rau xà lách, phô mai.', 50000),
-('Hotdog', 'Hotdog với xúc xích và sốt đặc biệt.', 30000),
-('Coca Cola', 'Nước giải khát Coca Cola.', 20000),
-('Pepsi', 'Một lon Pepsi mát lạnh.', 20000),
-('Sprite', 'Nước giải khát Sprite vị chanh tươi.', 20000),
-('Fanta', 'Nước ngọt Fanta vị cam đặc biệt.', 20000),
-('7Up', '7Up nước giải khát vị chanh tự nhiên.', 22000);
-INSERT INTO User (Name, Gender, Birth, Phone, Address, AccountId) VALUES
-('Quốc Thuận', 1, '1990-01-01', '0123456789', 'Hà Nội', 1),
-('Nguyễn Văn A', 1, '1992-05-15', '0987654321', 'Hồ Chí Minh', 2),
-('Trần Thị B', 0, '1995-08-20', '0934567890', 'Đà Nẵng', 3),
-('Phạm Văn D', 1, '1993-11-11', '0912345678', 'Cần Thơ', 4);
-
-
-INSERT INTO Bill (UserId, DatePurchased, BillStatus)
-VALUES
-(1, '2025-05-01 17:00:00', 'Đã thanh toán'),
-(2, '2025-05-01 18:00:00', 'Đã thanh toán'),
-(3, '2025-05-02 14:30:00', 'Đã thanh toán'),
-(4, '2025-05-02 15:00:00', 'Đã thanh toán');
+('2025-07-01 16:00:00', '2025-07-01 17:30:00', 1, 2),
+('2025-07-02 19:00:00', '2025-07-02 20:30:00', 1, 1),
+('2025-07-03 10:00:00', '2025-07-03 11:30:00', 1, 1),
+('2025-07-03 13:00:00', '2025-07-03 14:30:00', 1, 2);
 
 -- Bill
 INSERT INTO Bill (UserId, DatePurchased, BillStatus, TotalPrice)
@@ -349,7 +296,7 @@ VALUES
 (2, '2025-05-01 18:00:00', 'PAID',10000),
 (3, '2025-05-02 14:30:00', 'PAID',10000),
 (4, '2025-05-02 15:00:00', 'PAID',10000);
--- Giả sử BillId = 1 và ghế A1 (SeatId = 1) được đặt cho lịch chiếu MovieShowId = 1
+-- Reservation (Bạn giữ như dữ liệu mẫu bạn đã viết)
 INSERT INTO Reservation (BillId, SeatId, ShowId, Cost, SeatTypeName)
 VALUES
 (1, 1, 1, 50000, 'Thường'),  -- A1 cho suất 1
@@ -360,62 +307,7 @@ VALUES
 (3, 6, 3, 50000, 'Thường'),  -- B1 cho suất 3
 (4, 7, 4, 50000, 'Thường'),  -- B2 cho suất 4
 (4, 8, 4, 50000, 'Thường');  -- B3 cho suất 4
-
-
--- lenh truy van ghe da duoc dat o film nao
--- SELECT
---     f.name AS film_name,
---     ms.StartTime AS show_time,  -- Thay 'show_time' bằng 'StartTime'
---     r.Name AS room_name,
---     s.Position AS seat_label
--- FROM
---     Reservation res
--- JOIN
---     Seats s ON res.SeatId = s.Id
--- JOIN
---     MovieShow ms ON res.ShowId = ms.Id
--- JOIN
---     Room r ON ms.RoomId = r.Id
--- JOIN
---     Film f ON ms.FilmId = f.Id;
-
-INSERT INTO MovieShow (StartTime, EndTime, FilmId, RoomId)
-VALUES
--- Phim 1
-('2025-05-03 16:00:00', '2025-05-03 17:30:00', 1, 2),
-('2025-05-03 19:00:00', '2025-05-03 20:30:00', 1, 1),
-('2025-05-03 10:00:00', '2025-05-03 11:30:00', 1, 1),
-
--- Phim 2: Rocky
-('2025-05-03 12:00:00', '2025-05-03 14:00:00', 2, 1),
-('2025-05-03 15:00:00', '2025-05-03 17:00:00', 2, 2),
-('2025-05-03 20:00:00', '2025-05-03 22:00:00', 2, 2),
-
--- Phim 3: Ròm
-('2025-05-03 14:00:00', '2025-05-03 15:30:00', 3, 1),
-('2025-05-03 16:00:00', '2025-05-03 17:30:00', 3, 2),
-('2025-05-03 18:00:00', '2025-05-03 19:30:00', 3, 2),
-
--- Phim 4: The Lion King
-('2025-05-03 18:00:00', '2025-05-03 20:00:00', 4, 1),
-('2025-05-03 20:30:00', '2025-05-03 22:30:00', 4, 2),
-('2025-05-03 12:00:00', '2025-05-03 14:00:00', 4, 2),
-
--- Phim 5: Immaculatte
-('2025-05-03 14:00:00', '2025-05-03 15:30:00', 5, 1),
-('2025-05-03 16:00:00', '2025-05-03 17:30:00', 5, 2),
-('2025-05-03 18:00:00', '2025-05-03 19:30:00', 5, 2),
-
--- Phim 7: Ant-Man and the Wasp: Quantumania
-('2025-05-03 20:00:00', '2025-05-03 22:00:00', 7, 1),
-('2025-05-03 22:30:00', '2025-05-04 00:30:00', 7, 2),
-('2025-05-03 14:00:00', '2025-05-03 16:00:00', 7, 2),
-
--- Phim 8: Avengers: Infinity War
-('2025-05-03 12:00:00', '2025-05-03 14:00:00', 8, 1),
-('2025-05-03 14:30:00', '2025-05-03 16:30:00', 8, 2),
-('2025-05-03 20:00:00', '2025-05-03 22:00:00', 8, 2);
-
-
-
-
+-- FilmRating
+INSERT INTO FilmRating (UserId, FilmId, Rating, Comment) VALUES
+(1, 1, 5, 'Phim rất hay! Diễn xuất tuyệt vời.'),
+(2, 1, 4, 'Nội dung ổn, nhưng đoạn kết hơi nhanh.');
