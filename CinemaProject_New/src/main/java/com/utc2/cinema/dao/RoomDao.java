@@ -242,7 +242,24 @@ public class RoomDao {
         }
         return false;
     }
-
+    public boolean hasAnyReservations(int roomId) {
+        String query = """
+        SELECT 1
+        FROM Reservation r
+        JOIN MovieShow ms ON r.ShowId = ms.Id
+        WHERE ms.RoomId = ?
+        LIMIT 1
+    """;
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, roomId);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next(); // true nếu có ít nhất 1 vé đã đặt
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 
 
