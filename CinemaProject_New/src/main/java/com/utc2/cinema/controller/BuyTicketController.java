@@ -979,7 +979,7 @@ public class BuyTicketController {
                 CustomAlert.showError("","Túi đồ","Túi đồ trống!!!");
                 return;
             }
-            
+
             inventoryVoucher.setVisible(true);
             inventoryVoucher.setManaged(true);
             inventoryVoucher.setSpacing(10);

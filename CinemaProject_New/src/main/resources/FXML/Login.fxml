@@ -17,12 +17,12 @@
    <children>
       <Pane fx:id="loginPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="562.0" prefWidth="954.0" styleClass="background-menu" stylesheets="@../CSS/Login.css">
          <children>
-            <PasswordField fx:id="passWord" layoutX="351.0" layoutY="314.0" onMouseClicked="#onMouseClickedPassword" styleClass="field" />
-            <TextField fx:id="userName" layoutX="351.0" layoutY="260.0" onMouseClicked="#onMouseClickEmail" styleClass="field" />
-            <Button fx:id="loginButton" layoutX="352.0" layoutY="381.0" mnemonicParsing="false" onAction="#onClickLoginButton" prefHeight="17.0" prefWidth="141.0" styleClass="login-button" text="Login" />
-            <Label fx:id="toRegisterButton" layoutX="349.0" layoutY="435.0" onMouseClicked="#onClickToRegister" styleClass="register-button" text="I don't have account!" />
+            <PasswordField fx:id="passWord" layoutX="351.0" layoutY="314.0" onMouseClicked="#onMouseClickedPassword" promptText="Mật khẩu" styleClass="field" />
+            <TextField fx:id="userName" layoutX="351.0" layoutY="260.0" onMouseClicked="#onMouseClickEmail" promptText="Tài khoản" styleClass="field" />
+            <Button fx:id="loginButton" layoutX="352.0" layoutY="381.0" mnemonicParsing="false" onAction="#onClickLoginButton" prefHeight="17.0" prefWidth="141.0" styleClass="login-button" text="Đăng nhập" />
+            <Label fx:id="toRegisterButton" layoutX="349.0" layoutY="435.0" onMouseClicked="#onClickToRegister" styleClass="register-button" text="Tôi không có tài khoản!" />
             <CheckBox fx:id="showPass" layoutX="551.0" layoutY="355.0" mnemonicParsing="false" onAction="#onClickShowPassLogin" text="👁" textFill="WHITE" />
-            <TextField fx:id="passWordText" layoutX="351.0" layoutY="314.0" onMouseClicked="#onMouseClickEmail" styleClass="field" visible="false" />
+            <TextField fx:id="passWordText" layoutX="351.0" layoutY="314.0" onMouseClicked="#onMouseClickEmail" promptText="Mật khẩu" styleClass="field" visible="false" />
             <ImageView fitHeight="307.0" fitWidth="633.0" layoutX="-203.0" layoutY="258.0" pickOnBounds="true" preserveRatio="true" rotate="10.0" style="-fx-background-radius: 10px;">
                <image>
                   <Image url="@../Image/h2.png" />
@@ -33,7 +33,7 @@
                   <Image url="@../Image/h1.png" />
                </image>
             </ImageView>
-            <Label alignment="TOP_LEFT" contentDisplay="CENTER" layoutX="351.0" layoutY="225.0" prefHeight="35.0" prefWidth="250.0" text="Login" textFill="WHITE">
+            <Label alignment="TOP_LEFT" contentDisplay="CENTER" layoutX="351.0" layoutY="225.0" prefHeight="35.0" prefWidth="250.0" text="Đăng nhập" textFill="WHITE">
                <font>
                   <Font size="16.0" />
                </font>
@@ -67,23 +67,23 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <TextField fx:id="emailRegister" layoutX="351.0" layoutY="260.0" onMouseClicked="#onMouseClickedEmail" styleClass="field-register" />
-            <Button fx:id="registerButton" layoutX="351.0" layoutY="438.0" mnemonicParsing="false" onAction="#onClickRegisterButton" styleClass="register-button" text="Register" />
-            <Label fx:id="backButton" layoutX="351.0" layoutY="492.0" onMouseClicked="#onClickBackButton" styleClass="back-login-button" text="Go back to login?">
+            <TextField fx:id="emailRegister" layoutX="351.0" layoutY="260.0" onMouseClicked="#onMouseClickedEmail" promptText="Email" styleClass="field-register" />
+            <Button fx:id="registerButton" layoutX="351.0" layoutY="438.0" mnemonicParsing="false" onAction="#onClickRegisterButton" styleClass="register-button" text="Đăng ký" />
+            <Label fx:id="backButton" layoutX="351.0" layoutY="492.0" onMouseClicked="#onClickBackButton" styleClass="back-login-button" text="Trở về đăng nhập?">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
             <StackPane layoutX="351.0" layoutY="316.0" prefHeight="35.0" prefWidth="250.0">
                <children>
-                  <TextField fx:id="passwordPf" onMouseClicked="#OnClickPassPf" styleClass="field" />
-                  <PasswordField fx:id="passwordTf" onMouseClicked="#OnClickPassTf" styleClass="field-register" />
+                  <TextField fx:id="passwordPf" onMouseClicked="#OnClickPassPf" promptText="Mật khẩu" styleClass="field" />
+                  <PasswordField fx:id="passwordTf" onMouseClicked="#OnClickPassTf" promptText="Mật khẩu" styleClass="field-register" />
                </children>
             </StackPane>
             <StackPane layoutX="351.0" layoutY="372.0" prefHeight="35.0" prefWidth="250.0">
                <children>
-                  <TextField fx:id="passConfirmPf" onMouseClicked="#OnClickPassConfirmPf" styleClass="field" />
-                  <PasswordField fx:id="passConfirmTf" onMouseClicked="#OnClickPassConfirmTf" styleClass="field-register" />
+                  <TextField fx:id="passConfirmPf" onMouseClicked="#OnClickPassConfirmPf" promptText="Nhập lại mật khẩu" styleClass="field" />
+                  <PasswordField fx:id="passConfirmTf" onMouseClicked="#OnClickPassConfirmTf" promptText="Nhập lại mật khẩu" styleClass="field-register" />
                </children>
             </StackPane>
             <CheckBox fx:id="showPassCF" layoutX="551.0" layoutY="412.0" mnemonicParsing="false" onAction="#onClickShowPass" prefHeight="7.0" prefWidth="50.0" styleClass="show-register" text="👁" textFill="WHITE" />
@@ -92,7 +92,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label alignment="TOP_LEFT" contentDisplay="CENTER" layoutX="351.0" layoutY="225.0" prefHeight="35.0" prefWidth="250.0" text="Register" textFill="WHITE">
+            <Label alignment="TOP_LEFT" contentDisplay="CENTER" layoutX="351.0" layoutY="225.0" prefHeight="35.0" prefWidth="250.0" text="Đăng ký" textFill="WHITE">
                <font>
                   <Font size="16.0" />
                </font>
