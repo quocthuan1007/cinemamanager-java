@@ -1,11 +1,11 @@
 package com.utc2.cinema.controller;
 
 import com.utc2.cinema.dao.AccountDao;
+import com.utc2.cinema.dao.InventoryDao;
 import com.utc2.cinema.model.entity.*;
 import com.utc2.cinema.service.AccountService;
 import com.utc2.cinema.utils.PasswordUtils;
 import com.utc2.cinema.utils.ValidationUtils;
-import com.utc2.cinema.view.Login;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -43,10 +43,6 @@ public class LoginController {
             stage.setScene(scene);
             stage.setResizable(false);
             stage.show();
-            stage.setOnCloseRequest(event -> {
-                System.out.println("🔄 Shutting down...");
-                System.exit(0); // Tắt toàn bộ JVM - kill tất cả threads
-            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -375,7 +371,11 @@ public class LoginController {
             passwordPf.clear();
             passConfirmTf.clear();
             passConfirmPf.clear();
-            if (AccountService.registerAccount(accRegis)) {
+            if (AccountService.registerAccount(accRegis))
+            {
+                Account b = AccountService.getDataByEmail(accRegis.getEmail());
+                Inventory a = new Inventory(b.getId(),0,0,0, 0);
+                InventoryDao.insertInventory(a);
                 boolean check = CustomAlert.showConfirmation("", "Hoàn tất", "Đăng ký thành công, bạn có muốn đăng nhập không?");
                 if (check == true) {
                     try {

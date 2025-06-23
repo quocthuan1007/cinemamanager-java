@@ -57,6 +57,26 @@ public class BillDao {
         }
         return false;
     }
+    public static boolean updateTotalPrice(int billId, double totalPrice) {
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+            conn = Database.getConnection();
+            String sql = "UPDATE Bill SET TotalPrice = ? WHERE Id = ?";
+            st = conn.prepareStatement(sql);
+            st.setDouble(1, totalPrice);
+            st.setInt(2, billId);
+
+            int rowsUpdated = st.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Database.closeConnection(conn);
+            if (st != null) try { st.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return false;
+    }
 
     public static boolean insertBill(Bill bill) {
         String sql = "INSERT INTO Bill (UserId, DatePurchased, BillStatus) VALUES (?, ?, ?)";
@@ -126,8 +146,9 @@ public class BillDao {
                 int userId = rs.getInt("UserId");
                 java.sql.Date datePurchased = rs.getDate("DatePurchased");
                 String billStatus = rs.getString("BillStatus");
+                double totalPrice = rs.getDouble("TotalPrice");
 
-                return new Bill(billId, userId, datePurchased, billStatus);
+                return new Bill(billId, userId, datePurchased, billStatus,totalPrice);
             }
             Database.closeConnection(conn);
         } catch (Exception e) {
@@ -153,8 +174,8 @@ public class BillDao {
                 int billId = rs.getInt("Id");
                 java.sql.Date datePurchased = rs.getDate("DatePurchased");
                 String billStatus = rs.getString("BillStatus");
-
-                bills.add(new Bill(billId, userId, datePurchased, billStatus));
+                double totalPrice = rs.getDouble("TotalPrice");
+                bills.add(new Bill(billId, userId, datePurchased, billStatus,totalPrice));
             }
             Database.closeConnection(conn);
         } catch (Exception e) {
@@ -218,7 +239,7 @@ public class BillDao {
                     "JOIN Room r ON ms.RoomId = r.Id " +
                     "JOIN Seats s ON rsv.SeatId = s.Id " +
                     "WHERE b.UserId = ? " +
-                    "GROUP BY b.Id, b.DatePurchased, ms.StartTime, f.Name, r.Name, ms.FilmId"; // ✅ sửa dòng này
+                    "GROUP BY b.Id, b.DatePurchased, ms.StartTime, f.Name, r.Name, ms.FilmId";
 
             st = conn.prepareStatement(query);
             st.setInt(1, userId);
@@ -230,7 +251,8 @@ public class BillDao {
 
                 List<String> seatList = getSeatNamesByBillId(billId);
                 String foodCombo = getFoodComboByBillId(billId);
-
+                double totalUp = getBillById(billId).getTotalPrice();
+                System.out.println(totalUp);
                 Invoice invoice = new Invoice(
                         rs.getDate("DatePurchased").toLocalDate(),
                         rs.getString("SuatChieu"),
@@ -239,7 +261,7 @@ public class BillDao {
                         rs.getInt("SoGhe"),
                         rs.getDouble("GiaTriGhe"),
                         rs.getDouble("GiaTriDoAn"),
-                        rs.getDouble("GiaTri"),
+                        totalUp,
                         seatList,
                         foodCombo,
                         filmId

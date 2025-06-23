@@ -1,5 +1,6 @@
 package com.utc2.cinema.service;
 
+import com.beust.ah.A;
 import com.utc2.cinema.dao.AccountDao;
 import com.utc2.cinema.model.entity.Account;
 
@@ -37,5 +38,9 @@ public class AccountService
         AccountDao a = new AccountDao();
         return a.getPassword(email);
     }
-
+    public static Account getDataByEmail(String Email)
+    {
+        AccountDao a = new AccountDao();
+        return a.getDataByEmail(Email);
+    }
 }

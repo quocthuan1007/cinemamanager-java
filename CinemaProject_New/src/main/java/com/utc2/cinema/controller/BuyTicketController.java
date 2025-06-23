@@ -2,13 +2,12 @@ package com.utc2.cinema.controller;
 
 import com.utc2.cinema.dao.*;
 import com.utc2.cinema.model.entity.*;
-import com.utc2.cinema.service.FilmService;
+import com.utc2.cinema.service.AccountService;
 import com.utc2.cinema.service.UserService;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleFloatProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebView;
@@ -31,12 +31,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-import javax.servlet.ServletException;
-import java.awt.*;
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -86,13 +81,15 @@ public class BuyTicketController {
 
     private static int currentRoomId;
     private static int currentShowId;
-
+    private Label voucherLabel;
+    private VBox inventoryVoucher;
+    private VBox itemInventory;
     public BuyTicketController(MainMenuController mainMenu) {
         this.mainMenu = mainMenu;
+        this.voucherLabel=mainMenu.getVoucherLabel();
+        this.inventoryVoucher=mainMenu.getInventoryVoucher();
 
-        // gán các thành phần UI từ mainMenu như bạn đã làm...
-
-        this.filmNameLabel1 = mainMenu.getFilmNameLabel1(); // Giả sử bạn đã tạo getter trong MainMenuController
+        this.filmNameLabel1 = mainMenu.getFilmNameLabel1();
         this.showTimeLabel = mainMenu.getShowTimeLabel();
         this.roomLabel = mainMenu.getRoomLabel();
         this.seatLabel = mainMenu.getSeatLabel();
@@ -115,12 +112,13 @@ public class BuyTicketController {
         this.priceColumn = mainMenu.getPriceColumn();
         this.quantityColumn = mainMenu.getQuantityColumn();
         this.totalColumn = mainMenu.getTotalColumn();
+        this.itemInventory = mainMenu.getItemInventory();
     }
     @FXML FilmDisplayController filmDisplayController;
 
     public void initialize() {
         showAllFilms();
-
+        itemInventory.setVisible(true);
 
         loadFoodList();  // Đảm bảo rằng foodList đã được tải từ cơ sở dữ liệu
         // Khởi tạo TableView
@@ -131,12 +129,30 @@ public class BuyTicketController {
 
         billPane.setVisible(false);
         seatSelectionPane.setVisible(false);
+
+        Platform.runLater(() -> {
+            Stage stage = (Stage) billPane.getScene().getWindow();
+            stage.setOnCloseRequest(e -> {
+                if (billPane.isVisible()) {
+                    if (!voucherAdd.equals("")) {
+                        InventoryDao.useVoucher(AccountService.getDataByEmail(UserSession.getInstance().getEmail()).getId(), voucherAdd, 1);
+                        System.out.println(UserSession.getInstance().getEmail() + " " + "+" + voucherAdd);
+                        voucherAdd = "";
+                    }
+                }
+                System.out.println("🔄 Shutting down...");
+                System.exit(0); // Tắt toàn bộ JVM - kill tất cả threads
+            });
+        });
     }
     @FXML
     public void onBack() {
         // Ẩn Pane hóa đơn khi nhấn Quay lại
         billPane.setVisible(false);
-
+        if(voucherAdd == "") return;
+        InventoryDao.useVoucher(AccountService.getDataByEmail(UserSession.getInstance().getEmail()).getId() , voucherAdd,1);
+        voucherAdd="";
+        voucherLabel.setText("");
     }
 
     @FXML
@@ -213,7 +229,6 @@ public class BuyTicketController {
             roomLabel.setText(room);
             seatLabel.setText(seat);
             comboLabel.setText(combo);
-            totalLabel.setText(totalPrice + " VNĐ");
             // Hiển thị Pane hóa đơn
             billPane.setVisible(true);
         }
@@ -243,6 +258,7 @@ public class BuyTicketController {
             Bill bill = new Bill(userId, datePurchased, billStatus);
             boolean isBillSaved = BillDao.insertBill(bill);
             int billId = bill.getId();
+            System.out.println("thuan test:"+billId);
 
             int price = (int) Math.round(totalPrice);
             String url = ajaxServlet.createURL(price, "NCB", "vn", billId);
@@ -399,6 +415,15 @@ public class BuyTicketController {
         if (webViewStage != null) {
             webViewStage.close();
         }
+        if((double)totalPrice >= 500000)
+        {
+            InventoryDao.useVoucher(AccountService.getDataByEmail(UserSession.getInstance().getEmail()).getId() , "ticket",1);
+            CustomAlert.showInfo("Tặng voucher","","Bạn được tăng 1 vé quay do hoá đơn trên 500.000\nClick vào túi đồ bên phải để sử dụng.");
+        }
+        boolean updateBill = BillDao.updateTotalPrice(billId, totalPrice);
+        if(updateBill) System.out.println("Bill: "+ billId+" được update thành công");
+        else System.out.println("Bill: "+ billId+" được update thất bại");
+        totalPrice = 0;
     }
 
     private void showAllFilms() {
@@ -765,6 +790,9 @@ public class BuyTicketController {
         totalLabel.setText("Tổng tiền: " + total + " VNĐ");  // Hiển thị tổng tiền
     }
 
+    public String getVoucherAdd() {
+        return voucherAdd;
+    }
 
     // Cập nhật bảng khi có thay đổi
     private void displayFoodOrders() {
@@ -791,5 +819,113 @@ public class BuyTicketController {
         foodOrder.setTotalPrice(food.getCost(), count);  // Tính tổng tiền cho món ăn
         foodOrderList.add(foodOrder);  // Thêm món ăn vào giỏ hàng
         displayFoodOrders();  // Cập nhật lại bảng giỏ hàng
+    }
+
+    //add voucher
+    private String voucherAdd = ""; // Tránh áp dụng nhiều lần
+
+    private void applyVoucher(String type) {
+        if (voucherAdd != "") {
+            CustomAlert.showWarning("Voucher đã dùng", "Bạn đã sử dụng voucher rồi!");
+            return;
+        }
+
+        double discount = 0;
+        switch (type.toLowerCase()) {
+            case "gold":
+                discount = 50000;
+                break;
+            case "silver":
+                discount = 30000;
+                break;
+            case "bronze":
+                discount = 15000;
+                break;
+        }
+        voucherLabel.setText(type);
+        if (totalPrice <= discount) {
+            totalPrice = 0;
+        } else {
+            totalPrice -= discount;
+        }
+
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        totalLabel.setText(formatter.format(totalPrice));
+        voucherAdd = type;
+        InventoryDao.useVoucher(AccountService.getDataByEmail(UserSession.getInstance().getEmail()).getId() , type,-1);
+
+        inventoryVoucher.setVisible(false);
+
+        CustomAlert.showInfo("Áp dụng thành công", "", "Bạn đã áp dụng voucher " + type);
+    }
+
+    private HBox createVoucherItem(String type, int amount) {
+        Label nameLabel = new Label(type + " Voucher:");
+        nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+
+        Label amountLabel = new Label("x" + amount);
+        amountLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #555555;");
+
+        Button useButton = new Button("Sử dụng");
+        useButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-cursor: hand;");
+        useButton.setOnAction(event -> {
+            System.out.println("Dùng " + type + " voucher");
+            inventoryVoucher.setVisible(false);
+            inventoryVoucher.setManaged(false);
+            if (type.equals("Ticket")) {
+                LuckyWheel.start(result -> {
+                    System.out.println("Kết quả quay là: " + result);
+                    // Xử lý logic sau khi quay ở đây
+                });
+                return;
+            }
+
+            if (!billPane.isVisible()) {
+                CustomAlert.showError("Không thể mở", "Bạn chỉ có thể dùng voucher khi thanh toán!");
+                return;
+            }
+
+            applyVoucher(type);
+        });
+
+        HBox hBox = new HBox(10, nameLabel, amountLabel, useButton);
+        hBox.setAlignment(Pos.CENTER_RIGHT);
+        hBox.setPadding(new Insets(5));
+        hBox.setStyle("-fx-background-color: #f1f1f1; -fx-background-radius: 8;");
+        return hBox;
+    }
+
+    public void onClickInventory(MouseEvent mouseEvent) {
+        if (!inventoryVoucher.isVisible()) {
+            inventoryVoucher.setVisible(true);
+            inventoryVoucher.setManaged(true);
+            inventoryVoucher.setSpacing(10);
+            inventoryVoucher.getChildren().clear();
+
+            Inventory voucher = InventoryDao.findInventoryByUserId(UserSession.getInstance().getUserId());
+            if (voucher == null) return;
+
+            int amountGold = voucher.getAmountOfGold();
+            int amountSilver = voucher.getAmountOfSilver();
+            int amountBronze = voucher.getAmountOfBronze();
+            int amountTicket = voucher.getAmountOfTicketDiscount();
+
+            if (amountGold > 0) {
+                inventoryVoucher.getChildren().add(createVoucherItem("Gold", amountGold));
+            }
+            if (amountSilver > 0) {
+                inventoryVoucher.getChildren().add(createVoucherItem("Silver", amountSilver));
+            }
+            if (amountBronze > 0) {
+                inventoryVoucher.getChildren().add(createVoucherItem("Bronze", amountBronze));
+            }
+            if (amountTicket > 0) { // ✅ Đúng điều kiện
+                inventoryVoucher.getChildren().add(createVoucherItem("Ticket", amountTicket));
+            }
+
+        } else {
+            inventoryVoucher.setVisible(false);
+            inventoryVoucher.setManaged(false);
+        }
     }
 }

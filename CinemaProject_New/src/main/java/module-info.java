@@ -22,6 +22,7 @@ module CinemaProject {
     requires jakarta.mail;
 
     requires itextpdf;
+    requires jcommander;
 
 
     opens com.utc2.cinema.view to javafx.fxml;

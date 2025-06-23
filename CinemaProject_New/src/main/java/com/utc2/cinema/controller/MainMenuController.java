@@ -1,45 +1,17 @@
 package com.utc2.cinema.controller;
 
-import com.utc2.cinema.dao.AccountDao;
-import com.utc2.cinema.dao.FilmDao;
-import com.utc2.cinema.dao.MovieShowDao;
 import com.utc2.cinema.model.entity.*;
-import com.utc2.cinema.service.AccountService;
-import com.utc2.cinema.service.FilmService;
-import com.utc2.cinema.service.UserService;
-import com.utc2.cinema.utils.PasswordUtils;
-import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.Stage;
 import javafx.event.ActionEvent;
-import javafx.util.Duration;
 
-import javax.servlet.ServletException;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class MainMenuController implements Initializable {
 
@@ -761,4 +733,29 @@ public class MainMenuController implements Initializable {
     public void onConfirmChangePassword(ActionEvent event) {
         userConfirmController.onConfirmChangePassword(event);
     }
+
+    public Label getVoucherLabel() {
+        return voucherLabel;
+    }
+
+    public VBox getInventoryVoucher() {
+        return inventoryVoucher;
+    }
+
+    @FXML
+    private Label voucherLabel;
+    @FXML
+    private VBox inventoryVoucher;
+
+    public VBox getItemInventory() {
+        return itemInventory;
+    }
+
+    @FXML
+    private VBox itemInventory;
+    @FXML
+    public void onClickInventory(MouseEvent mouseEvent) {
+        buyTicketController.onClickInventory(mouseEvent);
+    }
+
 }

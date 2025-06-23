@@ -15,12 +15,13 @@ public class Bill {
     private int userId;
     private Date datePurchased;
     private String billStatus;
-
-    public Bill(int id, int userId, Date datePurchased, String billStatus) {
+    private double totalPrice;
+    public Bill(int id, int userId, Date datePurchased, String billStatus,double totalPrice) {
         this.id = id;
         this.userId = userId;
         this.datePurchased = datePurchased;
         this.billStatus = billStatus;
+        this.totalPrice = totalPrice;
     }
     public Bill( int userId, Date datePurchased, String billStatus) {
 
@@ -29,6 +30,15 @@ public class Bill {
         this.billStatus = billStatus;
     }
 
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public Bill(int id, double totalPrice)
+    {
+        this.id = id;
+        this.totalPrice = totalPrice;
+    }
     public String getBillStatus() {
         return billStatus;
     }
