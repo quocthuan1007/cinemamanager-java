@@ -254,6 +254,19 @@ public class MovieShowDao {
             e.printStackTrace();
         }
     }
+    public boolean hasAnyRelatedData(int movieShowId) {
+        String query = "SELECT 1 FROM Reservation WHERE ShowId = ? LIMIT 1";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, movieShowId);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next(); // Trả về true nếu có ít nhất 1 bản ghi
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
 
 

@@ -1025,5 +1025,18 @@ public class MainManagerController implements Initializable {
     @FXML void onExportPdf(){ManageStatisticalController.onExportPdf(event);}
     @FXML void onExportExcel(){ManageStatisticalController.onExportExcel(event);}
 
+    @FXML
+    private DatePicker startDatePicker;
+
+    @FXML
+    private DatePicker endDatePicker;
+
+    public DatePicker getStartDatePicker() {
+        return startDatePicker;
+    }
+
+    public DatePicker getEndDatePicker() {
+        return endDatePicker;
+    }
 
 }

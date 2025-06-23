@@ -304,7 +304,7 @@
 
                <!-- Tiêu đề và nút chức năng -->
                <HBox alignment="CENTER_LEFT" spacing="20">
-                  <Label fx:id="titleLabel" style="-fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Quản lý phòng chiếu" />
+                  <Label fx:id="titleLabel" prefHeight="52.0" prefWidth="246.0" style="-fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Quản lý phòng chiếu" />
                </HBox>
 
                <!-- Form nhập thông tin -->
@@ -507,18 +507,34 @@
                   <Label layoutX="20.0" layoutY="100.0" style="-fx-font-size: 14px;" text="Phòng:" />
                   <ComboBox fx:id="roomComboBox" layoutX="180.0" layoutY="98.0" prefWidth="200.0" />
 
-                  <!-- Thời gian bắt đầu -->
-                  <Label layoutX="20.0" layoutY="140.0" style="-fx-font-size: 14px;" text="Thời gian bắt đầu:" />
-                  <TextField fx:id="startTimeField" layoutX="180.0" layoutY="138.0" prefWidth="200.0" promptText="HH:mm dd/MM/yyyy" />
+<!--                  &lt;!&ndash; Thời gian bắt đầu &ndash;&gt;-->
+<!--                  <Label layoutX="20.0" layoutY="140.0" style="-fx-font-size: 14px;" text="Thời gian bắt đầu:" />-->
+<!--                  <TextField fx:id="startTimeField" layoutX="180.0" layoutY="138.0" prefWidth="200.0" promptText="HH:mm dd/MM/yyyy" />-->
 
-                  <!-- Thời gian kết thúc -->
-                  <Label layoutX="20.0" layoutY="180.0" style="-fx-font-size: 14px;" text="Thời gian kết thúc:" />
-                  <TextField fx:id="endTimeField" layoutX="180.0" layoutY="178.0" prefWidth="200.0" promptText="HH:mm dd/MM/yyyy" />
+<!--                  &lt;!&ndash; Thời gian kết thúc &ndash;&gt;-->
+<!--                  <Label layoutX="20.0" layoutY="180.0" style="-fx-font-size: 14px;" text="Thời gian kết thúc:" />-->
+<!--                  <TextField fx:id="endTimeField" layoutX="180.0" layoutY="178.0" prefWidth="200.0" promptText="HH:mm dd/MM/yyyy" />-->
+                  <!-- Ngày bắt đầu -->
+                  <Label layoutX="20.0" layoutY="140.0" style="-fx-font-size: 14px;" text="Ngày bắt đầu:" />
+                  <DatePicker fx:id="startDatePicker" layoutX="180.0" layoutY="138.0" prefWidth="200.0" />
+
+                  <!-- Giờ bắt đầu -->
+                  <Label layoutX="20.0" layoutY="170.0" style="-fx-font-size: 14px;" text="Giờ bắt đầu:" />
+                  <TextField fx:id="startTimeField" layoutX="180.0" layoutY="168.0" prefWidth="200.0" promptText="HH:mm" />
+
+                  <!-- Ngày kết thúc -->
+                  <Label layoutX="20.0" layoutY="200.0" style="-fx-font-size: 14px;" text="Ngày kết thúc:" />
+                  <DatePicker fx:id="endDatePicker" layoutX="180.0" layoutY="198.0" prefWidth="200.0" />
+
+                  <!-- Giờ kết thúc -->
+                  <Label layoutX="20.0" layoutY="230.0" style="-fx-font-size: 14px;" text="Giờ kết thúc:" />
+                  <TextField fx:id="endTimeField" layoutX="180.0" layoutY="228.0" prefWidth="200.0" promptText="HH:mm" />
+
 
                   <!-- Nút Lưu -->
-                  <Button layoutX="84.0" layoutY="245.0" onAction="#onSaveMovieShow" prefWidth="100.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Lưu" />
+                  <Button layoutX="80.0" layoutY="257.0" onAction="#onSaveMovieShow" prefWidth="100.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Lưu" />
                   <!-- Nút Hủy -->
-                  <Button layoutX="330.0" layoutY="245.0" onAction="#onCancelAddMovieShow" prefWidth="100.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="Hủy" />
+                  <Button layoutX="330.0" layoutY="257.0" onAction="#onCancelAddMovieShow" prefWidth="100.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="Hủy" />
                </children>
             </Pane>
          </Pane>
