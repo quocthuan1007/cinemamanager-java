@@ -1,6 +1,7 @@
 package com.utc2.cinema.controller;
 
 import com.utc2.cinema.dao.RoomDao;
+import com.utc2.cinema.model.entity.CustomAlert;
 import com.utc2.cinema.model.entity.Room;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -184,11 +185,7 @@ public class RoomManageController implements Initializable {
             // Kiểm tra xem có ghế đã được đặt chưa
             // Kiểm tra nếu thay đổi sơ đồ ghế và có vé đặt
             if (isSeatLayoutChanged && roomDao.hasFutureReservations(currentRoom.getId())) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Cảnh báo");
-                alert.setHeaderText("Không thể cập nhật sơ đồ ghế");
-                alert.setContentText("Phòng này đã có ghế được đặt trong tương lai. Không thể thay đổi số hàng hoặc số cột.");
-                alert.showAndWait();
+                CustomAlert.showError("Không thể cập nhật", "Phòng chiếu đã có vé đặt. Không thể cập nhật.");
                 return;
             }
 
@@ -210,14 +207,22 @@ public class RoomManageController implements Initializable {
         deleteConfirmationPane.setVisible(true);
     }
 
-    @FXML
     private void onConfirmDelete() {
         if (currentRoom != null) {
-            roomDao.deleteRoom(currentRoom.getName()); // Gọi DAO để xóa phòng chiếu
-            updateRoomNameComboBox(); // Cập nhật lại danh sách phòng chiếu
-            clearFields(); // Xóa các trường nhập liệu
+            boolean hasReservation = roomDao.hasAnyReservations(currentRoom.getId());
+            if (hasReservation) {
+                CustomAlert.showError("Không thể xóa", "Phòng chiếu đã có vé đặt. Không thể xóa.");
+                deleteConfirmationPane.setVisible(false);
+                return;
+            }
+
+            roomDao.deleteRoom(currentRoom.getName());
+            currentRoom = null;
+            updateRoomNameComboBox();
+            clearFields();
+            seatGrid.getChildren().clear();
         }
-        deleteConfirmationPane.setVisible(false); // Ẩn khung xác nhận
+        deleteConfirmationPane.setVisible(false);
     }
 
     @FXML

@@ -76,7 +76,7 @@
 
                   </children>
                </Pane>
-               <Pane layoutX="5.0" layoutY="384.0" prefHeight="339.0" prefWidth="940.0" styleClass="label-main">
+               <Pane layoutX="5.0" layoutY="383.0" prefHeight="373.0" prefWidth="940.0" styleClass="label-main">
                   <children>
 
                      <!-- Bộ lọc thời gian -->
@@ -114,7 +114,7 @@
                </Pane>
 
                <!-- Hàng tổng -->
-               <HBox alignment="CENTER_LEFT" layoutX="5.0" layoutY="736.0" prefHeight="30.0" prefWidth="787.0" spacing="20.0">
+               <HBox alignment="CENTER_LEFT" layoutX="5.0" layoutY="756.0" prefHeight="30.0" prefWidth="787.0" spacing="20.0">
                   <Label style="-fx-font-weight: bold; -fx-font-size: 14px;" text="Tổng:" textFill="WHITE" />
                   <Label fx:id="totalShowLabel" text="0 suất chiếu" textFill="WHITE" />
                   <Label fx:id="totalSeatsLabel" text="0 ghế đã đặt" textFill="WHITE" />
@@ -126,7 +126,7 @@
             <children>
                <Pane fx:id="foodForm" layoutX="651.0" layoutY="122.0" prefHeight="315.0" prefWidth="282.0" style="-fx-background-color: #EEEEEE;" visible="false">
                   <children>
-                     <Button fx:id="addOrSaveFood" layoutX="104.0" layoutY="253.0" mnemonicParsing="false" onAction="#onClickAddFood" prefHeight="43.0" prefWidth="83.0" styleClass="button-onback" text="thêm">
+                     <Button fx:id="addOrSaveFood" layoutX="77.0" layoutY="252.0" mnemonicParsing="false" onAction="#onClickAddFood" prefHeight="43.0" prefWidth="129.0" styleClass="button-onback" text="thêm">
                         <font>
                            <Font size="20.0" />
                         </font>

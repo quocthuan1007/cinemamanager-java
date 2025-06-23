@@ -2,6 +2,7 @@ package com.utc2.cinema.controller;
 
 import com.utc2.cinema.dao.RoomDao;
 import com.utc2.cinema.dao.SeatDao;
+import com.utc2.cinema.model.entity.CustomAlert;
 import com.utc2.cinema.model.entity.Room;
 import com.utc2.cinema.model.entity.Seats;
 import javafx.collections.FXCollections;
@@ -276,11 +277,18 @@ public class ManageRoomController {
         deleteConfirmationPane.setVisible(true);
     }
 
-    @FXML
     void onConfirmDelete() {
         if (currentRoom != null) {
+            boolean hasReservation = roomDao.hasAnyReservations(currentRoom.getId());
+            if (hasReservation) {
+                CustomAlert.showError("Không thể xóa", "Phòng này đang có vé được đặt. Vui lòng hủy các vé trước khi xóa phòng.");
+                deleteConfirmationPane.setVisible(false);
+                return;
+            }
+
+            // Xóa nếu không có liên kết
             roomDao.deleteRoom(currentRoom.getName());
-            currentRoom = null; // Reset sau khi xóa
+            currentRoom = null;
             updateRoomNameComboBox();
             clearFields();
             seatGrid.getChildren().clear();
