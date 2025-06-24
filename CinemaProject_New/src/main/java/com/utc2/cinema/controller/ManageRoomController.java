@@ -261,6 +261,12 @@ public class ManageRoomController {
             Room newRoom = new Room(name, rows, columns, status);
             roomDao.addRoom(newRoom);
         } else {
+            boolean hasReservation = roomDao.hasAnyReservations(currentRoom.getId());
+            if (hasReservation) {
+                CustomAlert.showError("Không thể cập nhật", "Phòng này đang có vé được đặt. Vui lòng hủy các vé trước khi cập nhật phòng.");
+                deleteConfirmationPane.setVisible(false);
+                return;
+            }
             currentRoom.setName(name);
             currentRoom.setNumRows(rows);
             currentRoom.setNumCols(columns);

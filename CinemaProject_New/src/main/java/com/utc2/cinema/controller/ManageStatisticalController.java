@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.sql.*;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
@@ -205,12 +206,16 @@ public class ManageStatisticalController {
         }
 
         try {
+            // Định dạng tên file theo ngày
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            String fileName = "ThongKe_" + startDate.format(formatter) + "_den_" + endDate.format(formatter) + ".pdf";
+            String filePath = fileName;
+
             Document document = new Document(PageSize.A4);
-            String filePath = "ThongKe_DoanhThu.pdf";
             PdfWriter.getInstance(document, new FileOutputStream(filePath));
             document.open();
 
-            // Load font Unicode hỗ trợ tiếng Việt (ví dụ: DejaVuSerif.ttf)
+            // Load font Unicode hỗ trợ tiếng Việt
             InputStream fontStream = ManageStatisticalController.class.getResourceAsStream("/fonts/DejaVuLGCSerif.ttf");
             if (fontStream == null) {
                 throw new FileNotFoundException("Không tìm thấy font DejaVuSerif.ttf trong resources/fonts/");
@@ -253,7 +258,7 @@ public class ManageStatisticalController {
 
             document.add(table);
 
-        // Tính tổng
+            // Tính tổng
             int totalShow = data.stream().mapToInt(StatisticalFilm::getShowCount).sum();
             int totalSeat = data.stream().mapToInt(StatisticalFilm::getSeatSold).sum();
             double totalRevenue = data.stream().mapToDouble(StatisticalFilm::getTotalRevenue).sum();
@@ -264,7 +269,6 @@ public class ManageStatisticalController {
             ), fontNormal);
             document.add(totals);
 
-
             document.close();
 
             CustomAlert.showSuccess("Thành công", "Xuất file PDF thành công:\n" + filePath);
@@ -273,6 +277,7 @@ public class ManageStatisticalController {
             CustomAlert.showError("Lỗi", "Không thể xuất file PDF.");
         }
     }
+
 
     @FXML
     public static void onExportExcel(ActionEvent event) {
@@ -328,8 +333,12 @@ public class ManageStatisticalController {
                 sheet.autoSizeColumn(i);
             }
 
-            // Lưu file
-            String filePath = "ThongKe_DoanhThu.xlsx";
+            // Định dạng tên file theo ngày
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            String fileName = "ThongKe_" + startDate.format(formatter) + "_den_" + endDate.format(formatter) + ".xlsx";
+            String filePath = fileName;
+
+            // Ghi file Excel
             try (FileOutputStream out = new FileOutputStream(filePath)) {
                 workbook.write(out);
             }
@@ -340,5 +349,6 @@ public class ManageStatisticalController {
             CustomAlert.showError("Lỗi", "Không thể xuất file Excel.");
         }
     }
+
 
 }
